@@ -68,6 +68,7 @@
                     <option value="2">高二</option>
                     <option value="3">高三</option>
                 </select>
+                <input type="email" name="email" placeholder="綁定電子郵件 (忘記密碼時使用)" required class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-indigo-500 transition text-lg font-bold text-center">
                 <input type="password" name="password" placeholder="建立密碼（請避免“0“開頭的密碼）" required class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-indigo-500 transition text-lg font-bold text-center">
                 <button type="submit" id="register-btn" class="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 transition duration-200 text-lg">註冊新帳號</button>
             </form>
@@ -164,11 +165,12 @@
 
   <div id="reset-password-modal" class="modal-overlay hidden">
     <div class="bg-white w-80 rounded-xl shadow-2xl p-6 text-center space-y-4 relative">
-       <div class="text-4xl mb-2">🔐</div>
-       <h3 class="text-xl font-extrabold text-gray-800">更改密碼</h3>
-       <p class="text-sm text-red-600 font-bold bg-red-50 p-2 rounded-lg border border-red-200">
+       <div class="text-4xl mb-2" id="reset-icon">🔐</div>
+       <h3 class="text-xl font-extrabold text-gray-800" id="reset-title">更改密碼</h3>
+       <p class="text-sm text-red-600 font-bold bg-red-50 p-2 rounded-lg border border-red-200" id="reset-warning">
          ⚠️ 注意：每個帳號<br><span class="text-lg">【僅限更改一次】</span>密碼<br>修改後請務必牢記！
        </p>
+       <input type="email" id="reset-email-input" placeholder="請輸入綁定的電子郵件驗證" class="w-full p-4 border-2 border-pink-200 rounded-xl focus:ring-pink-500 focus:border-pink-500 transition text-center font-bold text-gray-700 mt-2">
        <input type="password" id="new-password-input" placeholder="請輸入新密碼 (不可為 0 開頭)" class="w-full p-4 border-2 border-pink-200 rounded-xl focus:ring-pink-500 focus:border-pink-500 transition text-center font-bold text-gray-700 mt-2">
        <div class="flex justify-center gap-3 pt-4">
           <button onclick="closeResetModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300">取消</button>
@@ -443,9 +445,9 @@
           
           if (res.isWrongPassword) {
             if (!res.hasReset) {
-               showConfirmModal("密碼輸入錯誤！\n是否需要更改密碼？\n(注意：每個帳號僅有一次更改機會)", () => { openResetModal(u); }, true);
+               showConfirmModal("密碼輸入錯誤！\n是否需要更改密碼？\n(注意：每個帳號僅有一次更改機會)", () => { openResetModal(u, false); }, true);
             } else {
-               showMessage("密碼錯誤！且您已用盡重置密碼的機會。", "bg-red-100 text-red-700");
+               showConfirmModal("密碼錯誤！\n您已修改過密碼。\n是否要將密碼寄送至您綁定的電子郵件？", () => { openResetModal(u, true); }, true);
             }
           } else {
             if(e) showMessage(res.message, "bg-red-100 text-red-700");
@@ -455,34 +457,62 @@
     }
 
     let resetTargetUser = "";
-    function openResetModal(username) {
-       resetTargetUser = username; document.getElementById('new-password-input').value = ''; document.getElementById('reset-password-modal').classList.remove('hidden');
+    let isSecondTimeReset = false;
+    function openResetModal(username, isSecondTime) {
+       resetTargetUser = username; 
+       isSecondTimeReset = isSecondTime;
+       document.getElementById('reset-email-input').value = ''; 
+       document.getElementById('new-password-input').value = ''; 
+       
+       if (isSecondTime) {
+         document.getElementById('reset-title').textContent = "寄送密碼";
+         document.getElementById('reset-warning').innerHTML = "您已修改過密碼。<br>請輸入您註冊時綁定的電子郵件，<br>系統將寄送目前的密碼給您。";
+         document.getElementById('new-password-input').classList.add('hidden');
+         document.getElementById('submit-reset-btn').textContent = "寄送密碼";
+       } else {
+         document.getElementById('reset-title').textContent = "更改密碼";
+         document.getElementById('reset-warning').innerHTML = "⚠️ 注意：每個帳號<br><span class=\"text-lg\">【僅限更改一次】</span>密碼<br>修改後請務必牢記！";
+         document.getElementById('new-password-input').classList.remove('hidden');
+         document.getElementById('submit-reset-btn').textContent = "確認修改";
+       }
+       document.getElementById('reset-password-modal').classList.remove('hidden');
     }
     function closeResetModal() { document.getElementById('reset-password-modal').classList.add('hidden'); resetTargetUser = ""; }
     function submitNewPassword() {
-       const newPass = document.getElementById('new-password-input').value.trim();
-       if (!newPass) { showAlertModal("請輸入密碼！"); return; }
-       if (newPass.startsWith('0')) { showAlertModal("密碼不能以 0 開頭！"); return; }
+       const email = document.getElementById('reset-email-input').value.trim();
+       if (!email || !email.includes('@')) { showAlertModal("請輸入有效的電子郵件！"); return; }
        
-       const btn = document.getElementById('submit-reset-btn'); btn.disabled = true; btn.textContent = "修改中...";
+       const newPass = document.getElementById('new-password-input').value.trim();
+       if (!isSecondTimeReset) {
+         if (!newPass) { showAlertModal("請輸入新密碼！"); return; }
+         if (newPass.startsWith('0')) { showAlertModal("密碼不能以 0 開頭！"); return; }
+       }
+       
+       const btn = document.getElementById('submit-reset-btn'); 
+       btn.disabled = true; 
+       btn.textContent = isSecondTimeReset ? "寄送中..." : "修改中...";
+       
+       // Backend API determines action based on presence of newPass. If newPass is empty, it means 2nd time (send email).
        runGas('resetUserPassword', res => {
-          btn.disabled = false; btn.textContent = "確認修改";
+          btn.disabled = false; btn.textContent = isSecondTimeReset ? "寄送密碼" : "確認修改";
           if (res.success) {
              closeResetModal(); showAlertModal(res.message);
-             document.forms['login-form'].password.value = newPass;
+             if (!isSecondTimeReset) document.forms['login-form'].password.value = newPass;
           } else { showAlertModal(res.message); }
-       }, showGasError, resetTargetUser, newPass);
+       }, showGasError, resetTargetUser, email, newPass);
     }
 
     function handleRegister(e) {
       e.preventDefault(); hideMessage();
       const u = e.target.username.value.trim(); const p = e.target.password.value.trim();
       const grade = e.target.grade.value;
+      const email = e.target.email.value.trim();
 
       const chineseNameRegex = /^[\u4E00-\u9FA5]{2,4}$/;
       if (!chineseNameRegex.test(u)) { showMessage("⚠️ 帳號格式錯誤：請輸入正確的中文全名", "bg-red-100 text-red-700"); return; }
       if (p.startsWith('0')) { showMessage("⚠️ 密碼格式錯誤：請勿使用「0」開頭的密碼", "bg-red-100 text-red-700"); return; }
       if (!grade) { showMessage("⚠️ 請選擇目前年級", "bg-red-100 text-red-700"); return; }
+      if (!email || !email.includes('@')) { showMessage("⚠️ 請輸入有效的電子郵件", "bg-red-100 text-red-700"); return; }
 
       const d = new Date();
       const currentY = d.getFullYear() - 1911; 
@@ -499,7 +529,7 @@
         document.getElementById('register-btn').textContent = '註冊新帳號'; document.getElementById('register-btn').disabled=false;
         if(res.success){ showMessage("註冊成功，請登入！", "bg-pink-100 text-pink-700"); toggleAuthMode(true); }
         else { showMessage(res.message, "bg-red-100 text-red-700"); }
-      }, showGasError, u, p, grade, gradDateStr);
+      }, showGasError, u, p, email, grade, gradDateStr);
     }
 
     function handleLogout() {
