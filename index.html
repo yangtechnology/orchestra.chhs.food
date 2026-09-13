@@ -163,6 +163,44 @@
     </div>
   </div>
 
+  <!-- 登入成功廣告/推廣彈窗 -->
+  <div id="ad-modal" class="modal-overlay hidden">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl relative overflow-hidden text-center mx-4">
+      <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-pink-500 to-orange-400 opacity-20 pointer-events-none"></div>
+      
+      <div class="relative z-10 text-center">
+        <h3 class="text-2xl font-black text-gray-800 mb-2">🎉 登入成功！</h3>
+        <p class="text-sm text-gray-500 mb-5 border-b pb-4">風岡線上點餐系統 歡迎您</p>
+        
+        <div class="space-y-3 mb-6 text-left">
+          <p class="font-bold text-gray-700 text-sm mb-2 text-center">🔥 Yang Technology 升學必備推薦：</p>
+          
+          <a href="https://yangtechnology.github.io/GSAT.english/" target="_blank" class="block p-4 rounded-xl border border-pink-100 bg-pink-50 hover:bg-pink-100 hover:border-pink-300 transition-all group flex items-center gap-3 shadow-sm">
+            <div class="text-3xl drop-shadow-sm">📚</div>
+            <div class="text-left flex-1">
+              <div class="font-bold text-pink-700 group-hover:text-pink-800">學測英文測驗系統</div>
+              <div class="text-xs text-pink-500 mt-1">提升英文實力，迎戰學測！</div>
+            </div>
+            <div class="text-pink-400 group-hover:translate-x-1 transition-transform">➔</div>
+          </a>
+          
+          <a href="https://yangtechnology.github.io/exam_analysis/" target="_blank" class="block p-4 rounded-xl border border-orange-100 bg-orange-50 hover:bg-orange-100 hover:border-orange-300 transition-all group flex items-center gap-3 shadow-sm">
+            <div class="text-3xl drop-shadow-sm">🎯</div>
+            <div class="text-left flex-1">
+              <div class="font-bold text-orange-700 group-hover:text-orange-800">精準落點分析系統</div>
+              <div class="text-xs text-orange-500 mt-1">大數據預測，找到理想志願！</div>
+            </div>
+            <div class="text-orange-400 group-hover:translate-x-1 transition-transform">➔</div>
+          </a>
+        </div>
+        
+        <button onclick="document.getElementById('ad-modal').classList.add('hidden')" class="w-full py-3 bg-gray-800 text-white font-bold rounded-xl shadow-md hover:bg-gray-900 transition-colors">
+          開始點餐
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="reset-password-modal" class="modal-overlay hidden">
     <div class="bg-white w-80 rounded-xl shadow-2xl p-6 text-center space-y-4 relative">
        <div class="text-4xl mb-2" id="reset-icon">🔐</div>
@@ -541,16 +579,18 @@
     }
 
     function handleLogout() {
-      currentUsername = null; cartItems = []; updateCartUI();
-      localStorage.removeItem('app_user'); localStorage.removeItem('app_pass');
-      document.getElementById('order-section').classList.add('hidden');
-      document.getElementById('auth-section').classList.remove('hidden');
-      document.getElementById('user-info-display').textContent = '請登入或註冊以開始點餐';
+      localStorage.removeItem('app_user'); 
+      localStorage.removeItem('app_pass');
+      window.location.reload();
     }
 
     function enterSystem(loginData) {
       document.getElementById('auth-section').classList.add('hidden'); document.getElementById('auto-login-msg').classList.add('hidden');
       document.getElementById('order-section').classList.remove('hidden'); document.getElementById('user-info-display').textContent = `嗨，${currentUsername}！`;
+      
+      // 顯示推廣畫面 (每次登入或自動登入成功時)
+      document.getElementById('ad-modal').classList.remove('hidden');
+      
       if (loginData.hasOrdered) {
         document.getElementById('already-ordered-block').classList.remove('hidden'); document.getElementById('menu-container').classList.add('hidden');
         document.getElementById('floating-cart-footer').classList.add('hidden');
