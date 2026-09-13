@@ -581,7 +581,8 @@
           const btn = document.getElementById('view-cart-btn'); btn.disabled = true; 
           btn.innerHTML = `<span class="w-full text-center">已超過截單時間 (${res.cutoffStr})</span>`; 
           btn.classList.replace('bg-pink-500', 'bg-gray-500');
-          document.getElementById('menu-container').innerHTML = '<p class="text-center text-red-500 font-bold p-8">目前非開放點餐時間。</p>'; document.getElementById('menu-container').classList.remove('hidden');
+          document.getElementById('menu-list-grid').innerHTML = '<p class="text-center text-red-500 font-bold p-8 text-lg">目前非開放點餐時間。</p>'; 
+          document.getElementById('menu-container').classList.remove('hidden');
           return;
         }
         renderMenuCards(menuData);
