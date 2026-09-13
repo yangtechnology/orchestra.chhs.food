@@ -17,6 +17,49 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 9999 !important; display: flex; justify-content: center; align-items: center; padding: 1rem; }
     
+    /* Intro.js 質感美化 */
+    .introjs-tooltip {
+      border-radius: 16px !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      border: 1px solid #fce7f3 !important;
+      max-width: 85vw !important;
+      background: white !important;
+    }
+    .introjs-tooltiptext {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif !important;
+      padding: 16px 20px !important;
+      font-size: 15px !important;
+      color: #374151 !important;
+      line-height: 1.6 !important;
+    }
+    .introjs-tooltip-title {
+      font-size: 18px !important;
+      font-weight: 900 !important;
+      color: #be185d !important;
+      margin-bottom: 8px !important;
+    }
+    .introjs-tooltipbuttons {
+      border-top: 1px solid #f3f4f6 !important;
+      padding: 12px 20px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+    }
+    .introjs-button {
+      border-radius: 8px !important;
+      padding: 8px 16px !important;
+      font-weight: 700 !important;
+      text-shadow: none !important;
+      background-image: none !important;
+      transition: all 0.2s !important;
+    }
+    .introjs-prevbutton { background-color: #f3f4f6 !important; border: none !important; color: #4b5563 !important; }
+    .introjs-prevbutton:hover { background-color: #e5e7eb !important; }
+    .introjs-nextbutton { background-color: #db2777 !important; border: none !important; color: white !important; box-shadow: 0 4px 6px -1px rgba(219, 39, 119, 0.2) !important; }
+    .introjs-nextbutton:hover { background-color: #be185d !important; }
+    .introjs-disabled { opacity: 0.5 !important; cursor: not-allowed !important; }
+    .introjs-bullets ul li a { background: #fbcfe8 !important; }
+    .introjs-bullets ul li a.active { background: #db2777 !important; }
+
     .marquee-container { overflow: hidden; white-space: nowrap; width: 100%; box-sizing: border-box; }
     .marquee-content { display: inline-block; white-space: nowrap; padding-left: 100%; animation: marquee 40s linear infinite; }
     .marquee-container:hover .marquee-content { animation-play-state: paused; }
@@ -196,7 +239,7 @@
           </a>
         </div>
         
-        <button onclick="document.getElementById('ad-modal').classList.add('hidden')" class="w-full py-3 bg-gray-800 text-white font-bold rounded-xl shadow-md hover:bg-gray-900 transition-colors">
+        <button onclick="closeAdModal()" class="w-full py-3 bg-gray-800 text-white font-bold rounded-xl shadow-md hover:bg-gray-900 transition-colors">
           開始點餐
         </button>
       </div>
@@ -939,6 +982,18 @@
       }, showGasError, { username: currentUsername, total: total, items: itemsForGAS, restaurantName: currentRestaurant });
     }
 
+    function closeAdModal() {
+      document.getElementById('ad-modal').classList.add('hidden');
+      
+      // 在登入成功且關閉廣告後，檢查是否需要觸發首次導覽
+      const adminBtn = document.getElementById('admin-entry-btn');
+      if (!adminBtn.classList.contains('hidden')) {
+        if (!localStorage.getItem('admin_tour_seen_' + currentUsername)) {
+          setTimeout(() => startAdminTour(true), 300);
+        }
+      }
+    }
+
     // ==========================================
     // 頁籤切換與系統設定相關邏輯
     // ==========================================
@@ -946,11 +1001,6 @@
       document.getElementById('main-container').classList.add('hidden'); 
       document.getElementById('admin-section').classList.remove('hidden'); 
       switchAdminTab('orders'); 
-      
-      // Check if this is the first time the admin opens the panel
-      if (!localStorage.getItem('admin_tour_seen_' + currentUsername)) {
-        setTimeout(() => startAdminTour(true), 500); // slight delay to let UI render
-      }
     }
     
     function closeAdminPanel() { 
@@ -960,70 +1010,99 @@
 
     function startAdminTour(isFirstTime) {
         const intro = introJs();
+        let steps = [];
+
+        if (isFirstTime) {
+            steps.push({
+                element: '#admin-entry-btn',
+                title: "👋 歡迎成為管理員",
+                intro: "這是你的專屬入口！<br>點擊這裡可以進入後台管理系統，我們接著來看看後台有哪些功能吧！",
+                position: 'bottom'
+            });
+        }
+
+        steps = steps.concat([
+            {
+                title: "🔧 後台管理樞紐",
+                intro: "這裡是你管理整個點餐系統的地方。<br>上方的分頁可以切換不同的管理功能。"
+            },
+            {
+                element: '#tab-btn-orders',
+                title: "📋 名單管理",
+                intro: "檢視所有同學的點餐紀錄，並可依姓名搜尋。<br>每日結算後，記得點擊「清空紀錄」。",
+                position: 'bottom'
+            },
+            {
+                element: '#tab-btn-summary',
+                title: "📊 訂購統計",
+                intro: "自動計算每個便當的總數量與總金額。<br>可直接匯出統計圖給餐廳老闆。",
+                position: 'bottom'
+            },
+            {
+                element: '#tab-btn-menu',
+                title: "🍔 菜單編輯",
+                intro: "新增、修改或刪除今日菜單。<br>還可開啟「八方模式」讓同學自訂口味與數量！",
+                position: 'bottom'
+            },
+            {
+                element: '#tab-btn-history',
+                title: "🔄 切換餐廳",
+                intro: "不用每天重新打！<br>一鍵載入以前儲存過的餐廳菜單，超級省時。",
+                position: 'bottom'
+            },
+            {
+                element: '#tab-btn-direct',
+                title: "🧑‍💻 管理者代訂",
+                intro: "系統關閉或同學手機沒電時，可從這裡手動幫同學補點餐。",
+                position: 'bottom'
+            },
+            {
+                element: '#tab-btn-settings',
+                title: "⚙️ 系統設定",
+                intro: "設定「截單時間」、前台「公告」與「午餐店名」。店名要正確防呆機制才有效喔！",
+                position: 'bottom'
+            },
+            {
+                element: '#tab-btn-users',
+                title: "👥 人員管理",
+                intro: "搜尋下一屆幹部並將他們設為「管理員」。<br>為保護資安，這裡不會顯示密碼。",
+                position: 'bottom'
+            }
+        ]);
+
         intro.setOptions({
-            steps: [
-                {
-                    title: "👋 歡迎來到管理後台",
-                    intro: "學弟妹好！這裡是整個點餐系統的核心樞紐。<br><br>這份導覽將會帶你認識後台的各項功能，確保你能順利接手管理工作！"
-                },
-                {
-                    element: '#tab-btn-orders',
-                    title: "📋 名單管理",
-                    intro: "檢視所有同學的點餐紀錄，並可依姓名搜尋。<br>每日結算後，記得點擊「清空紀錄」來迎接隔天的訂單。"
-                },
-                {
-                    element: '#tab-btn-summary',
-                    title: "📊 訂購統計",
-                    intro: "系統會自動幫你計算每個便當的總數量與總金額。<br>可直接使用「匯出統計圖」將圖片傳給餐廳老闆叫餐。"
-                },
-                {
-                    element: '#tab-btn-menu',
-                    title: "🍔 菜單編輯",
-                    intro: "新增、修改或刪除今日的菜單。<br>你可以設定餐點分類、價格，還可以開啟「八方模式」讓同學自訂口味與數量！"
-                },
-                {
-                    element: '#tab-btn-history',
-                    title: "🔄 切換餐廳",
-                    intro: "不用每天重新打菜單！<br>只要你曾經儲存過，就可以從這裡一鍵載入以前吃過的餐廳，超級省時。"
-                },
-                {
-                    element: '#tab-btn-direct',
-                    title: "🧑‍💻 管理者代訂",
-                    intro: "如果已經過了截單時間，或者同學手機沒電，你可以從這裡手動幫同學補點餐，不受時間限制。"
-                },
-                {
-                    element: '#tab-btn-settings',
-                    title: "⚙️ 系統設定",
-                    intro: "設定每天的「截單時間」、前台的「跑馬燈公告」以及今天的「午餐店名」。記得店名要設定正確，防呆機制才有效喔！"
-                },
-                {
-                    element: '#tab-btn-users',
-                    title: "👥 人員管理",
-                    intro: "交接必備功能！搜尋下一屆的幹部並將他們設為「管理員」。<br>為保護資安，這裡不會顯示大家的密碼。"
-                },
-                {
-                    title: "✅ 導覽結束",
-                    intro: "恭喜你熟悉了所有功能！<br><br>如果之後忘記了，隨時可以點擊右上角的「❔」按鈕重新觀看導覽。祝你管理順利！"
-                }
-            ],
-            showSkipButton: !isFirstTime,
-            showBullets: true,
-            exitOnOverlayClick: !isFirstTime,
-            exitOnEsc: !isFirstTime,
+            steps: steps,
+            showSkipButton: false,
+            showCloseButton: false,
+            exitOnOverlayClick: false,
+            exitOnEsc: false,
             keyboardNavigation: true,
             disableInteraction: true,
             doneLabel: '完成導覽',
-            nextLabel: '下一步',
+            nextLabel: '下一步 ➔',
             prevLabel: '上一步',
-            skipLabel: '略過'
+            scrollToElement: true,
+            scrollPadding: 20
+        });
+
+        intro.onbeforechange(function(targetElement) {
+            if (isFirstTime && this._currentStep === 1) {
+                showAdminPanel();
+            }
+            if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
+                // 強制滑動到該 Tab，避免在手機版上看不到
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const tabId = targetElement.id.replace('tab-btn-', '');
+                switchAdminTab(tabId);
+            }
         });
 
         intro.oncomplete(function() {
             localStorage.setItem('admin_tour_seen_' + currentUsername, 'true');
+            if (isFirstTime) {
+                switchAdminTab('orders'); // 導覽結束後回到預設的訂單頁面
+            }
         });
-
-        // Intro.js might still allow skipping via X if showCloseButton is true. 
-        if(isFirstTime) intro.setOption('showCloseButton', false);
         
         intro.start();
     }
