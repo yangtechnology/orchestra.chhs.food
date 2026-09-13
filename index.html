@@ -1122,24 +1122,35 @@
         });
 
         intro.onbeforechange(function(targetElement) {
-            // First step in first time tour is 0. Second step is 1.
-            if (isFirstTime && this._currentStep === 1) {
-                showAdminPanel();
-            }
-            if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
-                // 精確且同步地計算橫向捲動，避免 Intro.js 抓到舊位置導致氣泡超出螢幕
-                const container = targetElement.parentElement;
-                if (container) {
-                    const containerRect = container.getBoundingClientRect();
-                    const elementRect = targetElement.getBoundingClientRect();
-                    const offsetLeft = elementRect.left - containerRect.left;
-                    const targetScroll = container.scrollLeft + offsetLeft - (container.offsetWidth / 2) + (elementRect.width / 2);
-                    
-                    container.scrollLeft = targetScroll; // 同步捲動
+            return new Promise((resolve) => {
+                // First step in first time tour is 0. Second step is 1.
+                if (isFirstTime && this._currentStep === 1) {
+                    showAdminPanel();
                 }
-                const tabId = targetElement.id.replace('tab-btn-', '');
-                switchAdminTab(tabId);
-            }
+                if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
+                    const container = targetElement.parentElement;
+                    let delay = 0;
+                    
+                    if (container) {
+                        const containerRect = container.getBoundingClientRect();
+                        const elementRect = targetElement.getBoundingClientRect();
+                        const offsetLeft = elementRect.left - containerRect.left;
+                        const targetScroll = container.scrollLeft + offsetLeft - (container.offsetWidth / 2) + (elementRect.width / 2);
+                        
+                        // 改回平滑捲動 (smooth)
+                        container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+                        delay = 400; // 給予動畫 400 毫秒的時間完成
+                    }
+                    
+                    const tabId = targetElement.id.replace('tab-btn-', '');
+                    switchAdminTab(tabId);
+                    
+                    // 等待動畫完成後，再讓 Intro.js 去渲染泡泡 (使用 Promise)
+                    setTimeout(resolve, delay);
+                } else {
+                    resolve();
+                }
+            });
         });
 
         intro.oncomplete(function() {
