@@ -1127,11 +1127,15 @@
                 showAdminPanel();
             }
             if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
-                // 強制滑動到該 Tab，避免在手機版上看不到
+                // 精確且同步地計算橫向捲動，避免 Intro.js 抓到舊位置導致氣泡超出螢幕
                 const container = targetElement.parentElement;
-                if(container) {
-                    const scrollLeft = targetElement.offsetLeft - (container.offsetWidth / 2) + (targetElement.offsetWidth / 2);
-                    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                if (container) {
+                    const containerRect = container.getBoundingClientRect();
+                    const elementRect = targetElement.getBoundingClientRect();
+                    const offsetLeft = elementRect.left - containerRect.left;
+                    const targetScroll = container.scrollLeft + offsetLeft - (container.offsetWidth / 2) + (elementRect.width / 2);
+                    
+                    container.scrollLeft = targetScroll; // 同步捲動
                 }
                 const tabId = targetElement.id.replace('tab-btn-', '');
                 switchAdminTab(tabId);
