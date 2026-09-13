@@ -849,6 +849,7 @@
       btn.disabled = true; btn.textContent = "處理中...";
       
       const itemsForGAS = cartItems.map(i => ({ name: i.name, price: i.price, type: i.type, selections: i.selections }));
+      const currentRestaurant = document.getElementById('restaurant-name-display').textContent.trim();
       
       runGas('logOrderToSheet', res => {
         if(res.success){
@@ -864,10 +865,18 @@
           document.getElementById('already-ordered-total').textContent = `總計: NT$ ${total}`;
           cartItems = [];
         } else { 
-            showAlertModal(res.message); 
-            btn.disabled = false; btn.textContent = "確認餐點並繳交"; 
+            // 處理餐點更改的情況：提示並重新載入
+            if (res.isMenuChanged) {
+                showAlertModal(res.message);
+                btn.disabled = false; btn.textContent = "確認餐點並繳交";
+                closeCartModal();
+                loadSystemData(); // 重新載入最新菜單
+            } else {
+                showAlertModal(res.message); 
+                btn.disabled = false; btn.textContent = "確認餐點並繳交"; 
+            }
         }
-      }, showGasError, { username: currentUsername, total: total, items: itemsForGAS });
+      }, showGasError, { username: currentUsername, total: total, items: itemsForGAS, restaurantName: currentRestaurant });
     }
 
     // ==========================================
@@ -1212,9 +1221,15 @@
 
       showConfirmModal(confirmMsg, () => { 
         const b = document.getElementById('proxy-submit-btn'); b.textContent="傳送中..."; b.disabled=true; const total = proxyCart.reduce((s,i)=>s+i.price,0); 
+        const currentRestaurant = document.getElementById('restaurant-name-display').textContent.trim();
         runGas('logOrderToSheet', res => {
-          if(res.success){ showAlertModal(`代點成功！`); initProxyOrder(); loadAdminOrders(); loadAdminSummary(); } else { showAlertModal("失敗："+res.message); b.disabled=false; b.textContent="確認送出"; } 
-        }, showGasError, { username: proxyUser, total: total, items: proxyCart, isAdminProxy: true }); 
+          if(res.success){ 
+             showAlertModal(`代點成功！`); initProxyOrder(); loadAdminOrders(); loadAdminSummary(); 
+          } else { 
+             showAlertModal("失敗："+res.message); b.disabled=false; b.textContent="確認送出"; 
+             if(res.isMenuChanged) loadSystemData();
+          } 
+        }, showGasError, { username: proxyUser, total: total, items: proxyCart, isAdminProxy: true, restaurantName: currentRestaurant }); 
       }, isSystemClosed); 
     }
   </script>
