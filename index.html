@@ -869,6 +869,8 @@
             if (res.isMenuChanged) {
                 showAlertModal(res.message);
                 btn.disabled = false; btn.textContent = "確認餐點並繳交";
+                cartItems = []; // 清空購物車
+                updateCartUI(); // 更新購物車介面
                 closeCartModal();
                 loadSystemData(); // 重新載入最新菜單
             } else {
@@ -1227,7 +1229,11 @@
              showAlertModal(`代點成功！`); initProxyOrder(); loadAdminOrders(); loadAdminSummary(); 
           } else { 
              showAlertModal("失敗："+res.message); b.disabled=false; b.textContent="確認送出"; 
-             if(res.isMenuChanged) loadSystemData();
+             if(res.isMenuChanged) {
+                 proxyCart = [];
+                 renderProxyCart();
+                 loadSystemData();
+             }
           } 
         }, showGasError, { username: proxyUser, total: total, items: proxyCart, isAdminProxy: true, restaurantName: currentRestaurant }); 
       }, isSystemClosed); 
