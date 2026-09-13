@@ -6,6 +6,8 @@
   <title>風岡線上點餐系統</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
   <style>
     body { font-family: 'Inter', 'Noto Sans TC', sans-serif; background-color: #fff0f6; -webkit-tap-highlight-color: transparent; position: relative; overflow-x: hidden; }
     button { touch-action: manipulation; cursor: pointer; position: relative; z-index: 10; user-select: none; }
@@ -228,8 +230,15 @@
   <section id="admin-section" class="hidden fixed inset-0 w-full h-full bg-gray-100 z-50 flex flex-col">
       <div class="bg-white shadow-sm p-4 flex-none z-10 border-b">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-          <h2 class="text-xl sm:text-2xl font-bold text-pink-700">🔧 後台管理系統</h2>
-          <button onclick="closeAdminPanel()" class="px-4 py-2 bg-gray-200 rounded-lg text-sm font-bold hover:bg-gray-300">返回</button>
+          <h2 class="text-xl sm:text-2xl font-bold text-pink-700 flex items-center gap-2">🔧 後台管理系統</h2>
+          <div class="flex items-center gap-3">
+            <button onclick="startAdminTour(false)" title="後台導覽" class="text-orange-500 hover:text-orange-600 transition p-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+            <button onclick="closeAdminPanel()" class="px-4 py-2 bg-gray-200 rounded-lg text-sm font-bold hover:bg-gray-300">返回</button>
+          </div>
         </div>
       </div>
       <div class="bg-white border-b flex-none z-10">
@@ -933,8 +942,91 @@
     // ==========================================
     // 頁籤切換與系統設定相關邏輯
     // ==========================================
-    function showAdminPanel() { document.getElementById('main-container').classList.add('hidden'); document.getElementById('admin-section').classList.remove('hidden'); switchAdminTab('orders'); }
-    function closeAdminPanel() { document.getElementById('admin-section').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); }
+    function showAdminPanel() { 
+      document.getElementById('main-container').classList.add('hidden'); 
+      document.getElementById('admin-section').classList.remove('hidden'); 
+      switchAdminTab('orders'); 
+      
+      // Check if this is the first time the admin opens the panel
+      if (!localStorage.getItem('admin_tour_seen_' + currentUsername)) {
+        setTimeout(() => startAdminTour(true), 500); // slight delay to let UI render
+      }
+    }
+    
+    function closeAdminPanel() { 
+      document.getElementById('admin-section').classList.add('hidden'); 
+      document.getElementById('main-container').classList.remove('hidden'); 
+    }
+
+    function startAdminTour(isFirstTime) {
+        const intro = introJs();
+        intro.setOptions({
+            steps: [
+                {
+                    title: "👋 歡迎來到管理後台",
+                    intro: "學弟妹好！這裡是整個點餐系統的核心樞紐。<br><br>這份導覽將會帶你認識後台的各項功能，確保你能順利接手管理工作！"
+                },
+                {
+                    element: '#tab-btn-orders',
+                    title: "📋 名單管理",
+                    intro: "檢視所有同學的點餐紀錄，並可依姓名搜尋。<br>每日結算後，記得點擊「清空紀錄」來迎接隔天的訂單。"
+                },
+                {
+                    element: '#tab-btn-summary',
+                    title: "📊 訂購統計",
+                    intro: "系統會自動幫你計算每個便當的總數量與總金額。<br>可直接使用「匯出統計圖」將圖片傳給餐廳老闆叫餐。"
+                },
+                {
+                    element: '#tab-btn-menu',
+                    title: "🍔 菜單編輯",
+                    intro: "新增、修改或刪除今日的菜單。<br>你可以設定餐點分類、價格，還可以開啟「八方模式」讓同學自訂口味與數量！"
+                },
+                {
+                    element: '#tab-btn-history',
+                    title: "🔄 切換餐廳",
+                    intro: "不用每天重新打菜單！<br>只要你曾經儲存過，就可以從這裡一鍵載入以前吃過的餐廳，超級省時。"
+                },
+                {
+                    element: '#tab-btn-direct',
+                    title: "🧑‍💻 管理者代訂",
+                    intro: "如果已經過了截單時間，或者同學手機沒電，你可以從這裡手動幫同學補點餐，不受時間限制。"
+                },
+                {
+                    element: '#tab-btn-settings',
+                    title: "⚙️ 系統設定",
+                    intro: "設定每天的「截單時間」、前台的「跑馬燈公告」以及今天的「午餐店名」。記得店名要設定正確，防呆機制才有效喔！"
+                },
+                {
+                    element: '#tab-btn-users',
+                    title: "👥 人員管理",
+                    intro: "交接必備功能！搜尋下一屆的幹部並將他們設為「管理員」。<br>為保護資安，這裡不會顯示大家的密碼。"
+                },
+                {
+                    title: "✅ 導覽結束",
+                    intro: "恭喜你熟悉了所有功能！<br><br>如果之後忘記了，隨時可以點擊右上角的「❔」按鈕重新觀看導覽。祝你管理順利！"
+                }
+            ],
+            showSkipButton: !isFirstTime,
+            showBullets: true,
+            exitOnOverlayClick: !isFirstTime,
+            exitOnEsc: !isFirstTime,
+            keyboardNavigation: true,
+            disableInteraction: true,
+            doneLabel: '完成導覽',
+            nextLabel: '下一步',
+            prevLabel: '上一步',
+            skipLabel: '略過'
+        });
+
+        intro.oncomplete(function() {
+            localStorage.setItem('admin_tour_seen_' + currentUsername, 'true');
+        });
+
+        // Intro.js might still allow skipping via X if showCloseButton is true. 
+        if(isFirstTime) intro.setOption('showCloseButton', false);
+        
+        intro.start();
+    }
     
     function switchAdminTab(tab) {
       ['orders', 'summary', 'menu', 'history', 'direct', 'settings', 'users'].forEach(t => { 
