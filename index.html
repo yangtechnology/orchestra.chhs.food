@@ -668,6 +668,11 @@
         runGas('getSystemData', res => {
            if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
            if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; }
+           window.isSystemDataLoaded = true;
+           if (window.pendingAdminTour) {
+               window.pendingAdminTour = false;
+               setTimeout(() => startAdminTour(true), 300);
+           }
         }, showGasError);
       } else {
         document.getElementById('already-ordered-block').classList.add('hidden'); loadSystemData();
@@ -681,6 +686,12 @@
         if (res.error) { showMessage(res.message, "bg-red-100 text-red-700"); return; }
         if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
         if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; }
+        
+        window.isSystemDataLoaded = true;
+        if (window.pendingAdminTour) {
+            window.pendingAdminTour = false;
+            setTimeout(() => startAdminTour(true), 300);
+        }
         
         isSystemClosed = res.isClosed; 
         menuData = res.menu || []; 
@@ -1001,11 +1012,14 @@
     function closeAdModal() {
       document.getElementById('ad-modal').classList.add('hidden');
       
-      // 在登入成功且關閉廣告後，檢查是否需要觸發首次導覽
       const adminBtn = document.getElementById('admin-entry-btn');
       if (!adminBtn.classList.contains('hidden')) {
-        if (!localStorage.getItem('admin_tour_seen_' + currentUsername)) {
-          setTimeout(() => startAdminTour(true), 300);
+        if (!window.currentUserHasSeenTour) {
+          if (window.isSystemDataLoaded) {
+            setTimeout(() => startAdminTour(true), 300);
+          } else {
+            window.pendingAdminTour = true;
+          }
         }
       }
     }
@@ -1028,19 +1042,25 @@
         const intro = introJs();
         let steps = [];
 
+        // 幫 admin-tab 容器加上 id 以便定位
+        const tabsContainer = document.querySelector('.bg-white.border-b.flex-none.z-10');
+        if(tabsContainer && !tabsContainer.id) tabsContainer.id = 'admin-tabs-container';
+
         if (isFirstTime) {
             steps.push({
                 element: '#admin-entry-btn',
                 title: "👋 歡迎成為管理員",
-                intro: "這是你的專屬入口！<br>點擊這裡可以進入後台管理系統，我們接著來看看後台有哪些功能吧！",
-                position: 'bottom'
+                intro: "這是你的專屬入口！<br>點擊「開始導覽」，我將帶你直接進入後台，認識各項管理功能！",
+                position: 'bottom-right-aligned'
             });
         }
 
         steps = steps.concat([
             {
+                element: '#admin-tabs-container',
                 title: "🔧 後台管理樞紐",
-                intro: "這裡是你管理整個點餐系統的地方。<br>上方的分頁可以切換不同的管理功能。"
+                intro: "這裡是你管理整個點餐系統的地方。<br>左右滑動上方的分頁，可以切換不同的管理功能。",
+                position: 'bottom'
             },
             {
                 element: '#tab-btn-orders',
@@ -1102,25 +1122,38 @@
         });
 
         intro.onbeforechange(function(targetElement) {
+            // First step in first time tour is 0. Second step is 1.
             if (isFirstTime && this._currentStep === 1) {
                 showAdminPanel();
             }
             if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
                 // 強制滑動到該 Tab，避免在手機版上看不到
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const container = targetElement.parentElement;
+                if(container) {
+                    const scrollLeft = targetElement.offsetLeft - (container.offsetWidth / 2) + (targetElement.offsetWidth / 2);
+                    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                }
                 const tabId = targetElement.id.replace('tab-btn-', '');
                 switchAdminTab(tabId);
             }
         });
 
         intro.oncomplete(function() {
-            localStorage.setItem('admin_tour_seen_' + currentUsername, 'true');
             if (isFirstTime) {
+                window.currentUserHasSeenTour = true;
+                runGas('markTourSeen', () => {}, showGasError, currentUsername);
                 switchAdminTab('orders'); // 導覽結束後回到預設的訂單頁面
             }
         });
         
         intro.start();
+        // 修正首次導覽按鈕名稱
+        if (isFirstTime) {
+            setTimeout(() => {
+                const nextBtn = document.querySelector('.introjs-nextbutton');
+                if(nextBtn && intro._currentStep === 0) nextBtn.innerHTML = '開始導覽 ➔';
+            }, 100);
+        }
     }
     
     function switchAdminTab(tab) {
