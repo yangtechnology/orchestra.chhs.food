@@ -202,6 +202,7 @@
           <button onclick="switchAdminTab('history')" id="tab-btn-history" class="px-4 py-3 text-gray-500 whitespace-nowrap">切換餐廳</button>
           <button onclick="switchAdminTab('direct')" id="tab-btn-direct" class="px-4 py-3 text-gray-500 whitespace-nowrap">管理者代訂</button>
           <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-4 py-3 text-gray-500 whitespace-nowrap">系統設定</button>
+          <button onclick="switchAdminTab('users')" id="tab-btn-users" class="px-4 py-3 text-gray-500 whitespace-nowrap">人員管理</button>
         </div>
       </div>
       
@@ -213,6 +214,13 @@
                 <button onclick="confirmResetOrders()" class="bg-red-600 text-white px-4 py-2 rounded shadow text-sm hover:bg-red-700 font-bold">⚠️ 清空紀錄</button>
             </div>
             <div id="admin-order-list" class="space-y-2 pb-10"></div>
+          </div>
+  
+          <div id="admin-tab-users" class="hidden space-y-4">
+            <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                <input type="text" id="user-search-input" oninput="filterAdminUsers()" placeholder="🔍 搜尋姓名、年級..." class="w-full p-2 border rounded-lg outline-none">
+            </div>
+            <div id="admin-user-list" class="space-y-2 pb-10 text-sm"></div>
           </div>
   
           <div id="admin-tab-summary" class="hidden space-y-4">
@@ -888,7 +896,7 @@
     function closeAdminPanel() { document.getElementById('admin-section').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); }
     
     function switchAdminTab(tab) {
-      ['orders', 'summary', 'menu', 'history', 'direct', 'settings'].forEach(t => { 
+      ['orders', 'summary', 'menu', 'history', 'direct', 'settings', 'users'].forEach(t => { 
         document.getElementById(`admin-tab-${t}`).classList.add('hidden'); 
         document.getElementById(`tab-btn-${t}`).className = "px-4 py-3 text-gray-500 whitespace-nowrap"; 
       });
@@ -901,6 +909,7 @@
       if(tab==='history') loadHistorySheets();
       if(tab==='direct') initProxyOrder();
       if(tab==='settings') loadAdminSettings();
+      if(tab==='users') loadAdminUsers();
     }
 
     function loadAdminSettings() {
@@ -1238,6 +1247,68 @@
         }, showGasError, { username: proxyUser, total: total, items: proxyCart, isAdminProxy: true, restaurantName: currentRestaurant }); 
       }, isSystemClosed); 
     }
+    let allAdminUsers = [];
+    function loadAdminUsers() {
+      const c = document.getElementById('admin-user-list');
+      c.innerHTML = '<p class="text-center p-8 text-gray-500">載入名單中...</p>';
+      runGas('getAdminUsers', res => {
+        if (res.error) { c.innerHTML = `<p class="text-red-500">${res.message}</p>`; return; }
+        allAdminUsers = res.users || [];
+        renderAdminUsers();
+      }, showGasError);
+    }
+    
+    function renderAdminUsers(filterText = '') {
+      const c = document.getElementById('admin-user-list');
+      let filtered = allAdminUsers;
+      if (filterText) {
+        const lower = filterText.toLowerCase();
+        filtered = allAdminUsers.filter(u => u.username.toLowerCase().includes(lower) || u.grade.includes(lower));
+      }
+      
+      if (filtered.length === 0) {
+        c.innerHTML = '<p class="text-center text-gray-500">無符合的使用者</p>';
+        return;
+      }
+      
+      c.innerHTML = filtered.map(u => {
+        const gradeText = u.grade ? `高${u.grade}` : '未填寫';
+        const gradText = u.gradDateStr ? `${u.gradDateStr}畢業` : '未知';
+        const adminBtn = u.isAdmin 
+          ? `<button onclick="toggleAdminRole(${u.rowIndex}, true)" class="px-3 py-1 bg-pink-100 text-pink-700 font-bold rounded-lg border border-pink-300 text-xs shadow-sm whitespace-nowrap">✅ 管理員</button>`
+          : `<button onclick="toggleAdminRole(${u.rowIndex}, false)" class="px-3 py-1 bg-gray-100 text-gray-500 font-bold rounded-lg border border-gray-300 text-xs shadow-sm whitespace-nowrap">設為管理員</button>`;
+          
+        return `
+          <div class="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+            <div>
+              <div class="font-bold text-gray-800 text-base">${u.username}</div>
+              <div class="text-xs text-gray-500">${gradeText} (${gradText})</div>
+            </div>
+            <div>${adminBtn}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function filterAdminUsers() {
+      const t = document.getElementById('user-search-input').value.trim();
+      renderAdminUsers(t);
+    }
+    
+    function toggleAdminRole(rowIndex, currentStatus) {
+      const actionText = currentStatus ? "拔除" : "設為";
+      showConfirmModal(`確定要${actionText}該使用者的管理員權限嗎？`, () => {
+        runGas('toggleAdminStatus', res => {
+          if (res.success) {
+            showAlertModal(`權限修改成功！`);
+            loadAdminUsers();
+          } else {
+            showAlertModal(res.message);
+          }
+        }, showGasError, rowIndex, !currentStatus);
+      }, true);
+    }
+
   </script>
 </body>
 </html>
