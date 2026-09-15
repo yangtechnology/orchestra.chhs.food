@@ -345,23 +345,29 @@
                   <p class="text-gray-600 font-medium">總計應收金額</p>
                   <p id="admin-grand-total" class="text-4xl font-extrabold text-pink-700 mt-2">NT$ 0</p>
               </div>
-              <table class="w-full text-left text-sm bg-white border rounded-lg"><tbody id="admin-summary-list" class="divide-y divide-gray-100"></tbody></table>
+                  <table class="w-full text-left text-sm bg-white border rounded-lg"><tbody id="admin-summary-list" class="divide-y divide-gray-100"></tbody></table>
             </div>
           </div>
   
           <div id="admin-tab-menu" class="hidden space-y-4 pb-20">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4">
+              <label class="block font-bold text-gray-700 text-sm mb-1">目前編輯的餐廳名稱</label>
+              <div class="flex gap-2">
+                <input type="text" id="menu-restaurant-name" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 outline-none font-bold" placeholder="輸入餐廳名稱...">
+                <button onclick="createNewRestaurantSheet()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 whitespace-nowrap">新增餐廳</button>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">若是全新餐廳，輸入名稱後請點擊「新增餐廳」。若要儲存菜單項目，請點擊最下方按鈕。</p>
+            </div>
+            
             <div class="flex justify-between items-center mb-2">
-              <h3 class="font-bold text-gray-700 text-lg">編輯清單</h3>
-              <button onclick="openMenuEditorModal(-1)" class="bg-pink-600 text-white px-3 py-1.5 rounded-lg shadow text-sm font-bold hover:bg-pink-700">+ 新增品項</button>
+              <h3 class="font-bold text-gray-700 text-lg">菜單項目</h3>
+              <button onclick="openMenuEditorModal(-1)" class="bg-pink-600 text-white px-3 py-1.5 rounded-lg shadow text-sm font-bold hover:bg-pink-700">+ 新增餐點</button>
             </div>
             <div id="admin-menu-list-container" class="space-y-3"></div>
             
             <div class="space-y-3 mt-6">
               <button id="save-menu-server-btn" onclick="saveMenuToServer()" class="w-full py-4 bg-pink-500 text-white font-bold rounded-xl shadow-lg hover:bg-pink-600 transition flex justify-center items-center gap-2">
-                ☁️ 更新目前菜單 (Menu 分頁)
-              </button>
-              <button id="save-as-history-btn" onclick="saveCurrentMenuAsNewSheet()" class="w-full py-4 bg-indigo-500 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-600 transition flex justify-center items-center gap-2">
-                📂 將此餐廳存入歷史 (新增試算表分頁)
+                💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)
               </button>
             </div>
           </div>
@@ -1210,11 +1216,7 @@
           </div>
           <div>
               <label class="block font-bold text-gray-700 mb-1">跑馬燈公告</label>
-              <input type="text" id="set-ann" value="${res.ann}" placeholder="例如：本週五前請完成點餐喔！" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
-          </div>
-          <div>
-              <label class="block font-bold text-gray-700 mb-1">午餐店名 (將顯示於前台標題)</label>
-              <input type="text" id="set-restaurant" value="${res.restaurantName}" placeholder="例如: 麥當勞" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
+              <input type="text" id="set-ann" value="${res.ann}" placeholder="例如：請於午休前完成點餐！" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
           </div>
           <button onclick="saveAdminSettingsUI()" class="w-full py-3 mt-6 bg-pink-600 text-white font-bold rounded-lg shadow-md hover:bg-pink-700 transition">💾 儲存所有設定</button>
         `;
@@ -1224,8 +1226,7 @@
     function saveAdminSettingsUI() {
       const data = {
         cutoff: document.getElementById('set-cutoff').value,
-        ann: document.getElementById('set-ann').value,
-        restaurantName: document.getElementById('set-restaurant').value
+        ann: document.getElementById('set-ann').value
       };
       const btn = document.querySelector('#admin-settings-container button');
       btn.disabled = true; btn.textContent = "儲存中...";
