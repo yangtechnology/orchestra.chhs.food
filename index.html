@@ -1490,35 +1490,27 @@
         document.getElementById('edit-item-name').value = item.name;
         document.getElementById('edit-item-price').value = item.price;
         document.getElementById('edit-item-image').value = item.image || "";
-        currentEditOptions = item.options ? JSON.parse(JSON.stringify(item.options)) : {};
+        currentEditOptions = {};
+        if (item.options) {
+           const opts = JSON.parse(JSON.stringify(item.options));
+           for (let k in opts) {
+              if (Array.isArray(opts[k])) { currentEditOptions[k] = { type: 'radio', choices: opts[k] }; } else { currentEditOptions[k] = opts[k]; }
+           }
+        }
       }
-      renderEditorOptions();
+      renderOptionsBuilderUI();
       document.getElementById('menu-editor-modal').classList.remove('hidden');
     }
 
     function closeMenuEditorModal() { document.getElementById('menu-editor-modal').classList.add('hidden'); }
 
-    function addOptionToEditor() {
-      const g = document.getElementById('new-opt-group').value.trim();
-      const n = document.getElementById('new-opt-name').value.trim();
-      const p = parseInt(document.getElementById('new-opt-price').value.trim()) || 0;
-      if(!g || !n) { showAlertModal("請輸入群組與選項名稱！"); return; }
-      if(!currentEditOptions[g]) currentEditOptions[g] = [];
-      currentEditOptions[g].push({name: n, price: p});
-      document.getElementById('new-opt-name').value = ""; document.getElementById('new-opt-price').value = "";
-      renderEditorOptions();
-    }
+    function renderOptionsBuilderUI() {
+      const container = document.getElementById('options-builder-container'); const keys = Object.keys(currentEditOptions);
+      if (keys.length === 0) { container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded border border-dashed">尚未設定任何客製選項</p>'; return; }
 
-    function removeOptionFromEditor(g, idx) {
-      currentEditOptions[g].splice(idx, 1);
-      if(currentEditOptions[g].length === 0) delete currentEditOptions[g];
-      renderEditorOptions();
-    }
-
-    function renderEditorOptions() {
-      const div = document.getElementById('editor-options-list');
-      if(Object.keys(currentEditOptions).length === 0) { div.innerHTML = '<p class="text-xs text-gray-400">目前無選項</p>'; return; }
       let html = '';
+      keys.forEach(groupName => {
+        const grp = currentEditOptions[groupName]; const gType = grp.type || 'radio';
         html += `
           <div class="border border-gray-200 p-3 rounded-lg bg-white relative shadow-sm">
             <div class="flex justify-between items-center mb-2">
