@@ -350,13 +350,12 @@
           </div>
   
           <div id="admin-tab-menu" class="hidden space-y-4 pb-20">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4">
-              <label class="block font-bold text-gray-700 text-sm mb-1">目前編輯的餐廳名稱</label>
-              <div class="flex gap-2">
-                <input type="text" id="menu-restaurant-name" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 outline-none font-bold" placeholder="輸入餐廳名稱...">
-                <button onclick="createNewRestaurantSheet()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 whitespace-nowrap">新增餐廳</button>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 mb-4 flex justify-between items-center">
+              <div>
+                <label class="block font-bold text-gray-500 text-xs mb-1">目前編輯的餐廳</label>
+                <div id="current-edit-restaurant-name" class="text-xl font-bold text-gray-800">載入中...</div>
               </div>
-              <p class="text-xs text-gray-500 mt-2">若是全新餐廳，輸入名稱後請點擊「新增餐廳」。若要儲存菜單項目，請點擊最下方按鈕。</p>
+              <button onclick="openSwitchRestaurantModal()" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-bold shadow-sm hover:bg-indigo-200 whitespace-nowrap">🔄 切換餐廳</button>
             </div>
             
             <div class="flex justify-between items-center mb-2">
@@ -373,11 +372,15 @@
           </div>
   
           <div id="admin-tab-history" class="hidden space-y-6 pb-20">
+            <div class="bg-indigo-50 border border-indigo-200 p-5 rounded-xl text-center shadow-sm">
+                <p class="text-indigo-600 font-bold text-sm">目前今日餐廳</p>
+                <h2 id="history-current-restaurant" class="text-3xl font-black text-indigo-900 mt-1">載入中...</h2>
+            </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-pink-200">
               <h3 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">🔄 切換歷史餐廳</h3>
               <p class="text-sm text-gray-600 mb-6">選擇下方的歷史紀錄，系統將會直接載入該餐廳的菜單。<br><span class="text-red-500 font-bold">⚠️ 注意：載入後將會直接覆蓋掉目前的菜單喔！</span></p>
               <div id="history-sheet-list" class="space-y-3">
-                <p class="text-center text-gray-400 py-4">讀取分頁中...</p>
+                <p class="text-center text-gray-400 py-4">讀取中...</p>
               </div>
             </div>
           </div>
@@ -410,6 +413,28 @@
         </div>
       </div>
   </section>
+
+  <!-- Switch Restaurant Modal -->
+  <div id="switch-restaurant-modal" class="modal-overlay hidden z-[10000]">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm flex flex-col p-6 text-center space-y-6">
+      <h2 class="text-2xl font-black text-gray-800">切換餐廳</h2>
+      <p class="text-gray-600 font-medium">請選擇要使用歷史餐廳，還是建立全新的餐廳？</p>
+      
+      <div id="new-restaurant-input-area" class="hidden space-y-3">
+        <input type="text" id="new-restaurant-name" class="w-full p-3 border-2 border-green-200 rounded-lg text-center font-bold focus:ring-2 focus:ring-green-400 outline-none" placeholder="請輸入新餐廳名稱">
+        <div class="flex gap-2">
+           <button onclick="document.getElementById('new-restaurant-input-area').classList.add('hidden')" class="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300">取消</button>
+           <button onclick="confirmNewRestaurant()" class="flex-1 py-3 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700">確認建立</button>
+        </div>
+      </div>
+      
+      <div id="switch-restaurant-buttons" class="space-y-3">
+        <button onclick="document.getElementById('new-restaurant-input-area').classList.remove('hidden')" class="w-full py-4 bg-green-50 text-green-700 border-2 border-green-200 font-bold rounded-xl hover:bg-green-100 transition">➕ 建立新餐廳</button>
+        <button onclick="goToHistoryTab()" class="w-full py-4 bg-indigo-50 text-indigo-700 border-2 border-indigo-200 font-bold rounded-xl hover:bg-indigo-100 transition">📂 選擇歷史餐廳</button>
+        <button onclick="closeSwitchRestaurantModal()" class="w-full py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 mt-2">關閉</button>
+      </div>
+    </div>
+  </div>
 
   <div id="menu-editor-modal" class="modal-overlay hidden z-[10000]">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col max-h-[95vh] relative">
@@ -1245,16 +1270,23 @@
 
     function loadHistorySheets() {
       const container = document.getElementById('history-sheet-list');
-      container.innerHTML = '<p class="text-center text-gray-400 py-4">讀取分頁中...</p>';
+      const currentLabel = document.getElementById('history-current-restaurant');
+      if(currentLabel) currentLabel.textContent = currentRestaurantName || '尚未設定';
+      
+      container.innerHTML = '<p class="text-center text-gray-400 py-4">讀取中...</p>';
       runGas('getHistorySheets', res => {
         if (res.success) {
           if (res.sheets.length === 0) {
-            container.innerHTML = '<p class="text-center text-gray-500 py-4">找不到其他餐廳分頁</p>';
+            container.innerHTML = '<p class="text-center text-gray-500 py-4">找無歷史紀錄</p>';
             return;
           }
-          container.innerHTML = res.sheets.map(sheet => `
-            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:border-pink-300 transition">
-              <span class="font-bold text-gray-700">${sheet}</span>
+          // 過濾掉系統表
+          const skip = ['Menu', 'SystemSettings', 'Orders', 'Users', 'Logs'];
+          const historySheets = res.sheets.filter(s => !skip.includes(s));
+          
+          container.innerHTML = historySheets.map(sheet => `
+            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:border-pink-300 transition ${sheet === currentRestaurantName ? 'ring-2 ring-indigo-400 bg-indigo-50' : ''}">
+              <span class="font-bold text-gray-700">${sheet} ${sheet === currentRestaurantName ? '<span class="text-xs text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded ml-2">使用中</span>' : ''}</span>
               <button onclick="confirmImportHistory('${sheet}')" class="px-4 py-2 bg-pink-100 text-pink-700 font-bold rounded hover:bg-pink-200 transition">選擇此餐廳</button>
             </div>
           `).join('');
@@ -1265,20 +1297,63 @@
     }
 
     function confirmImportHistory(sheetName) {
-      showConfirmModal(`確定要將「${sheetName}」設為本次菜單嗎？\n(這將會覆蓋掉目前正在使用的菜單內容喔！)`, () => {
+      showConfirmModal(`確定要將「${sheetName}」設為今日餐廳嗎？\n(這將會覆蓋目前的菜單內容！)`, () => {
         const container = document.getElementById('history-sheet-list');
-        container.innerHTML = '<div class="text-center py-4"><div class="loading-spinner border-4 border-gray-200 border-t-pink-500 inline-block mb-2"></div><p class="text-pink-600 font-bold">正在載入菜單，請稍候...</p></div>';
+        container.innerHTML = '<div class="text-center py-4"><div class="loading-spinner border-4 border-gray-200 border-t-pink-500 inline-block mb-2"></div><p class="text-pink-600 font-bold">載入中，請稍候...</p></div>';
         
+        // 1. 先呼叫後端覆蓋 Menu 表
         runGas('importHistoryMenu', res => {
           if (res.success) {
-            showAlertModal(res.message);
-            loadHistorySheets(); 
+            // 2. 成功後，更新 SystemSettings 的餐廳名稱
+            runGas('getAdminSettings', settings => {
+                if(settings.error) { showGasError(settings); return; }
+                const payload = { cutoff: settings.cutoff, ann: settings.ann, restaurantName: sheetName };
+                runGas('saveSystemSettings', sysRes => {
+                    if(sysRes.success) {
+                        currentRestaurantName = sheetName;
+                        document.getElementById('restaurant-name-display').textContent = sheetName;
+                        showAlertModal(res.message);
+                        switchAdminTab('menu'); // 自動跳回菜單編輯頁面
+                    } else {
+                        showAlertModal(sysRes.message);
+                        loadHistorySheets();
+                    }
+                }, showGasError, payload);
+            }, showGasError);
           } else {
             showAlertModal(res.message);
             loadHistorySheets();
           }
         }, showGasError, sheetName);
       }, true);
+    }
+
+    function saveMenuToServer() {
+      if (!currentRestaurantName || currentRestaurantName === '尚未設定') {
+          showAlertModal("請先切換餐廳或建立新餐廳！");
+          return;
+      }
+      const btn = document.getElementById('save-menu-server-btn');
+      btn.disabled = true; btn.innerHTML = `<div class="loading-spinner border-white border-t-transparent w-5 h-5 inline-block"></div> 儲存中...`;
+      
+      // Step 1: 儲存今日 Menu
+      runGas('saveMenuData', res => {
+        if (res.success) {
+          // Step 2: 儲存為歷史紀錄 (會讀取 SystemSettings 的餐廳名稱作為工作表名稱)
+          runGas('saveCurrentMenuAsNewSheet', historyRes => {
+              btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
+              showAlertModal("儲存成功！已更新今日菜單並存入歷史紀錄。");
+              loadSystemData(); // 重新載入前台資料確保同步
+          }, () => {
+              // 就算歷史存檔失敗，菜單還是存了
+              btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
+              showAlertModal("今日菜單已更新，但寫入歷史紀錄失敗，請聯絡開發者。");
+          });
+        } else {
+          btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
+          showAlertModal(res.message); 
+        }
+      }, showGasError, adminMenuData);
     }
 
     function loadAdminOrders() {
@@ -1303,25 +1378,84 @@
     function captureSummary() { const el = document.getElementById('summary-capture-area'); const bg = el.style.backgroundColor; el.style.backgroundColor = "#fff"; html2canvas(el, { scale: 2 }).then(canvas => { el.style.backgroundColor = bg; document.getElementById('preview-img').src = canvas.toDataURL("image/png"); document.getElementById('image-preview-modal').classList.remove('hidden'); }); }
 
     let adminMenuData = []; let editingItemIndex = -1; let currentEditOptions = {};
+    // ==========================================
+    // 菜單編輯與歷史切換邏輯
+    // ==========================================
+    
+    function openSwitchRestaurantModal() {
+        document.getElementById('switch-restaurant-modal').classList.remove('hidden');
+        document.getElementById('new-restaurant-input-area').classList.add('hidden');
+        document.getElementById('new-restaurant-name').value = '';
+    }
+
+    function closeSwitchRestaurantModal() {
+        document.getElementById('switch-restaurant-modal').classList.add('hidden');
+    }
+
+    function goToHistoryTab() {
+        closeSwitchRestaurantModal();
+        switchAdminTab('history');
+    }
+
+    function confirmNewRestaurant() {
+        const newName = document.getElementById('new-restaurant-name').value.trim();
+        if (!newName) {
+            showAlertModal("請輸入餐廳名稱！");
+            return;
+        }
+        
+        const btn = document.querySelector('#new-restaurant-input-area button:last-child');
+        btn.disabled = true; btn.innerHTML = "設定中...";
+        
+        // 1. 更新 SystemSettings
+        runGas('getAdminSettings', settings => {
+            if (settings.error) { showGasError(settings); btn.disabled = false; return; }
+            const payload = { cutoff: settings.cutoff, ann: settings.ann, restaurantName: newName };
+            
+            runGas('saveSystemSettings', res => {
+                btn.disabled = false;
+                btn.innerHTML = "確認建立";
+                if(res.success) {
+                    currentRestaurantName = newName;
+                    document.getElementById('restaurant-name-display').textContent = newName;
+                    adminMenuData = []; // 清空菜單準備新增
+                    closeSwitchRestaurantModal();
+                    loadAdminMenuEditor(); // 重新渲染畫面
+                    showAlertModal(`已建立「${newName}」！\n請開始新增菜單項目，並在最後點擊下方的「儲存」按鈕。`);
+                } else {
+                    showAlertModal(res.message);
+                }
+            }, showGasError, payload);
+        }, showGasError);
+    }
 
     function loadAdminMenuEditor() {
-      document.getElementById('admin-menu-list-container').innerHTML = '<p class="text-center text-gray-400">從雲端讀取菜單中...</p>';
-      runGas('getSystemData', res => { adminMenuData = res.menu || []; renderAdminMenuList(); }, showGasError);
+      const restName = currentRestaurantName || '尚未設定';
+      const displayElem = document.getElementById('current-edit-restaurant-name');
+      if (displayElem) displayElem.textContent = restName;
+      
+      document.getElementById('admin-menu-list-container').innerHTML = '<p class="text-center text-gray-400">讀取清單中...</p>';
+      runGas('getSystemData', res => { 
+        adminMenuData = res.menu || []; 
+        currentRestaurantName = res.restaurantName; 
+        if (displayElem) displayElem.textContent = currentRestaurantName || '尚未設定';
+        renderAdminMenuList(); 
+      }, showGasError);
     }
 
     function renderAdminMenuList() {
       const listDiv = document.getElementById('admin-menu-list-container');
       const items = adminMenuData;
-      if(items.length === 0) { listDiv.innerHTML = '<div class="text-center p-8 bg-white rounded-lg border border-dashed border-gray-300 text-gray-500">目前沒有品項，點擊右上角新增吧！</div>'; return; }
+      if(items.length === 0) { listDiv.innerHTML = '<div class="text-center p-8 bg-white rounded-lg border border-dashed border-gray-300 text-gray-500">目前無品項，請點擊上方新增餐點！</div>'; return; }
 
       listDiv.innerHTML = items.map((item, idx) => {
         const optionCount = item.options ? Object.keys(item.options).length : 0;
         return `
           <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:border-pink-300 transition">
             <div class="flex items-center gap-3">
-              ${item.image ? `<img src="${item.image}" class="w-12 h-12 rounded object-cover border">` : `<div class="w-12 h-12 rounded bg-gray-100 flex items-center justify-center text-xl">🍽️</div>`}
+              ${item.image ? `<img src="${item.image}" class="w-12 h-12 rounded object-cover border">` : `<div class="w-12 h-12 rounded bg-gray-100 flex items-center justify-center text-xl">🍔</div>`}
               <div>
-                <div class="text-xs text-pink-500 font-bold">${item.category || '未分類'}</div>
+                <div class="text-xs text-pink-500 font-bold">${item.category || '無'}</div>
                 <p class="font-bold text-gray-800">${item.name}</p>
                 <div class="text-xs text-gray-500 flex gap-2">
                   <span class="text-red-500 font-bold">$${item.price}</span>
@@ -1330,8 +1464,8 @@
               </div>
             </div>
             <div class="flex gap-2">
-              <button onclick="openMenuEditorModal(${idx})" class="p-2 bg-pink-100 text-pink-700 rounded hover:bg-pink-200">✎ 編輯</button>
-              <button onclick="deleteMenuItemFromLocal(${idx})" class="p-2 bg-red-100 text-red-700 rounded hover:bg-red-200">✖ 刪除</button>
+              <button onclick="openMenuEditorModal(${idx})" class="p-2 bg-pink-100 text-pink-700 rounded hover:bg-pink-200">✏️ 編輯</button>
+              <button onclick="deleteMenuItemFromLocal(${idx})" class="p-2 bg-red-100 text-red-700 rounded hover:bg-red-200">❌ 刪除</button>
             </div>
           </div>
         `;
@@ -1341,7 +1475,7 @@
     function openMenuEditorModal(index) {
       editingItemIndex = index;
       if (index === -1) {
-        document.getElementById('editor-modal-title').textContent = "新增品項";
+        document.getElementById('editor-modal-title').textContent = "新增餐點";
         document.getElementById('edit-item-bafang').checked = false; 
         document.getElementById('edit-item-category').value = ""; 
         document.getElementById('edit-item-name').value = "";
@@ -1352,32 +1486,39 @@
         const item = adminMenuData[index];
         document.getElementById('editor-modal-title').textContent = `編輯：${item.name}`;
         document.getElementById('edit-item-bafang').checked = item.isBafangMode || false;
-        document.getElementById('edit-item-category').value = item.category || "未分類"; 
+        document.getElementById('edit-item-category').value = item.category || "無"; 
         document.getElementById('edit-item-name').value = item.name;
         document.getElementById('edit-item-price').value = item.price;
         document.getElementById('edit-item-image').value = item.image || "";
-        
-        currentEditOptions = {};
-        if (item.options) {
-           const opts = JSON.parse(JSON.stringify(item.options));
-           for (let k in opts) {
-              if (Array.isArray(opts[k])) { currentEditOptions[k] = { type: 'radio', choices: opts[k] }; } else { currentEditOptions[k] = opts[k]; }
-           }
-        }
+        currentEditOptions = item.options ? JSON.parse(JSON.stringify(item.options)) : {};
       }
-      renderOptionsBuilderUI();
+      renderEditorOptions();
       document.getElementById('menu-editor-modal').classList.remove('hidden');
     }
 
     function closeMenuEditorModal() { document.getElementById('menu-editor-modal').classList.add('hidden'); }
 
-    function renderOptionsBuilderUI() {
-      const container = document.getElementById('options-builder-container'); const keys = Object.keys(currentEditOptions);
-      if (keys.length === 0) { container.innerHTML = '<p class="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded border border-dashed">尚未設定任何客製選項</p>'; return; }
+    function addOptionToEditor() {
+      const g = document.getElementById('new-opt-group').value.trim();
+      const n = document.getElementById('new-opt-name').value.trim();
+      const p = parseInt(document.getElementById('new-opt-price').value.trim()) || 0;
+      if(!g || !n) { showAlertModal("請輸入群組與選項名稱！"); return; }
+      if(!currentEditOptions[g]) currentEditOptions[g] = [];
+      currentEditOptions[g].push({name: n, price: p});
+      document.getElementById('new-opt-name').value = ""; document.getElementById('new-opt-price').value = "";
+      renderEditorOptions();
+    }
 
+    function removeOptionFromEditor(g, idx) {
+      currentEditOptions[g].splice(idx, 1);
+      if(currentEditOptions[g].length === 0) delete currentEditOptions[g];
+      renderEditorOptions();
+    }
+
+    function renderEditorOptions() {
+      const div = document.getElementById('editor-options-list');
+      if(Object.keys(currentEditOptions).length === 0) { div.innerHTML = '<p class="text-xs text-gray-400">目前無選項</p>'; return; }
       let html = '';
-      keys.forEach(groupName => {
-        const grp = currentEditOptions[groupName]; const gType = grp.type || 'radio';
         html += `
           <div class="border border-gray-200 p-3 rounded-lg bg-white relative shadow-sm">
             <div class="flex justify-between items-center mb-2">
@@ -1465,42 +1606,6 @@
     }
 
     function deleteMenuItemFromLocal(index) { if(confirm("確定要刪除這個品項嗎？ (刪除後需點擊「儲存至雲端」才會真正生效)")) { adminMenuData.splice(index, 1); renderAdminMenuList(); } }
-
-    function saveMenuToServer() {
-      const btn = document.getElementById('save-menu-server-btn');
-      btn.disabled = true; btn.innerHTML = `<div class="loading-spinner border-white border-t-transparent w-5 h-5 inline-block"></div> 正在同步至試算表...`;
-      runGas('saveMenuData', res => {
-        btn.disabled = false; btn.innerHTML = `☁️ 更新目前菜單 (Menu 分頁)`;
-        if (res.success) { showAlertModal(res.message); loadSystemData(); } else { showAlertModal(res.message); }
-      }, showGasError, adminMenuData);
-    }
-
-    // 【新增】儲存為歷史分頁
-    function saveCurrentMenuAsNewSheet() {
-      const btn = document.getElementById('save-as-history-btn');
-      const restaurantName = document.getElementById('restaurant-name-display').textContent;
-
-      if (!restaurantName || restaurantName.includes('本日供應')) {
-        showAlertModal("請先在「系統設定」中設定正確的餐廳名稱，再進行儲存！");
-        return;
-      }
-
-      showConfirmModal(`確定要將目前的菜單儲存為新分頁「${restaurantName}」嗎？`, () => {
-        btn.disabled = true;
-        btn.innerHTML = `<div class="loading-spinner border-white border-t-transparent w-5 h-5 inline-block"></div> 正在建立分頁...`;
-
-        runGas('saveCurrentMenuAsNewSheet', res => {
-          btn.disabled = false;
-          btn.innerHTML = `📂 將此餐廳存入歷史 (新增試算表分頁)`;
-          if (res.success) {
-            showAlertModal(res.message);
-            loadHistorySheets(); // 更新歷史分頁列表
-          } else {
-            showAlertModal(res.message);
-          }
-        }, showGasError);
-      });
-    }
 
     let proxyCart = []; let proxyUser = "";
     function initProxyOrder() { proxyCart=[]; proxyUser=""; document.getElementById('proxy-username').value=""; document.getElementById('admin-direct-step-1').classList.remove('hidden'); document.getElementById('admin-direct-step-2').classList.add('hidden'); }
