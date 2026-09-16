@@ -1317,8 +1317,10 @@
                     if(sysRes.success) {
                         currentRestaurantName = sheetName;
                         document.getElementById('restaurant-name-display').textContent = sheetName;
+                        cartItems = []; updateCartUI();
+                        proxyCart = []; renderProxyCart();
                         showAlertModal(res.message);
-                        switchAdminTab('menu'); // 自動跳回菜單編輯頁面
+                        switchAdminTab('menu'); // 自動跳回菜單頁面
                     } else {
                         showAlertModal(sysRes.message);
                         loadHistorySheets();
@@ -1424,6 +1426,8 @@
                       currentRestaurantName = newName;
                       document.getElementById('restaurant-name-display').textContent = newName;
                       adminMenuData = []; // 清空菜單準備新增
+                      cartItems = []; updateCartUI();
+                      proxyCart = []; renderProxyCart();
                       closeSwitchRestaurantModal();
                       
                       const displayElem = document.getElementById('current-edit-restaurant-name');
