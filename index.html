@@ -591,6 +591,7 @@
           currentUsername = res.username;
           localStorage.setItem('app_user', u); localStorage.setItem('app_pass', p);
           document.getElementById('admin-entry-btn').classList.toggle('hidden', !res.isAdmin);
+          window.currentUserHasSeenTour = res.hasSeenTour || false;
           enterSystem(res);
         } else {
           localStorage.removeItem('app_user'); localStorage.removeItem('app_pass');
@@ -1419,16 +1420,20 @@
             runGas('saveSystemSettings', res => {
                 btn.disabled = false;
                 btn.innerHTML = "確認建立";
-                if(res.success) {
-                    currentRestaurantName = newName;
-                    document.getElementById('restaurant-name-display').textContent = newName;
-                    adminMenuData = []; // 清空菜單準備新增
-                    closeSwitchRestaurantModal();
-                    loadAdminMenuEditor(); // 重新渲染畫面
-                    showAlertModal(`已建立「${newName}」！\n請開始新增菜單項目，並在最後點擊下方的「儲存」按鈕。`);
-                } else {
-                    showAlertModal(res.message);
-                }
+                  if(res.success) {
+                      currentRestaurantName = newName;
+                      document.getElementById('restaurant-name-display').textContent = newName;
+                      adminMenuData = []; // 清空菜單準備新增
+                      closeSwitchRestaurantModal();
+                      
+                      const displayElem = document.getElementById('current-edit-restaurant-name');
+                      if (displayElem) displayElem.textContent = newName;
+                      
+                      renderAdminMenuList(); // 直接渲染本地空清單，不要重新去後端抓舊的菜單
+                      showAlertModal(`已建立「${newName}」！\n請開始新增餐點，並在最後點擊下方的「儲存」按鈕。`);
+                  } else {
+                      showAlertModal(res.message);
+                  }
             }, showGasError, payload);
         }, showGasError);
     }
