@@ -1163,11 +1163,17 @@
 
         intro.onbeforechange(function(targetElement) {
             return new Promise((resolve) => {
-                // First step in first time tour is 0. Second step is 1.
-                if (isFirstTime && this._currentStep === 1) {
+                if (targetElement && targetElement.id === 'admin-tabs-container') {
                     showAdminPanel();
+                    setTimeout(() => {
+                        window.scrollTo(0, 0);
+                        resolve();
+                    }, 100);
+                    return;
                 }
+                
                 if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
+                    showAdminPanel();
                     const container = targetElement.parentElement;
                     let delay = 0;
                     
@@ -1177,15 +1183,13 @@
                         const offsetLeft = elementRect.left - containerRect.left;
                         const targetScroll = container.scrollLeft + offsetLeft - (container.offsetWidth / 2) + (elementRect.width / 2);
                         
-                        // 改回平滑捲動 (smooth)
                         container.scrollTo({ left: targetScroll, behavior: 'smooth' });
-                        delay = 400; // 給予動畫 400 毫秒的時間完成
+                        delay = 400; 
                     }
                     
                     const tabId = targetElement.id.replace('tab-btn-', '');
                     switchAdminTab(tabId);
                     
-                    // 等待動畫完成後，再讓 Intro.js 去渲染泡泡 (使用 Promise)
                     setTimeout(resolve, delay);
                 } else {
                     resolve();
@@ -1377,7 +1381,7 @@
     }
     function captureSummary() { const el = document.getElementById('summary-capture-area'); const bg = el.style.backgroundColor; el.style.backgroundColor = "#fff"; html2canvas(el, { scale: 2 }).then(canvas => { el.style.backgroundColor = bg; document.getElementById('preview-img').src = canvas.toDataURL("image/png"); document.getElementById('image-preview-modal').classList.remove('hidden'); }); }
 
-    let adminMenuData = []; let editingItemIndex = -1; let currentEditOptions = {};
+    let adminMenuData = []; let editingItemIndex = -1; let currentEditOptions = {}; let currentRestaurantName = '';
     // ==========================================
     // 菜單編輯與歷史切換邏輯
     // ==========================================
