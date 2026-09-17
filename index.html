@@ -707,8 +707,17 @@
       document.getElementById('auth-section').classList.add('hidden'); document.getElementById('auto-login-msg').classList.add('hidden');
       document.getElementById('order-section').classList.remove('hidden'); document.getElementById('user-info-display').textContent = `嗨，${currentUsername}！`;
       
-      // 顯示推廣畫面 (每次登入或自動登入成功時)
+      // 顯示推廣畫面
       document.getElementById('ad-modal').classList.remove('hidden');
+
+      // 【優化】loginAndGetData 已把 systemData 一起帶回來，直接套用，不需再呼叫 GAS
+      const sysData = loginData.systemData;
+      if (sysData && !sysData.error) {
+        if (sysData.announcement) { document.getElementById('announcement-text').textContent = sysData.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
+        if (sysData.restaurantName) { document.getElementById('restaurant-name-display').textContent = sysData.restaurantName; currentRestaurantName = sysData.restaurantName; }
+        window.isSystemDataLoaded = true;
+        if (window.pendingAdminTour) { window.pendingAdminTour = false; setTimeout(() => startAdminTour(true), 300); }
+      }
       
       if (loginData.hasOrdered) {
         document.getElementById('already-ordered-block').classList.remove('hidden'); document.getElementById('menu-container').classList.add('hidden');
@@ -716,46 +725,56 @@
         document.getElementById('already-ordered-details').textContent = loginData.orderDetails;
         document.getElementById('already-ordered-total').textContent = `總計: NT$ ${loginData.orderTotal}`;
         
-        runGas('getSystemData', res => {
-           if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
-           if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; }
-           window.isSystemDataLoaded = true;
-           if (window.pendingAdminTour) {
-               window.pendingAdminTour = false;
-               setTimeout(() => startAdminTour(true), 300);
-           }
-        }, showGasError);
+        // fallback：若 systemData 沒有順利取回，才補一次 GAS 呼叫
+        if (!sysData || sysData.error) {
+          runGas('getSystemData', res => {
+             if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
+             if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; currentRestaurantName = res.restaurantName; }
+             window.isSystemDataLoaded = true;
+             if (window.pendingAdminTour) { window.pendingAdminTour = false; setTimeout(() => startAdminTour(true), 300); }
+          }, showGasError);
+        }
       } else {
-        document.getElementById('already-ordered-block').classList.add('hidden'); loadSystemData();
+        document.getElementById('already-ordered-block').classList.add('hidden');
+        if (sysData && !sysData.error) {
+          // 直接用已取回的資料渲染菜單，不需再呼叫 GAS
+          applySystemData(sysData);
+        } else {
+          // fallback：資料沒有順利取回時才再發一次
+          loadSystemData();
+        }
       }
+    }
+
+    // 【新增】將 systemData 套用到 UI（從 enterSystem 中抽出，讓 loadSystemData 也能共用）
+    function applySystemData(res) {
+      document.getElementById('loading-message').classList.add('hidden');
+      if (res.error) { showMessage(res.message, "bg-red-100 text-red-700"); return; }
+      isSystemClosed = res.isClosed; 
+      menuData = res.menu || [];
+
+      if (res.isClosed) {
+        const btn = document.getElementById('view-cart-btn'); btn.disabled = true; 
+        btn.innerHTML = `<span class="w-full text-center">已超過截單時間 (${res.cutoffStr})</span>`; 
+        btn.classList.replace('bg-pink-500', 'bg-gray-500');
+        document.getElementById('menu-list-grid').innerHTML = '<p class="text-center text-red-500 font-bold p-8 text-lg">目前非開放點餐時間。</p>'; 
+        document.getElementById('menu-container').classList.remove('hidden');
+        return;
+      }
+      renderMenuCards(menuData);
     }
 
     function loadSystemData() {
       document.getElementById('loading-message').classList.remove('hidden'); document.getElementById('menu-container').classList.add('hidden');
       runGas('getSystemData', res => {
         document.getElementById('loading-message').classList.add('hidden');
-        if (res.error) { showMessage(res.message, "bg-red-100 text-red-700"); return; }
         if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
-        if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; }
+        if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; currentRestaurantName = res.restaurantName; }
         
         window.isSystemDataLoaded = true;
-        if (window.pendingAdminTour) {
-            window.pendingAdminTour = false;
-            setTimeout(() => startAdminTour(true), 300);
-        }
+        if (window.pendingAdminTour) { window.pendingAdminTour = false; setTimeout(() => startAdminTour(true), 300); }
         
-        isSystemClosed = res.isClosed; 
-        menuData = res.menu || []; 
-
-        if (res.isClosed) {
-          const btn = document.getElementById('view-cart-btn'); btn.disabled = true; 
-          btn.innerHTML = `<span class="w-full text-center">已超過截單時間 (${res.cutoffStr})</span>`; 
-          btn.classList.replace('bg-pink-500', 'bg-gray-500');
-          document.getElementById('menu-list-grid').innerHTML = '<p class="text-center text-red-500 font-bold p-8 text-lg">目前非開放點餐時間。</p>'; 
-          document.getElementById('menu-container').classList.remove('hidden');
-          return;
-        }
-        renderMenuCards(menuData);
+        applySystemData(res);
       }, showGasError);
     }
 
@@ -1316,27 +1335,15 @@
         const container = document.getElementById('history-sheet-list');
         container.innerHTML = '<div class="text-center py-4"><div class="loading-spinner border-4 border-gray-200 border-t-pink-500 inline-block mb-2"></div><p class="text-pink-600 font-bold">載入中，請稍候...</p></div>';
         
-        // 1. 先呼叫後端覆蓋 Menu 表
+        // 【優化】importHistoryMenu 後端已同步更新 B4（餐廳名稱），只需一次呼叫
         runGas('importHistoryMenu', res => {
           if (res.success) {
-            // 2. 成功後，更新 SystemSettings 的餐廳名稱
-            runGas('getAdminSettings', settings => {
-                if(settings.error) { showGasError(settings); return; }
-                const payload = { cutoff: settings.cutoff, ann: settings.ann, restaurantName: sheetName };
-                runGas('saveSystemSettings', sysRes => {
-                    if(sysRes.success) {
-                        currentRestaurantName = sheetName;
-                        document.getElementById('restaurant-name-display').textContent = sheetName;
-                        cartItems = []; updateCartUI();
-                        proxyCart = []; renderProxyCart();
-                        showAlertModal(res.message);
-                        switchAdminTab('menu'); // 自動跳回菜單頁面
-                    } else {
-                        showAlertModal(sysRes.message);
-                        loadHistorySheets();
-                    }
-                }, showGasError, payload);
-            }, showGasError);
+            currentRestaurantName = sheetName;
+            document.getElementById('restaurant-name-display').textContent = sheetName;
+            cartItems = []; updateCartUI();
+            proxyCart = []; renderProxyCart();
+            showAlertModal(res.message);
+            switchAdminTab('menu');
           } else {
             showAlertModal(res.message);
             loadHistorySheets();
@@ -1353,22 +1360,14 @@
       const btn = document.getElementById('save-menu-server-btn');
       btn.disabled = true; btn.innerHTML = `<div class="loading-spinner border-white border-t-transparent w-5 h-5 inline-block"></div> 儲存中...`;
       
-      // Step 1: 儲存今日 Menu
-      runGas('saveMenuData', res => {
+      // 【優化】saveMenuAndHistory 在後端一次完成「儲存今日菜單」+「寫歷史紀錄」
+      runGas('saveMenuAndHistory', res => {
+        btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
         if (res.success) {
-          // Step 2: 儲存為歷史紀錄 (會讀取 SystemSettings 的餐廳名稱作為工作表名稱)
-          runGas('saveCurrentMenuAsNewSheet', historyRes => {
-              btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
-              showAlertModal("儲存成功！已更新今日菜單並存入歷史紀錄。");
-              loadSystemData(); // 重新載入前台資料確保同步
-          }, () => {
-              // 就算歷史存檔失敗，菜單還是存了
-              btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
-              showAlertModal("今日菜單已更新，但寫入歷史紀錄失敗，請聯絡開發者。");
-          });
+          showAlertModal(res.message);
+          loadSystemData();
         } else {
-          btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
-          showAlertModal(res.message); 
+          showAlertModal(res.message);
         }
       }, showGasError, adminMenuData);
     }
@@ -1424,32 +1423,27 @@
         const btn = document.querySelector('#new-restaurant-input-area button:last-child');
         btn.disabled = true; btn.innerHTML = "設定中...";
         
-        // 1. 更新 SystemSettings
-        runGas('getAdminSettings', settings => {
-            if (settings.error) { showGasError(settings); btn.disabled = false; return; }
-            const payload = { cutoff: settings.cutoff, ann: settings.ann, restaurantName: newName };
-            
-            runGas('saveSystemSettings', res => {
-                btn.disabled = false;
-                btn.innerHTML = "確認建立";
-                  if(res.success) {
-                      currentRestaurantName = newName;
-                      document.getElementById('restaurant-name-display').textContent = newName;
-                      adminMenuData = []; // 清空菜單準備新增
-                      cartItems = []; updateCartUI();
-                      proxyCart = []; renderProxyCart();
-                      closeSwitchRestaurantModal();
-                      
-                      const displayElem = document.getElementById('current-edit-restaurant-name');
-                      if (displayElem) displayElem.textContent = newName;
-                      
-                      renderAdminMenuList(); // 直接渲染本地空清單，不要重新去後端抓舊的菜單
-                      showAlertModal(`已建立「${newName}」！\n請開始新增餐點，並在最後點擊下方的「儲存」按鈕。`);
-                  } else {
-                      showAlertModal(res.message);
-                  }
-            }, showGasError, payload);
-        }, showGasError);
+        // 【優化】改用 setRestaurantName，只需一次呼叫直接更新 B4，不需要先讀再寫
+        runGas('setRestaurantName', res => {
+            btn.disabled = false;
+            btn.innerHTML = "確認建立";
+            if(res.success) {
+                currentRestaurantName = newName;
+                document.getElementById('restaurant-name-display').textContent = newName;
+                adminMenuData = [];
+                cartItems = []; updateCartUI();
+                proxyCart = []; renderProxyCart();
+                closeSwitchRestaurantModal();
+                
+                const displayElem = document.getElementById('current-edit-restaurant-name');
+                if (displayElem) displayElem.textContent = newName;
+                
+                renderAdminMenuList();
+                showAlertModal(`已建立「${newName}」！\n請開始新增餐點，並在最後點擊下方的「儲存」按鈕。`);
+            } else {
+                showAlertModal(res.message);
+            }
+        }, showGasError, newName);
     }
 
     function loadAdminMenuEditor() {
