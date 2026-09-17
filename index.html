@@ -472,25 +472,34 @@
   <script>
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5lzeKHGHkFI58bDajyOuwSRWPg-Zbz1ksFFqM0jp-3bpPAaduzTvilBqPgy3lVZuE/exec'; 
 
+    // 【優化】加入 retry 機制：網路錯誤時自動等 1.5 秒後重試一次
     function runGas(funcName, onSuccess, onFail, ...args) {
-        fetch(GAS_WEB_APP_URL, {
-            redirect: "follow",
-            method: 'POST',
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: funcName, args: args })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error && data.message && !data.hasOwnProperty('isClosed')) {
-                if (onFail) onFail(new Error(data.message));
-            } else {
-                onSuccess(data);
-            }
-        })
-        .catch(err => {
-            console.error("API 請求錯誤:", err);
-            if (onFail) onFail(err);
-        });
+        const attempt = (retriesLeft) => {
+            fetch(GAS_WEB_APP_URL, {
+                redirect: "follow",
+                method: 'POST',
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: funcName, args: args })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error && data.message && !data.hasOwnProperty('isClosed')) {
+                    if (onFail) onFail(new Error(data.message));
+                } else {
+                    onSuccess(data);
+                }
+            })
+            .catch(err => {
+                if (retriesLeft > 0) {
+                    console.warn(`[GAS] 網路錯誤，1.5 秒後自動重試 (${funcName})...`, err);
+                    setTimeout(() => attempt(retriesLeft - 1), 1500);
+                } else {
+                    console.error("[GAS] 重試後仍然失敗:", err);
+                    if (onFail) onFail(err);
+                }
+            });
+        };
+        attempt(1); // 最多重試 1 次
     }
 
     function createSakura() {
@@ -585,14 +594,15 @@
 
       if(e){ document.getElementById('login-btn').textContent = '驗證中...'; document.getElementById('login-btn').disabled=true; }
       
-      runGas('checkUserLogin', res => {
+      // 【優化】改用 loginAndGetData，一次呼叫同時取得登入結果 + 系統資料
+      runGas('loginAndGetData', res => {
         if(e){ document.getElementById('login-btn').textContent = '登入系統'; document.getElementById('login-btn').disabled=false; }
         if(res.success){
           currentUsername = res.username;
           localStorage.setItem('app_user', u); localStorage.setItem('app_pass', p);
           document.getElementById('admin-entry-btn').classList.toggle('hidden', !res.isAdmin);
           window.currentUserHasSeenTour = res.hasSeenTour || false;
-          enterSystem(res);
+          enterSystem(res); // res 內已包含 res.systemData
         } else {
           localStorage.removeItem('app_user'); localStorage.removeItem('app_pass');
           document.getElementById('auto-login-msg').classList.add('hidden');
