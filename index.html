@@ -189,7 +189,7 @@
       </div>
       
       <div class="p-4 flex-grow overflow-y-auto bg-gray-50 space-y-4" id="cart-page-list">
-        </div>
+      </div>
       
       <div class="p-6 bg-white border-t flex-shrink-0 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] sm:rounded-b-xl">
         <div class="flex justify-between items-center text-xl font-bold mb-4 text-gray-800">
@@ -298,7 +298,14 @@
   <section id="admin-section" class="hidden fixed inset-0 w-full h-full bg-gray-100 z-50 flex flex-col">
       <div class="bg-white shadow-sm p-4 flex-none z-10 border-b">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-          <h2 class="text-xl sm:text-2xl font-bold text-pink-700 flex items-center gap-2">🔧 後台管理系統</h2>
+          <div class="flex items-center gap-3">
+            <h2 class="text-xl sm:text-2xl font-bold text-pink-700 flex items-center gap-2">🔧 後台管理系統</h2>
+            <!-- 【新增】SWR 背景同步狀態呼吸燈 -->
+            <div id="bg-sync-indicator" onclick="fetchAdminBundleSWR(true)" title="點擊手動強制同步最新資料" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-green-50 text-green-600 border border-green-200 cursor-pointer hover:bg-green-100 transition select-none">
+              <span id="bg-sync-dot" class="w-2 h-2 rounded-full bg-green-500"></span>
+              <span id="bg-sync-text">已同步</span>
+            </div>
+          </div>
           <div class="flex items-center gap-3">
             <button onclick="startAdminTour(false)" title="後台導覽" class="text-orange-500 hover:text-orange-600 transition p-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -309,7 +316,7 @@
           </div>
         </div>
       </div>
-      <div class="bg-white border-b flex-none z-10">
+      <div class="bg-white border-b flex-none z-10" id="admin-tabs-container">
         <div class="max-w-4xl mx-auto px-4 flex space-x-2 overflow-x-auto">
           <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="px-4 py-3 text-pink-600 border-b-2 border-pink-600 font-bold whitespace-nowrap">名單管理</button>
           <button onclick="switchAdminTab('summary')" id="tab-btn-summary" class="px-4 py-3 text-gray-500 whitespace-nowrap">訂購統計</button>
@@ -345,7 +352,7 @@
                   <p class="text-gray-600 font-medium">總計應收金額</p>
                   <p id="admin-grand-total" class="text-4xl font-extrabold text-pink-700 mt-2">NT$ 0</p>
               </div>
-                  <table class="w-full text-left text-sm bg-white border rounded-lg"><tbody id="admin-summary-list" class="divide-y divide-gray-100"></tbody></table>
+              <table class="w-full text-left text-sm bg-white border rounded-lg"><tbody id="admin-summary-list" class="divide-y divide-gray-100"></tbody></table>
             </div>
           </div>
   
@@ -472,34 +479,188 @@
   <script>
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5lzeKHGHkFI58bDajyOuwSRWPg-Zbz1ksFFqM0jp-3bpPAaduzTvilBqPgy3lVZuE/exec'; 
 
-    // 【優化】加入 retry 機制：網路錯誤時自動等 1.5 秒後重試一次
+    // =========================================
+    // 【核心升級】具備 Request Deduplication (請求合併去重) + Auto-Retry (最多重試 2 次) 的 API 引擎
+    // =========================================
+    const inFlightRequests = new Map();
+    const READ_ONLY_ACTIONS = new Set([
+      'getSystemData', 'getAdminBundle', 'getAdminOrders', 'getSalesSummary', 
+      'getHistorySheets', 'getAdminSettings', 'getAdminUsers', 'loginAndGetData'
+    ]);
+
+    function setBgSyncStatus(isSyncing) {
+      const ind = document.getElementById('bg-sync-indicator');
+      const dot = document.getElementById('bg-sync-dot');
+      const txt = document.getElementById('bg-sync-text');
+      if (!ind || !dot || !txt) return;
+      if (isSyncing) {
+        ind.className = "flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-pink-50 text-pink-600 border border-pink-200 cursor-pointer transition select-none";
+        dot.className = "w-2 h-2 rounded-full bg-pink-500 animate-ping";
+        txt.textContent = "背景同步中...";
+      } else {
+        ind.className = "flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-green-50 text-green-600 border border-green-200 cursor-pointer hover:bg-green-100 transition select-none";
+        dot.className = "w-2 h-2 rounded-full bg-green-500";
+        txt.textContent = "已同步";
+      }
+    }
+
     function runGas(funcName, onSuccess, onFail, ...args) {
-        const attempt = (retriesLeft) => {
-            fetch(GAS_WEB_APP_URL, {
-                redirect: "follow",
-                method: 'POST',
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: funcName, args: args })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.error && data.message && !data.hasOwnProperty('isClosed')) {
-                    if (onFail) onFail(new Error(data.message));
-                } else {
-                    onSuccess(data);
-                }
-            })
-            .catch(err => {
-                if (retriesLeft > 0) {
-                    console.warn(`[GAS] 網路錯誤，1.5 秒後自動重試 (${funcName})...`, err);
-                    setTimeout(() => attempt(retriesLeft - 1), 1500);
-                } else {
-                    console.error("[GAS] 重試後仍然失敗:", err);
-                    if (onFail) onFail(err);
-                }
-            });
-        };
-        attempt(1); // 最多重試 1 次
+      const reqKey = READ_ONLY_ACTIONS.has(funcName) ? `${funcName}:${JSON.stringify(args)}` : null;
+
+      // 若相同的讀取請求正在飛，直接掛載 callback 共用結果，不重複發送網路請求！
+      if (reqKey && inFlightRequests.has(reqKey)) {
+        inFlightRequests.get(reqKey).push({ onSuccess, onFail });
+        return;
+      }
+      if (reqKey) {
+        inFlightRequests.set(reqKey, [{ onSuccess, onFail }]);
+      }
+
+      const resolveAll = (data) => {
+        if (reqKey) {
+          const list = inFlightRequests.get(reqKey) || [];
+          inFlightRequests.delete(reqKey);
+          list.forEach(cb => cb.onSuccess && cb.onSuccess(data));
+        } else if (onSuccess) {
+          onSuccess(data);
+        }
+      };
+
+      const rejectAll = (err) => {
+        if (reqKey) {
+          const list = inFlightRequests.get(reqKey) || [];
+          inFlightRequests.delete(reqKey);
+          list.forEach(cb => cb.onFail && cb.onFail(err));
+        } else if (onFail) {
+          onFail(err);
+        }
+      };
+
+      const attempt = (retriesLeft, delayMs) => {
+        fetch(GAS_WEB_APP_URL, {
+          redirect: "follow",
+          method: 'POST',
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: funcName, args: args })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error && data.message && !data.hasOwnProperty('isClosed')) {
+            rejectAll(new Error(data.message));
+          } else {
+            resolveAll(data);
+          }
+        })
+        .catch(err => {
+          if (retriesLeft > 0) {
+            console.warn(`[GAS] 網路瞬斷，${delayMs}ms 後自動重試 (${funcName}, 剩餘 ${retriesLeft} 次)...`, err);
+            setTimeout(() => attempt(retriesLeft - 1, delayMs * 1.5), delayMs);
+          } else {
+            console.error("[GAS] 重試後仍然失敗:", err);
+            rejectAll(err);
+          }
+        });
+      };
+
+      attempt(2, 1200); // 最多自動無感重試 2 次
+    }
+
+    // =========================================
+    // 【核心升級】SWR 智慧快取池 (Stale-While-Revalidate)
+    // =========================================
+    const swrCache = {
+      orders: null,
+      summary: null,
+      historySheets: null,
+      settings: null,
+      users: null,
+      lastFetched: 0
+    };
+    let isMenuDirty = false; // 保護管理員正在編輯但尚未儲存的菜單草稿
+
+    function computeSummaryFromOrders(orders) {
+      const summary = {};
+      let grandTotal = 0;
+      (orders || []).forEach(order => {
+        grandTotal += parseFloat(order.total || 0);
+        const lines = String(order.items || '').split('\n');
+        lines.forEach(line => {
+          const baseMatch = line.match(/^(.+?) \((.+?)\) \(NT\$\d+\)/);
+          if (baseMatch) {
+            const name = baseMatch[1].trim();
+            const optionMatch = line.match(/\[(.*?)\]/);
+            let uniqueKey = name;
+            if (optionMatch) uniqueKey = `${name} <br><span class="text-xs text-gray-500 font-normal">[${optionMatch[1]}]</span>`;
+            if (!summary[uniqueKey]) summary[uniqueKey] = 0;
+            summary[uniqueKey] += 1;
+          }
+        });
+      });
+      const summaryList = Object.keys(summary).sort().map(key => ({ name: key, count: summary[key] }));
+      return { items: summaryList, grandTotal: grandTotal };
+    }
+
+    function fetchAdminBundleSWR(force = false) {
+      const now = Date.now();
+      // 若距離上次同步小於 15 秒且非強制刷新，不重複打擾 GAS
+      if (!force && swrCache.lastFetched > 0 && (now - swrCache.lastFetched < 15000)) {
+        return;
+      }
+      setBgSyncStatus(true);
+      runGas('getAdminBundle', res => {
+        setBgSyncStatus(false);
+        if (!res || res.error) return;
+
+        swrCache.orders = res.orders || [];
+        swrCache.summary = res.summary || computeSummaryFromOrders(swrCache.orders);
+        swrCache.historySheets = res.historySheets || [];
+        swrCache.settings = res.settings || null;
+        swrCache.users = res.users || [];
+        swrCache.lastFetched = Date.now();
+
+        if (res.systemData && !res.systemData.error) {
+          menuData = res.systemData.menu || [];
+          isSystemClosed = res.systemData.isClosed;
+          if (res.systemData.restaurantName) {
+            currentRestaurantName = res.systemData.restaurantName;
+            document.getElementById('restaurant-name-display').textContent = currentRestaurantName;
+          }
+          // 若管理員沒有正在修改菜單草稿，才自動同步後台菜單編輯器
+          if (!isMenuDirty) {
+            adminMenuData = JSON.parse(JSON.stringify(menuData));
+          }
+        }
+        allAdminUsers = swrCache.users;
+        refreshCurrentVisibleAdminTab();
+      }, err => {
+        setBgSyncStatus(false);
+        console.warn("背景同步失敗 (已保留快取畫面):", err);
+      });
+    }
+
+    function refreshCurrentVisibleAdminTab() {
+      const adminSec = document.getElementById('admin-section');
+      if (adminSec.classList.contains('hidden')) return;
+
+      if (!document.getElementById('admin-tab-orders').classList.contains('hidden')) renderAdminOrdersDOM(swrCache.orders || []);
+      if (!document.getElementById('admin-tab-summary').classList.contains('hidden')) renderAdminSummaryDOM(swrCache.summary || { items: [], grandTotal: 0 });
+      if (!document.getElementById('admin-tab-menu').classList.contains('hidden') && !isMenuDirty) {
+        const displayElem = document.getElementById('current-edit-restaurant-name');
+        if (displayElem) displayElem.textContent = currentRestaurantName || '尚未設定';
+        renderAdminMenuList();
+      }
+      if (!document.getElementById('admin-tab-history').classList.contains('hidden')) renderHistorySheetsDOM(swrCache.historySheets || []);
+      if (!document.getElementById('admin-tab-settings').classList.contains('hidden')) {
+        // 若使用者沒有正在輸入設定，才更新設定欄位
+        const activeId = document.activeElement ? document.activeElement.id : '';
+        if (activeId !== 'set-cutoff' && activeId !== 'set-ann' && swrCache.settings) {
+          renderAdminSettingsDOM(swrCache.settings);
+        }
+      }
+      if (!document.getElementById('admin-tab-users').classList.contains('hidden')) {
+        const searchVal = document.getElementById('user-search-input')?.value.trim() || '';
+        renderAdminUsers(searchVal);
+      }
     }
 
     function createSakura() {
@@ -526,7 +687,7 @@
 
     let currentUsername = null; let menuData = []; let cartItems = []; let configuringItem = null; let onConfirmCallback = null;
     let isSystemClosed = false; 
-    let editingCartIndex = -1; // 【新增】記錄目前正在編輯的購物車項目索引
+    let editingCartIndex = -1;
 
     function showConfirmModal(msg, cb, isDanger=false) {
         document.getElementById('system-modal-message').textContent = msg;
@@ -594,7 +755,6 @@
 
       if(e){ document.getElementById('login-btn').textContent = '驗證中...'; document.getElementById('login-btn').disabled=true; }
       
-      // 【優化】改用 loginAndGetData，一次呼叫同時取得登入結果 + 系統資料
       runGas('loginAndGetData', res => {
         if(e){ document.getElementById('login-btn').textContent = '登入系統'; document.getElementById('login-btn').disabled=false; }
         if(res.success){
@@ -602,7 +762,11 @@
           localStorage.setItem('app_user', u); localStorage.setItem('app_pass', p);
           document.getElementById('admin-entry-btn').classList.toggle('hidden', !res.isAdmin);
           window.currentUserHasSeenTour = res.hasSeenTour || false;
-          enterSystem(res); // res 內已包含 res.systemData
+          enterSystem(res);
+          // 【預熱快取】若是管理員登入，在背景靜默預先拉取後台大禮包，點進後台即刻 0 秒顯示！
+          if (res.isAdmin) {
+            setTimeout(() => fetchAdminBundleSWR(true), 500);
+          }
         } else {
           localStorage.removeItem('app_user'); localStorage.removeItem('app_pass');
           document.getElementById('auto-login-msg').classList.add('hidden');
@@ -657,7 +821,6 @@
        btn.disabled = true; 
        btn.textContent = isSecondTimeReset ? "寄送中..." : "修改中...";
        
-       // Backend API determines action based on presence of newPass. If newPass is empty, it means 2nd time (send email).
        runGas('resetUserPassword', res => {
           btn.disabled = false; btn.textContent = isSecondTimeReset ? "寄送密碼" : "確認修改";
           if (res.success) {
@@ -707,14 +870,14 @@
       document.getElementById('auth-section').classList.add('hidden'); document.getElementById('auto-login-msg').classList.add('hidden');
       document.getElementById('order-section').classList.remove('hidden'); document.getElementById('user-info-display').textContent = `嗨，${currentUsername}！`;
       
-      // 顯示推廣畫面
       document.getElementById('ad-modal').classList.remove('hidden');
 
-      // 【優化】loginAndGetData 已把 systemData 一起帶回來，直接套用，不需再呼叫 GAS
       const sysData = loginData.systemData;
       if (sysData && !sysData.error) {
         if (sysData.announcement) { document.getElementById('announcement-text').textContent = sysData.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
         if (sysData.restaurantName) { document.getElementById('restaurant-name-display').textContent = sysData.restaurantName; currentRestaurantName = sysData.restaurantName; }
+        menuData = sysData.menu || [];
+        if (!isMenuDirty) adminMenuData = JSON.parse(JSON.stringify(menuData));
         window.isSystemDataLoaded = true;
         if (window.pendingAdminTour) { window.pendingAdminTour = false; setTimeout(() => startAdminTour(true), 300); }
       }
@@ -725,11 +888,12 @@
         document.getElementById('already-ordered-details').textContent = loginData.orderDetails;
         document.getElementById('already-ordered-total').textContent = `總計: NT$ ${loginData.orderTotal}`;
         
-        // fallback：若 systemData 沒有順利取回，才補一次 GAS 呼叫
         if (!sysData || sysData.error) {
           runGas('getSystemData', res => {
              if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
              if (res.restaurantName) { document.getElementById('restaurant-name-display').textContent = res.restaurantName; currentRestaurantName = res.restaurantName; }
+             menuData = res.menu || [];
+             if (!isMenuDirty) adminMenuData = JSON.parse(JSON.stringify(menuData));
              window.isSystemDataLoaded = true;
              if (window.pendingAdminTour) { window.pendingAdminTour = false; setTimeout(() => startAdminTour(true), 300); }
           }, showGasError);
@@ -737,21 +901,19 @@
       } else {
         document.getElementById('already-ordered-block').classList.add('hidden');
         if (sysData && !sysData.error) {
-          // 直接用已取回的資料渲染菜單，不需再呼叫 GAS
           applySystemData(sysData);
         } else {
-          // fallback：資料沒有順利取回時才再發一次
           loadSystemData();
         }
       }
     }
 
-    // 【新增】將 systemData 套用到 UI（從 enterSystem 中抽出，讓 loadSystemData 也能共用）
     function applySystemData(res) {
       document.getElementById('loading-message').classList.add('hidden');
       if (res.error) { showMessage(res.message, "bg-red-100 text-red-700"); return; }
       isSystemClosed = res.isClosed; 
       menuData = res.menu || [];
+      if (!isMenuDirty) adminMenuData = JSON.parse(JSON.stringify(menuData));
 
       if (res.isClosed) {
         const btn = document.getElementById('view-cart-btn'); btn.disabled = true; 
@@ -764,8 +926,12 @@
       renderMenuCards(menuData);
     }
 
-    function loadSystemData() {
-      document.getElementById('loading-message').classList.remove('hidden'); document.getElementById('menu-container').classList.add('hidden');
+    function loadSystemData(silent = false) {
+      // 【SWR 優化】若已有菜單資料，不把畫面蓋起來轉圈圈，直接在背景更新
+      if (!silent && menuData.length === 0) {
+        document.getElementById('loading-message').classList.remove('hidden'); 
+        document.getElementById('menu-container').classList.add('hidden');
+      }
       runGas('getSystemData', res => {
         document.getElementById('loading-message').classList.add('hidden');
         if (res.announcement) { document.getElementById('announcement-text').textContent = res.announcement; document.getElementById('announcement-box').classList.remove('hidden'); }
@@ -824,9 +990,14 @@
       document.getElementById('menu-container').classList.remove('hidden');
     }
 
-    function handleItemClick(id) {
+    function handleItemClick(id, isProxy = false) {
       const item = menuData.find(i => String(i.id) === String(id)); if(!item) return;
-      if (item.type === '套餐' && item.options && Object.keys(item.options).length > 0) { configuringItem = item; openOptionsModal(item, false); } else { addSimpleItemToCart(item, false); }
+      if (item.type === '套餐' && item.options && Object.keys(item.options).length > 0) { 
+        configuringItem = item; 
+        openOptionsModal(item, isProxy); 
+      } else { 
+        addSimpleItemToCart(item, isProxy); 
+      }
     }
 
     function addSimpleItemToCart(item, isProxy) {
@@ -835,7 +1006,6 @@
       if(isProxy) renderProxyCart(); else { updateCartUI(); showMessage(`已加入：${item.name}`, "bg-pink-100 text-pink-700"); }
     }
 
-    // 【修改】開啟與關閉購物車 Modal 的函數
     function openCartModal() {
         const modal = document.getElementById('cart-modal');
         const content = document.getElementById('cart-modal-content');
@@ -851,7 +1021,6 @@
 
     window.removeCartItem = function(index) { cartItems.splice(index, 1); updateCartUI(); }
 
-    // 【新增】編輯購物車內的餐點
     window.editCartItem = function(index) {
         const cartItem = cartItems[index];
         const originalMenuItem = menuData.find(i => String(i.id) === String(cartItem.id));
@@ -859,16 +1028,13 @@
             showAlertModal("找不到原始餐點資料，無法編輯。");
             return;
         }
-        editingCartIndex = index; // 標記正在編輯哪一個項目
+        editingCartIndex = index;
         configuringItem = originalMenuItem;
-        openOptionsModal(originalMenuItem, false, cartItem.selections); // 傳入先前的選擇
+        openOptionsModal(originalMenuItem, false, cartItem.selections);
     }
 
-    // 【修改】重新設計購物車 UI 的更新邏輯，支援底部按鈕與 Modal 內清單
     function updateCartUI() {
       let total = 0;
-      
-      // 更新購物車清單 (Cart Modal 內)
       const listDiv = document.getElementById('cart-page-list'); 
       if(cartItems.length === 0) { 
           listDiv.innerHTML = '<div class="text-center py-10"><p class="text-gray-400 text-lg mb-2">購物車空空的耶</p><button onclick="closeCartModal()" class="text-pink-600 font-bold bg-pink-100 px-4 py-2 rounded-full">去挑選餐點</button></div>'; 
@@ -879,7 +1045,6 @@
           if (item.selections && Object.keys(item.selections).length > 0) { 
               details = `<p class="text-sm text-gray-500 mt-1">${Object.values(item.selections).join(' / ')}</p>`; 
           }
-          // 判斷是否為可以編輯的餐點 (有選項的)
           const canEdit = (item.type === '套餐' || (item.selections && Object.keys(item.selections).length > 0));
           
           return `
@@ -900,11 +1065,9 @@
         }).join('');
       }
       
-      // 更新 Cart Modal 總價與按鈕狀態
       document.getElementById('cart-modal-total').textContent = `NT$ ${total}`;
       document.getElementById('final-submit-btn').disabled = cartItems.length === 0;
 
-      // 更新主畫面懸浮底部按鈕
       const viewCartBtn = document.getElementById('view-cart-btn');
       document.getElementById('cart-item-count').textContent = `${cartItems.length} 份`;
       document.getElementById('cart-preview-total').textContent = `NT$ ${total}`;
@@ -912,7 +1075,7 @@
       if (cartItems.length === 0) {
           viewCartBtn.disabled = true;
           if (document.getElementById('cart-modal').classList.contains('hidden') === false) {
-              closeCartModal(); // 購物車空了自動關閉
+              closeCartModal();
           }
       } else {
           viewCartBtn.disabled = false;
@@ -921,7 +1084,6 @@
 
     let isProxyModeForModal = false;
     
-    // 【修改】加入 prefilledSelections 參數，用於編輯模式回填資料
     function openOptionsModal(item, isProxy, prefilledSelections = null) {
       isProxyModeForModal = isProxy; 
       const imgContainer = document.getElementById('modal-image-container'); 
@@ -942,7 +1104,6 @@
         
         const choicesArray = grp.choices || grp; 
         
-        // 抓出之前選好的值 (編輯模式)
         let prefilledValues = [];
         if (prefilledSelections && prefilledSelections[optName]) {
             const sel = prefilledSelections[optName];
@@ -951,7 +1112,6 @@
         
         const html = choicesArray.map((opt, idx) => {
           const name = Array.isArray(opt) ? opt[0] : opt; const extra = Array.isArray(opt) ? opt[1] : 0;
-          // 判斷是否要預設打勾
           const isChecked = prefilledValues.includes(name) ? 'checked' : '';
           
           return `<label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition"><input type="${inputType}" name="option-${optName}" value="${name}" data-extra="${extra}" onchange="checkModalSelections()" ${isChecked} class="form-${inputType} h-5 w-5 text-pink-600"><span class="ml-3 text-gray-700 font-medium">${name}${extra>0?` (+NT$${extra})`:''}</span></label>`;
@@ -962,11 +1122,10 @@
       checkModalSelections(); document.getElementById('options-modal').classList.remove('hidden');
     }
 
-    // 【修改】關閉選項視窗時，重置編輯狀態
     function closeOptionsModal() { 
         document.getElementById('options-modal').classList.add('hidden'); 
         configuringItem = null; 
-        editingCartIndex = -1; // 關閉時清除編輯索引
+        editingCartIndex = -1;
     }
     
     function checkModalSelections() {
@@ -996,7 +1155,6 @@
       }
     }
 
-    // 【修改】確認選項時，判斷是新增還是更新現有項目
     function confirmOptions() {
       if(!configuringItem) return; 
       let extraTotal = 0; const selections = {};
@@ -1026,11 +1184,9 @@
       const targetCart = isProxyModeForModal ? proxyCart : cartItems;
       
       if (editingCartIndex > -1 && !isProxyModeForModal) {
-          // 更新模式
           targetCart[editingCartIndex] = newItemObj;
           showMessage(`已更新：${configuringItem.name}`, "bg-pink-100 text-pink-700");
       } else {
-          // 新增模式
           targetCart.push(newItemObj);
           if(isProxyModeForModal) renderProxyCart(); else { showMessage(`已加入：${configuringItem.name}`, "bg-pink-100 text-pink-700"); }
       }
@@ -1039,7 +1195,18 @@
       closeOptionsModal();
     }
 
-    // 【修改】送出訂單邏輯適應購物車彈窗
+    // 【修復 Bug 3】送出訂單後，「已完成點餐」完整顯示客製化選項與單價明細
+    function formatItemsTextClient(items) {
+      return items.map(i => {
+        let str = `${i.name} (${i.type}) (NT$${i.price})`;
+        if (i.selections && Object.keys(i.selections).length > 0) {
+          const selStr = Object.keys(i.selections).map(k => `${k}: ${i.selections[k]}`).join(', ');
+          str += ` [${selStr}]`;
+        }
+        return str;
+      }).join('\n');
+    }
+
     function submitOrder() {
       if(cartItems.length===0) return; 
       const total = cartItems.reduce((sum, i) => sum + i.price, 0); 
@@ -1051,26 +1218,27 @@
       
       runGas('logOrderToSheet', res => {
         if(res.success){
-          closeCartModal(); // 點餐成功後關閉購物車彈窗
+          closeCartModal();
           showAlertModal("✅ 點餐成功！"); 
           
           document.getElementById('menu-container').classList.add('hidden'); 
-          document.getElementById('floating-cart-footer').classList.add('hidden'); // 隱藏浮動按鈕
+          document.getElementById('floating-cart-footer').classList.add('hidden');
           document.getElementById('already-ordered-block').classList.remove('hidden');
           
-          let detailsText = itemsForGAS.map(i => `${i.name}`).join('\n'); 
+          const detailsText = res.formattedDetails || formatItemsTextClient(itemsForGAS);
           document.getElementById('already-ordered-details').textContent = detailsText; 
           document.getElementById('already-ordered-total').textContent = `總計: NT$ ${total}`;
           cartItems = [];
+          // 同步刷新後台快取
+          fetchAdminBundleSWR(true);
         } else { 
-            // 處理餐點更改的情況：提示並重新載入
             if (res.isMenuChanged) {
                 showAlertModal(res.message);
                 btn.disabled = false; btn.textContent = "確認餐點並繳交";
-                cartItems = []; // 清空購物車
-                updateCartUI(); // 更新購物車介面
+                cartItems = [];
+                updateCartUI();
                 closeCartModal();
-                loadSystemData(); // 重新載入最新菜單
+                loadSystemData();
             } else {
                 showAlertModal(res.message); 
                 btn.disabled = false; btn.textContent = "確認餐點並繳交"; 
@@ -1095,12 +1263,13 @@
     }
 
     // ==========================================
-    // 頁籤切換與系統設定相關邏輯
+    // 【SWR 極速版】後台頁籤切換與管理邏輯
     // ==========================================
     function showAdminPanel() { 
       document.getElementById('main-container').classList.add('hidden'); 
       document.getElementById('admin-section').classList.remove('hidden'); 
       switchAdminTab('orders'); 
+      fetchAdminBundleSWR(); // 背景檢查同步
     }
     
     function closeAdminPanel() { 
@@ -1111,10 +1280,6 @@
     function startAdminTour(isFirstTime) {
         const intro = introJs();
         let steps = [];
-
-        // 幫 admin-tab 容器加上 id 以便定位
-        const tabsContainer = document.querySelector('.bg-white.border-b.flex-none.z-10');
-        if(tabsContainer && !tabsContainer.id) tabsContainer.id = 'admin-tabs-container';
 
         if (isFirstTime) {
             steps.push({
@@ -1165,7 +1330,7 @@
             {
                 element: '#tab-btn-settings',
                 title: "⚙️ 系統設定",
-                intro: "設定「截單時間」、前台「公告」與「午餐店名」。店名要正確防呆機制才有效喔！",
+                intro: "設定「截單時間」與前台「跑馬燈公告」。",
                 position: 'bottom'
             },
             {
@@ -1203,7 +1368,8 @@
                 }
                 
                 if (targetElement && targetElement.id && targetElement.id.startsWith('tab-btn-')) {
-                    showAdminPanel();
+                    document.getElementById('main-container').classList.add('hidden'); 
+                    document.getElementById('admin-section').classList.remove('hidden'); 
                     const container = targetElement.parentElement;
                     let delay = 0;
                     
@@ -1214,7 +1380,7 @@
                         const targetScroll = container.scrollLeft + offsetLeft - (container.offsetWidth / 2) + (elementRect.width / 2);
                         
                         container.scrollTo({ left: targetScroll, behavior: 'smooth' });
-                        delay = 400; 
+                        delay = 350; 
                     }
                     
                     const tabId = targetElement.id.replace('tab-btn-', '');
@@ -1231,12 +1397,11 @@
             if (isFirstTime) {
                 window.currentUserHasSeenTour = true;
                 runGas('markTourSeen', () => {}, showGasError, currentUsername);
-                switchAdminTab('orders'); // 導覽結束後回到預設的訂單頁面
+                switchAdminTab('orders');
             }
         });
         
         intro.start();
-        // 修正首次導覽按鈕名稱
         if (isFirstTime) {
             setTimeout(() => {
                 const nextBtn = document.querySelector('.introjs-nextbutton');
@@ -1262,44 +1427,79 @@
       if(tab==='users') loadAdminUsers();
     }
 
+    // --- 系統設定 (SWR) ---
+    function renderAdminSettingsDOM(res) {
+      const container = document.getElementById('admin-settings-container');
+      container.innerHTML = `
+        <h3 class="text-xl font-bold text-pink-700 mb-4 flex items-center gap-2">⚙️ 系統設定</h3>
+        <div>
+            <label class="block font-bold text-gray-700 mb-1">截單時間 (超過此時間自動關閉點餐)</label>
+            <input type="datetime-local" id="set-cutoff" value="${res.cutoff || ''}" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
+        </div>
+        <div>
+            <label class="block font-bold text-gray-700 mb-1">跑馬燈公告</label>
+            <input type="text" id="set-ann" value="${res.ann || ''}" placeholder="例如：請於午休前完成點餐！" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
+        </div>
+        <button id="save-settings-btn" onclick="saveAdminSettingsUI()" class="w-full py-3 mt-6 bg-pink-600 text-white font-bold rounded-lg shadow-md hover:bg-pink-700 transition">💾 儲存所有設定</button>
+      `;
+    }
+
     function loadAdminSettings() {
       const container = document.getElementById('admin-settings-container');
+      if (swrCache.settings) {
+        renderAdminSettingsDOM(swrCache.settings);
+        fetchAdminBundleSWR();
+        return;
+      }
       container.innerHTML = '<p class="text-center p-8 text-gray-500">載入設定中...</p>';
       runGas('getAdminSettings', res => {
         if (res.error) { showGasError(res); return; }
-        container.innerHTML = `
-          <h3 class="text-xl font-bold text-pink-700 mb-4 flex items-center gap-2">⚙️ 系統設定</h3>
-          <div>
-              <label class="block font-bold text-gray-700 mb-1">截單時間 (超過此時間自動關閉點餐)</label>
-              <input type="datetime-local" id="set-cutoff" value="${res.cutoff}" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
-          </div>
-          <div>
-              <label class="block font-bold text-gray-700 mb-1">跑馬燈公告</label>
-              <input type="text" id="set-ann" value="${res.ann}" placeholder="例如：請於午休前完成點餐！" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-pink-300 outline-none">
-          </div>
-          <button onclick="saveAdminSettingsUI()" class="w-full py-3 mt-6 bg-pink-600 text-white font-bold rounded-lg shadow-md hover:bg-pink-700 transition">💾 儲存所有設定</button>
-        `;
+        swrCache.settings = res;
+        renderAdminSettingsDOM(res);
       }, showGasError);
     }
 
     function saveAdminSettingsUI() {
       const data = {
         cutoff: document.getElementById('set-cutoff').value,
-        ann: document.getElementById('set-ann').value
+        ann: document.getElementById('set-ann').value,
+        restaurantName: currentRestaurantName // 【雙重保險】連同目前餐廳名稱一起傳送，絕不洗掉 B4
       };
-      const btn = document.querySelector('#admin-settings-container button');
+      const btn = document.getElementById('save-settings-btn');
       btn.disabled = true; btn.textContent = "儲存中...";
       
       runGas('saveSystemSettings', res => {
+        btn.disabled = false; btn.textContent = "💾 儲存所有設定";
         if(res.success) {
+            swrCache.settings = { cutoff: data.cutoff, ann: data.ann, restaurantName: currentRestaurantName };
             showAlertModal(res.message);
-            loadSystemData(); 
-            loadAdminSettings(); 
+            loadSystemData(true); 
+            fetchAdminBundleSWR(true);
         } else {
             showAlertModal(res.message);
-            btn.disabled = false; btn.textContent = "💾 儲存所有設定";
         }
       }, showGasError, data);
+    }
+
+    // --- 歷史餐廳 (SWR) ---
+    function renderHistorySheetsDOM(sheets) {
+      const container = document.getElementById('history-sheet-list');
+      const currentLabel = document.getElementById('history-current-restaurant');
+      if(currentLabel) currentLabel.textContent = currentRestaurantName || '尚未設定';
+
+      const skip = ['Menu', 'Settings', 'SystemSettings', 'Orders', 'Users', 'Logs'];
+      const historySheets = (sheets || []).filter(s => !skip.includes(s));
+
+      if (historySheets.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500 py-4">找無歷史紀錄</p>';
+        return;
+      }
+      container.innerHTML = historySheets.map(sheet => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:border-pink-300 transition ${sheet === currentRestaurantName ? 'ring-2 ring-indigo-400 bg-indigo-50' : ''}">
+          <span class="font-bold text-gray-700">${sheet} ${sheet === currentRestaurantName ? '<span class="text-xs text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded ml-2">使用中</span>' : ''}</span>
+          <button onclick="confirmImportHistory('${sheet}')" class="px-4 py-2 bg-pink-100 text-pink-700 font-bold rounded hover:bg-pink-200 transition">選擇此餐廳</button>
+        </div>
+      `).join('');
     }
 
     function loadHistorySheets() {
@@ -1307,23 +1507,16 @@
       const currentLabel = document.getElementById('history-current-restaurant');
       if(currentLabel) currentLabel.textContent = currentRestaurantName || '尚未設定';
       
+      if (swrCache.historySheets !== null) {
+        renderHistorySheetsDOM(swrCache.historySheets);
+        fetchAdminBundleSWR();
+        return;
+      }
       container.innerHTML = '<p class="text-center text-gray-400 py-4">讀取中...</p>';
       runGas('getHistorySheets', res => {
         if (res.success) {
-          if (res.sheets.length === 0) {
-            container.innerHTML = '<p class="text-center text-gray-500 py-4">找無歷史紀錄</p>';
-            return;
-          }
-          // 過濾掉系統表
-          const skip = ['Menu', 'SystemSettings', 'Orders', 'Users', 'Logs'];
-          const historySheets = res.sheets.filter(s => !skip.includes(s));
-          
-          container.innerHTML = historySheets.map(sheet => `
-            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:border-pink-300 transition ${sheet === currentRestaurantName ? 'ring-2 ring-indigo-400 bg-indigo-50' : ''}">
-              <span class="font-bold text-gray-700">${sheet} ${sheet === currentRestaurantName ? '<span class="text-xs text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded ml-2">使用中</span>' : ''}</span>
-              <button onclick="confirmImportHistory('${sheet}')" class="px-4 py-2 bg-pink-100 text-pink-700 font-bold rounded hover:bg-pink-200 transition">選擇此餐廳</button>
-            </div>
-          `).join('');
+          swrCache.historySheets = res.sheets || [];
+          renderHistorySheetsDOM(swrCache.historySheets);
         } else {
           container.innerHTML = `<p class="text-center text-red-500 py-4">${res.message}</p>`;
         }
@@ -1335,15 +1528,21 @@
         const container = document.getElementById('history-sheet-list');
         container.innerHTML = '<div class="text-center py-4"><div class="loading-spinner border-4 border-gray-200 border-t-pink-500 inline-block mb-2"></div><p class="text-pink-600 font-bold">載入中，請稍候...</p></div>';
         
-        // 【優化】importHistoryMenu 後端已同步更新 B4（餐廳名稱），只需一次呼叫
         runGas('importHistoryMenu', res => {
           if (res.success) {
+            isMenuDirty = false;
             currentRestaurantName = sheetName;
             document.getElementById('restaurant-name-display').textContent = sheetName;
+            if (res.systemData && !res.systemData.error) {
+              menuData = res.systemData.menu || [];
+              adminMenuData = JSON.parse(JSON.stringify(menuData));
+              applySystemData(res.systemData);
+            }
             cartItems = []; updateCartUI();
             proxyCart = []; renderProxyCart();
             showAlertModal(res.message);
             switchAdminTab('menu');
+            fetchAdminBundleSWR(true);
           } else {
             showAlertModal(res.message);
             loadHistorySheets();
@@ -1360,42 +1559,123 @@
       const btn = document.getElementById('save-menu-server-btn');
       btn.disabled = true; btn.innerHTML = `<div class="loading-spinner border-white border-t-transparent w-5 h-5 inline-block"></div> 儲存中...`;
       
-      // 【優化】saveMenuAndHistory 在後端一次完成「儲存今日菜單」+「寫歷史紀錄」
       runGas('saveMenuAndHistory', res => {
         btn.disabled = false; btn.innerHTML = `💾 儲存此餐廳菜單 (覆蓋今日菜單與歷史紀錄)`;
         if (res.success) {
+          isMenuDirty = false;
+          menuData = JSON.parse(JSON.stringify(adminMenuData));
+          renderMenuCards(menuData);
+          if (swrCache.historySheets && !swrCache.historySheets.includes(currentRestaurantName)) {
+            swrCache.historySheets.push(currentRestaurantName);
+          }
           showAlertModal(res.message);
-          loadSystemData();
+          fetchAdminBundleSWR(true);
         } else {
           showAlertModal(res.message);
         }
       }, showGasError, adminMenuData);
     }
 
+    // --- 名單管理 & 訂購統計 (SWR + 前端 0 秒即時統計) ---
+    function renderAdminOrdersDOM(orders) {
+      const div = document.getElementById('admin-order-list');
+      if (!orders || orders.length === 0) {
+        div.innerHTML = '<p class="text-center text-gray-500 py-6">目前無訂單紀錄</p>';
+        return;
+      }
+      div.innerHTML = orders.map(o => `
+        <div class="bg-white border p-3 rounded shadow-sm">
+          <div class="flex justify-between items-center border-b pb-2 mb-2">
+            <span class="font-bold search-target">${o.user} <span class="text-xs font-normal text-gray-400 ml-2">${o.time}</span></span>
+            <button onclick="togglePay(this, ${o.rowIndex})" class="px-3 py-1 rounded-full text-xs font-bold transition ${o.paid?'bg-pink-500 text-white':'bg-gray-200 text-gray-500'}">${o.paid?'已繳費':'未繳費'}</button>
+          </div>
+          <div class="text-sm text-gray-600 whitespace-pre-line bg-gray-50 p-2 rounded">${o.items}</div>
+          <div class="text-right font-bold text-red-600 mt-1">總計: $${o.total}</div>
+        </div>
+      `).join('');
+      filterOrders(); // 保持搜尋框篩選狀態
+    }
+
     function loadAdminOrders() {
-      const div = document.getElementById('admin-order-list'); div.innerHTML = '<p class="text-center text-gray-400">載入中...</p>';
+      const div = document.getElementById('admin-order-list');
+      if (swrCache.orders !== null) {
+        renderAdminOrdersDOM(swrCache.orders);
+        fetchAdminBundleSWR();
+        return;
+      }
+      div.innerHTML = '<p class="text-center text-gray-400 py-6">載入中...</p>';
       runGas('getAdminOrders', res => {
-        if(res.length===0) { div.innerHTML='<p class="text-center">無訂單</p>'; return; }
-        div.innerHTML = res.map(o => `<div class="bg-white border p-3 rounded shadow-sm"><div class="flex justify-between items-center border-b pb-2 mb-2"><span class="font-bold search-target">${o.user} <span class="text-xs font-normal text-gray-400 ml-2">${o.time}</span></span><button onclick="togglePay(this, ${o.rowIndex})" class="px-3 py-1 rounded-full text-xs font-bold transition ${o.paid?'bg-pink-500 text-white':'bg-gray-200 text-gray-500'}">${o.paid?'已繳費':'未繳費'}</button></div><div class="text-sm text-gray-600 whitespace-pre-line bg-gray-50 p-2 rounded">${o.items}</div><div class="text-right font-bold text-red-600 mt-1">總計: $${o.total}</div></div>`).join('');
+        swrCache.orders = res || [];
+        swrCache.summary = computeSummaryFromOrders(swrCache.orders);
+        renderAdminOrdersDOM(swrCache.orders);
       }, showGasError);
     }
-    function filterOrders() { const f = document.getElementById('order-search-input').value.toUpperCase(); Array.from(document.getElementById('admin-order-list').children).forEach(c => c.classList.toggle('hidden', c.querySelector('.search-target').innerText.toUpperCase().indexOf(f) === -1)); }
-    function togglePay(btn, row) { const p = btn.innerText === '已繳費'; btn.innerText = p ? '未繳費' : '已繳費'; btn.className = `px-3 py-1 rounded-full text-xs font-bold transition ${p ? 'bg-gray-200 text-gray-500' : 'bg-pink-500 text-white'}`; runGas('togglePaymentStatus', ()=>{}, showGasError, row, p); }
-    function confirmResetOrders() { showConfirmModal("確定要清空本次所有紀錄嗎？", () => runGas('resetAllOrders', r => { showAlertModal(r.message); loadAdminOrders(); }, showGasError), true); }
+
+    function filterOrders() { 
+      const input = document.getElementById('order-search-input');
+      if (!input) return;
+      const f = input.value.toUpperCase(); 
+      Array.from(document.getElementById('admin-order-list').children).forEach(c => {
+        const target = c.querySelector('.search-target');
+        if (target) c.classList.toggle('hidden', target.innerText.toUpperCase().indexOf(f) === -1);
+      }); 
+    }
+
+    function togglePay(btn, row) { 
+      const p = btn.innerText === '已繳費'; 
+      const nextState = !p;
+      btn.innerText = nextState ? '已繳費' : '未繳費'; 
+      btn.className = `px-3 py-1 rounded-full text-xs font-bold transition ${nextState ? 'bg-pink-500 text-white' : 'bg-gray-200 text-gray-500'}`; 
+      // 同步更新本地快取
+      if (swrCache.orders) {
+        const target = swrCache.orders.find(o => o.rowIndex === row);
+        if (target) target.paid = nextState;
+      }
+      runGas('togglePaymentStatus', ()=>{}, showGasError, row, p); 
+    }
+
+    function confirmResetOrders() { 
+      showConfirmModal("確定要清空本次所有紀錄嗎？", () => {
+        runGas('resetAllOrders', r => { 
+          swrCache.orders = [];
+          swrCache.summary = { items: [], grandTotal: 0 };
+          renderAdminOrdersDOM([]);
+          renderAdminSummaryDOM(swrCache.summary);
+          showAlertModal(r.message); 
+        }, showGasError);
+      }, true); 
+    }
+
+    function renderAdminSummaryDOM(summaryData) {
+      document.getElementById('admin-grand-total').textContent = `NT$ ${summaryData.grandTotal || 0}`; 
+      const l = document.getElementById('admin-summary-list');
+      if (!summaryData.items || !summaryData.items.length) {
+        l.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-gray-500">無資料</td></tr>';
+      } else {
+        l.innerHTML = summaryData.items.map(i => `<tr class="hover:bg-gray-50"><td class="p-3 border-b">${i.name}</td><td class="p-3 border-b text-right font-bold text-gray-900">${i.count}</td></tr>`).join('');
+      }
+    }
 
     function loadAdminSummary() {
+      // 若快取中已有訂單，直接 0 秒算出統計，不發多餘請求！
+      if (swrCache.orders !== null) {
+        swrCache.summary = computeSummaryFromOrders(swrCache.orders);
+        renderAdminSummaryDOM(swrCache.summary);
+        fetchAdminBundleSWR();
+        return;
+      }
       document.getElementById('admin-summary-list').innerHTML = '<tr><td colspan="2" class="p-4 text-center">計算中...</td></tr>';
       runGas('getSalesSummary', res => {
-        document.getElementById('admin-grand-total').textContent = `NT$ ${res.grandTotal}`; const l = document.getElementById('admin-summary-list');
-        if(!res.items.length) l.innerHTML = '<tr><td colspan="2" class="p-4 text-center">無資料</td></tr>';
-        else l.innerHTML = res.items.map(i => `<tr class="hover:bg-gray-50"><td class="p-3 border-b">${i.name}</td><td class="p-3 border-b text-right font-bold text-gray-900">${i.count}</td></tr>`).join('');
+        swrCache.summary = res;
+        renderAdminSummaryDOM(res);
       }, showGasError);
     }
+
     function captureSummary() { const el = document.getElementById('summary-capture-area'); const bg = el.style.backgroundColor; el.style.backgroundColor = "#fff"; html2canvas(el, { scale: 2 }).then(canvas => { el.style.backgroundColor = bg; document.getElementById('preview-img').src = canvas.toDataURL("image/png"); document.getElementById('image-preview-modal').classList.remove('hidden'); }); }
 
     let adminMenuData = []; let editingItemIndex = -1; let currentEditOptions = {}; let currentRestaurantName = '';
     // ==========================================
-    // 菜單編輯與歷史切換邏輯
+    // 菜單編輯與歷史切換邏輯 (SWR)
     // ==========================================
     
     function openSwitchRestaurantModal() {
@@ -1423,11 +1703,11 @@
         const btn = document.querySelector('#new-restaurant-input-area button:last-child');
         btn.disabled = true; btn.innerHTML = "設定中...";
         
-        // 【優化】改用 setRestaurantName，只需一次呼叫直接更新 B4，不需要先讀再寫
         runGas('setRestaurantName', res => {
             btn.disabled = false;
             btn.innerHTML = "確認建立";
             if(res.success) {
+                isMenuDirty = true;
                 currentRestaurantName = newName;
                 document.getElementById('restaurant-name-display').textContent = newName;
                 adminMenuData = [];
@@ -1451,9 +1731,20 @@
       const displayElem = document.getElementById('current-edit-restaurant-name');
       if (displayElem) displayElem.textContent = restName;
       
+      // 若已有快取或正在編輯草稿，0 秒直接顯示！
+      if (isMenuDirty || menuData.length > 0 || window.isSystemDataLoaded) {
+        if (!isMenuDirty && adminMenuData.length === 0 && menuData.length > 0) {
+          adminMenuData = JSON.parse(JSON.stringify(menuData));
+        }
+        renderAdminMenuList();
+        fetchAdminBundleSWR();
+        return;
+      }
+
       document.getElementById('admin-menu-list-container').innerHTML = '<p class="text-center text-gray-400">讀取清單中...</p>';
       runGas('getSystemData', res => { 
-        adminMenuData = res.menu || []; 
+        menuData = res.menu || [];
+        adminMenuData = JSON.parse(JSON.stringify(menuData)); 
         currentRestaurantName = res.restaurantName; 
         if (displayElem) displayElem.textContent = currentRestaurantName || '尚未設定';
         renderAdminMenuList(); 
@@ -1511,7 +1802,7 @@
         if (item.options) {
            const opts = JSON.parse(JSON.stringify(item.options));
            for (let k in opts) {
-              if (Array.isArray(opts[k])) { currentEditOptions[k] = { type: 'radio', choices: opts[k] }; } else { currentEditOptions[k] = opts[k]; }
+             if (Array.isArray(opts[k])) { currentEditOptions[k] = { type: 'radio', choices: opts[k] }; } else { currentEditOptions[k] = opts[k]; }
            }
         }
       }
@@ -1601,29 +1892,35 @@
       for(let key in currentEditOptions) {
         if (currentEditOptions[key].choices && currentEditOptions[key].choices.length > 0) {
            finalOptions[key] = {
-              type: currentEditOptions[key].type,
-              choices: currentEditOptions[key].choices.map(opt => {
-                 const optName = Array.isArray(opt) ? opt[0] : opt; const optPrice = Array.isArray(opt) ? opt[1] : 0;
-                 return optPrice === 0 ? optName : [optName, optPrice];
-              })
+             type: currentEditOptions[key].type,
+             choices: currentEditOptions[key].choices.map(opt => {
+                const optName = Array.isArray(opt) ? opt[0] : opt; const optPrice = Array.isArray(opt) ? opt[1] : 0;
+                return optPrice === 0 ? optName : [optName, optPrice];
+             })
            };
         }
       }
-      const newItem = { id: `temp-${Date.now()}`, isBafangMode, category, name, price, image, options: finalOptions };
+      const hasOpts = Object.keys(finalOptions).length > 0;
+      const newItem = { id: `temp-${Date.now()}`, isBafangMode, category, name, price, type: hasOpts ? '套餐' : '單點', image, options: finalOptions };
       if (editingItemIndex === -1) adminMenuData.push(newItem); else adminMenuData[editingItemIndex] = newItem;
+      isMenuDirty = true;
       closeMenuEditorModal(); renderAdminMenuList();
     }
 
-    function deleteMenuItemFromLocal(index) { if(confirm("確定要刪除這個品項嗎？ (刪除後需點擊「儲存至雲端」才會真正生效)")) { adminMenuData.splice(index, 1); renderAdminMenuList(); } }
+    function deleteMenuItemFromLocal(index) { 
+      if(confirm("確定要刪除這個品項嗎？ (刪除後需點擊下方「儲存此餐廳菜單」才會真正生效)")) { 
+        adminMenuData.splice(index, 1); 
+        isMenuDirty = true;
+        renderAdminMenuList(); 
+      } 
+    }
 
+    // --- 管理者代訂 ---
     let proxyCart = []; let proxyUser = "";
     function initProxyOrder() { proxyCart=[]; proxyUser=""; document.getElementById('proxy-username').value=""; document.getElementById('admin-direct-step-1').classList.remove('hidden'); document.getElementById('admin-direct-step-2').classList.add('hidden'); }
     function startProxyOrder() { const n = document.getElementById('proxy-username').value.trim(); if(!n){showAlertModal("請輸入姓名！");return;} proxyUser=n; document.getElementById('proxy-current-name').textContent=proxyUser; document.getElementById('admin-direct-step-1').classList.add('hidden'); document.getElementById('admin-direct-step-2').classList.remove('hidden'); renderProxyMenu(); renderProxyCart(); }
     function cancelProxyOrder() { showConfirmModal("確定結束代點？", ()=>initProxyOrder(), true); }
     function renderProxyMenu() { const c = document.getElementById('admin-direct-menu-list'); if(!menuData || menuData.length===0){ c.innerHTML='<p class="text-center text-gray-500">無菜單資料</p>'; return; } c.innerHTML = menuData.map(item => `<div class="flex justify-between items-center p-3 rounded-lg shadow-sm border bg-white mb-2"><div><div class="text-xs text-pink-500 font-bold">${item.category || '未分類'}</div><div class="font-bold">${item.name}</div><div class="text-red-500 font-bold">NT$ ${item.price}</div></div><button onclick="handleItemClick('${item.id}', true)" class="bg-indigo-600 text-white w-8 h-8 rounded-full font-bold">+</button></div>`).join(''); }
-    
-    const originalHandleItemClick = handleItemClick;
-    handleItemClick = function(id, isProxy=false) { if(!isProxy) return originalHandleItemClick(id); const item = menuData.find(i => String(i.id) === String(id)); if(!item) return; if (item.type === '套餐' && item.options && Object.keys(item.options).length > 0) { configuringItem = item; openOptionsModal(item, true); } else { addSimpleItemToCart(item, true); } }
     
     function renderProxyCart() { const c = document.getElementById('admin-direct-cart-list'); const t = document.getElementById('proxy-total-price'); const b = document.getElementById('proxy-submit-btn'); if(proxyCart.length===0){ c.innerHTML='空'; t.textContent='NT$ 0'; b.disabled=true; b.className="w-full py-3 bg-gray-400 text-white font-bold rounded-lg"; return; } let sum = 0; c.innerHTML = proxyCart.map((i, idx)=>{ sum+=i.price; let det=''; if(Object.keys(i.selections).length>0) det=`<div class="text-xs">${Object.values(i.selections).join(', ')}</div>`; return `<div class="flex justify-between items-center bg-gray-50 p-2 rounded border"><div><div class="font-bold text-gray-700">${i.name}</div>${det}</div><div class="flex items-center gap-3"><span class="text-red-600 font-bold">NT$ ${i.price}</span><button onclick="proxyCart.splice(${idx},1);renderProxyCart()" class="text-gray-400 font-bold">×</button></div></div>`; }).join(''); t.textContent=`NT$ ${sum}`; b.disabled=false; b.className="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg shadow"; }
     
@@ -1635,7 +1932,9 @@
         const currentRestaurant = document.getElementById('restaurant-name-display').textContent.trim();
         runGas('logOrderToSheet', res => {
           if(res.success){ 
-             showAlertModal(`代點成功！`); initProxyOrder(); loadAdminOrders(); loadAdminSummary(); 
+             showAlertModal(`代點成功！`); 
+             initProxyOrder(); 
+             fetchAdminBundleSWR(true); // 背景一次同步訂單與統計，不再分開狂發 API
           } else { 
              showAlertModal("失敗："+res.message); b.disabled=false; b.textContent="確認送出"; 
              if(res.isMenuChanged) {
@@ -1647,13 +1946,23 @@
         }, showGasError, { username: proxyUser, total: total, items: proxyCart, isAdminProxy: true, restaurantName: currentRestaurant }); 
       }, isSystemClosed); 
     }
+
+    // --- 人員管理 (SWR) ---
     let allAdminUsers = [];
     function loadAdminUsers() {
       const c = document.getElementById('admin-user-list');
+      if (swrCache.users !== null) {
+        allAdminUsers = swrCache.users;
+        const searchVal = document.getElementById('user-search-input')?.value.trim() || '';
+        renderAdminUsers(searchVal);
+        fetchAdminBundleSWR();
+        return;
+      }
       c.innerHTML = '<p class="text-center p-8 text-gray-500">載入名單中...</p>';
       runGas('getAdminUsers', res => {
         if (res.error) { c.innerHTML = `<p class="text-red-500">${res.message}</p>`; return; }
         allAdminUsers = res.users || [];
+        swrCache.users = allAdminUsers;
         renderAdminUsers();
       }, showGasError);
     }
@@ -1698,11 +2007,18 @@
     function toggleAdminRole(rowIndex, currentStatus) {
       const actionText = currentStatus ? "拔除" : "設為";
       showConfirmModal(`確定要${actionText}該使用者的管理員權限嗎？`, () => {
+        // 樂觀更新本地快取，0 秒變色
+        const target = allAdminUsers.find(u => u.rowIndex === rowIndex);
+        if (target) target.isAdmin = !currentStatus;
+        filterAdminUsers();
+
         runGas('toggleAdminStatus', res => {
           if (res.success) {
             showAlertModal(`權限修改成功！`);
-            loadAdminUsers();
+            fetchAdminBundleSWR(true);
           } else {
+            if (target) target.isAdmin = currentStatus;
+            filterAdminUsers();
             showAlertModal(res.message);
           }
         }, showGasError, rowIndex, !currentStatus);
