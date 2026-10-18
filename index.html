@@ -163,10 +163,10 @@
           </div>
 
           <div id="menu-container" class="space-y-8 transition-opacity duration-300">
-              <div>
+             <div>
                <h3 id="restaurant-name-display" class="text-xl font-bold text-orange-600 border-b pb-2 mb-4">🍽️ 本日供應</h3>
                <div id="menu-list-grid"></div>
-              </div>
+             </div>
           </div>
 
           <div id="floating-cart-footer" class="fixed bottom-0 left-0 w-full p-4 bg-white border-t border-gray-200 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-40 sm:relative sm:bg-transparent sm:border-none sm:shadow-none sm:p-0 sm:pt-4 transition-all duration-300">
@@ -1195,7 +1195,6 @@
       closeOptionsModal();
     }
 
-    // 【修復 Bug 3】送出訂單後，「已完成點餐」完整顯示客製化選項與單價明細
     function formatItemsTextClient(items) {
       return items.map(i => {
         let str = `${i.name} (${i.type}) (NT$${i.price})`;
@@ -1915,12 +1914,19 @@
       } 
     }
 
-    // --- 管理者代訂 ---
+    // --- 管理者代訂 (【修復第 2 點】同步支援八方模式「/顆」價格顯示) ---
     let proxyCart = []; let proxyUser = "";
     function initProxyOrder() { proxyCart=[]; proxyUser=""; document.getElementById('proxy-username').value=""; document.getElementById('admin-direct-step-1').classList.remove('hidden'); document.getElementById('admin-direct-step-2').classList.add('hidden'); }
     function startProxyOrder() { const n = document.getElementById('proxy-username').value.trim(); if(!n){showAlertModal("請輸入姓名！");return;} proxyUser=n; document.getElementById('proxy-current-name').textContent=proxyUser; document.getElementById('admin-direct-step-1').classList.add('hidden'); document.getElementById('admin-direct-step-2').classList.remove('hidden'); renderProxyMenu(); renderProxyCart(); }
     function cancelProxyOrder() { showConfirmModal("確定結束代點？", ()=>initProxyOrder(), true); }
-    function renderProxyMenu() { const c = document.getElementById('admin-direct-menu-list'); if(!menuData || menuData.length===0){ c.innerHTML='<p class="text-center text-gray-500">無菜單資料</p>'; return; } c.innerHTML = menuData.map(item => `<div class="flex justify-between items-center p-3 rounded-lg shadow-sm border bg-white mb-2"><div><div class="text-xs text-pink-500 font-bold">${item.category || '未分類'}</div><div class="font-bold">${item.name}</div><div class="text-red-500 font-bold">NT$ ${item.price}</div></div><button onclick="handleItemClick('${item.id}', true)" class="bg-indigo-600 text-white w-8 h-8 rounded-full font-bold">+</button></div>`).join(''); }
+    function renderProxyMenu() { 
+      const c = document.getElementById('admin-direct-menu-list'); 
+      if(!menuData || menuData.length===0){ c.innerHTML='<p class="text-center text-gray-500">無菜單資料</p>'; return; } 
+      c.innerHTML = menuData.map(item => {
+        const priceDisplay = item.isBafangMode ? `NT$ ${item.price} /顆` : `NT$ ${item.price}`;
+        return `<div class="flex justify-between items-center p-3 rounded-lg shadow-sm border bg-white mb-2"><div><div class="text-xs text-pink-500 font-bold">${item.category || '未分類'}</div><div class="font-bold">${item.name}</div><div class="text-red-500 font-bold">${priceDisplay}</div></div><button onclick="handleItemClick('${item.id}', true)" class="bg-indigo-600 text-white w-8 h-8 rounded-full font-bold">+</button></div>`;
+      }).join(''); 
+    }
     
     function renderProxyCart() { const c = document.getElementById('admin-direct-cart-list'); const t = document.getElementById('proxy-total-price'); const b = document.getElementById('proxy-submit-btn'); if(proxyCart.length===0){ c.innerHTML='空'; t.textContent='NT$ 0'; b.disabled=true; b.className="w-full py-3 bg-gray-400 text-white font-bold rounded-lg"; return; } let sum = 0; c.innerHTML = proxyCart.map((i, idx)=>{ sum+=i.price; let det=''; if(Object.keys(i.selections).length>0) det=`<div class="text-xs">${Object.values(i.selections).join(', ')}</div>`; return `<div class="flex justify-between items-center bg-gray-50 p-2 rounded border"><div><div class="font-bold text-gray-700">${i.name}</div>${det}</div><div class="flex items-center gap-3"><span class="text-red-600 font-bold">NT$ ${i.price}</span><button onclick="proxyCart.splice(${idx},1);renderProxyCart()" class="text-gray-400 font-bold">×</button></div></div>`; }).join(''); t.textContent=`NT$ ${sum}`; b.disabled=false; b.className="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg shadow"; }
     
