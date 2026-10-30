@@ -206,7 +206,6 @@
     .christmas-only { display: none !important; pointer-events: none !important; }
     body.theme-christmas .christmas-only { display: block !important; }
 
-    /* 背景深邃冬夜松林綠與暖金微光漸層 */
     body.theme-christmas {
       background-color: #071f18 !important;
       background-image: 
@@ -216,14 +215,12 @@
         linear-gradient(180deg, #051611 0%, #0b2920 55%, #061913 100%) !important;
     }
 
-    /* 主容器卡片：高對比雪白底色搭配聖誕紅金光暈外框 */
     body.theme-christmas #main-container {
       background-color: #ffffff !important;
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 38px rgba(220, 38, 38, 0.28), 0 0 15px rgba(250, 204, 21, 0.25) !important;
       --tw-ring-color: rgba(220, 38, 38, 0.7) !important;
     }
 
-    /* 系統櫻花粉色系無縫轉換為聖誕緋紅、松針綠與暖金 */
     body.theme-christmas .text-pink-700 { color: #b91c1c !important; }
     body.theme-christmas .text-pink-600 { color: #dc2626 !important; }
     body.theme-christmas .text-pink-500 { color: #15803d !important; }
@@ -242,7 +239,6 @@
     body.theme-christmas .focus\:ring-pink-500:focus { --tw-ring-color: #dc2626 !important; }
     body.theme-christmas .focus\:border-pink-500:focus { border-color: #dc2626 !important; }
 
-    /* 聖誕節專屬動畫集 */
     @keyframes bellSwing {
       0%, 100% { transform: rotate(-8deg); }
       50% { transform: rotate(8deg); }
@@ -279,7 +275,6 @@
     .xmas-bulb-a { animation: bulbBlinkA 1.8s ease-in-out infinite; }
     .xmas-bulb-b { animation: bulbBlinkB 1.8s ease-in-out infinite; }
 
-    /* 背景六角冰晶雪花與暖金星塵粒子 */
     .xmas-snowflake-particle {
       position: absolute;
       top: -15%;
@@ -300,11 +295,109 @@
       animation: fall linear infinite, sway ease-in-out infinite alternate;
       animation-fill-mode: both;
     }
+
+    /* =========================================================================
+       🧧 農曆新年限定主題 (Lunar New Year Pro Theme) - 100% 純 SVG 向量與動態特效，不影響任何操作
+       ========================================================================= */
+    .newyear-only { display: none !important; pointer-events: none !important; }
+    body.theme-newyear .newyear-only { display: block !important; }
+
+    /* 背景深邃宮廷朱紅與帝王金瑞氣漸層 */
+    body.theme-newyear {
+      background-color: #3b0404 !important;
+      background-image: 
+        radial-gradient(circle at 15% 18%, rgba(250, 204, 21, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 85% 22%, rgba(239, 68, 68, 0.25) 0%, transparent 48%),
+        radial-gradient(circle at 50% 85%, rgba(234, 179, 8, 0.16) 0%, transparent 55%),
+        linear-gradient(180deg, #2b0202 0%, #4a0606 52%, #2e0303 100%) !important;
+    }
+
+    /* 主容器卡片：高對比暖白底搭配鎏金宮廷紅雙層光暈外框 */
+    body.theme-newyear #main-container {
+      background-color: #fffdf9 !important;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 40px rgba(234, 179, 8, 0.38), 0 0 18px rgba(220, 38, 38, 0.45) !important;
+      --tw-ring-color: rgba(250, 204, 21, 0.85) !important;
+    }
+
+    /* 系統櫻花粉色系無縫轉換為新春喜慶紅與帝王金 */
+    body.theme-newyear .text-pink-700 { color: #991b1b !important; }
+    body.theme-newyear .text-pink-600 { color: #b91c1c !important; }
+    body.theme-newyear .text-pink-500 { color: #d97706 !important; }
+    body.theme-newyear .bg-pink-600 { background-color: #b91c1c !important; }
+    body.theme-newyear .hover\:bg-pink-700:hover { background-color: #991b1b !important; }
+    body.theme-newyear .bg-pink-500 { background-color: #dc2626 !important; }
+    body.theme-newyear .hover\:bg-pink-600:hover { background-color: #b91c1c !important; }
+    body.theme-newyear .bg-pink-100 { background-color: #fef3c7 !important; }
+    body.theme-newyear .hover\:bg-pink-200:hover { background-color: #fde68a !important; }
+    body.theme-newyear .bg-pink-50 { background-color: #fffbeb !important; }
+    body.theme-newyear .border-pink-200 { border-color: #fde68a !important; }
+    body.theme-newyear .border-pink-300 { border-color: #fcd34d !important; }
+    body.theme-newyear .border-pink-600 { border-color: #b91c1c !important; }
+    body.theme-newyear .border-t-pink-500 { border-top-color: #dc2626 !important; }
+    body.theme-newyear .loading-spinner { border-top-color: #d97706 !important; }
+    body.theme-newyear .focus\:ring-pink-500:focus { --tw-ring-color: #d97706 !important; }
+    body.theme-newyear .focus\:border-pink-500:focus { border-color: #d97706 !important; }
+
+    /* 農曆新年專屬動畫集 */
+    @keyframes lanternSway {
+      0%, 100% { transform: rotate(-5deg); filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.55)); }
+      50% { transform: rotate(5deg); filter: drop-shadow(0 0 24px rgba(253, 224, 71, 0.85)); }
+    }
+    @keyframes tasselWave {
+      0%, 100% { transform: rotate(-8deg) skewX(-4deg); }
+      50% { transform: rotate(8deg) skewX(4deg); }
+    }
+    @keyframes fuCoupletTilt {
+      0%, 100% { transform: rotate(-12deg) translateY(0px); }
+      50% { transform: rotate(-7deg) translateY(-3px); }
+    }
+    @keyframes ingotGleam {
+      0%, 100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.65)); }
+      50% { transform: translateY(-5px) scale(1.03); filter: drop-shadow(0 0 24px rgba(254, 240, 138, 0.95)); }
+    }
+    @keyframes lionDanceBob {
+      0%, 100% { transform: translateY(0px) rotate(2deg); }
+      25% { transform: translateY(-8px) rotate(-3deg); }
+      50% { transform: translateY(-2px) rotate(3deg); }
+      75% { transform: translateY(-10px) rotate(-2deg); }
+    }
+    @keyframes sparkleTwinkle {
+      0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+      50% { opacity: 0.35; transform: scale(0.6) rotate(45deg); }
+    }
+
+    .ny-lantern-sway { animation: lanternSway 4.2s ease-in-out infinite; transform-origin: 60px 0px; }
+    .ny-tassel-wave { animation: tasselWave 2.6s ease-in-out infinite; transform-origin: 60px 135px; }
+    .ny-fu-couplet { animation: fuCoupletTilt 4.5s ease-in-out infinite; transform-origin: center center; }
+    .ny-ingot-glow { animation: ingotGleam 3.8s ease-in-out infinite; }
+    .ny-lion-dance { animation: lionDanceBob 4.4s ease-in-out infinite; }
+    .ny-sparkle-star { animation: sparkleTwinkle 2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+    /* 背景飄落紅梅花瓣、閃爍金箔與立體小金元寶 */
+    .ny-falling-particle {
+      position: absolute;
+      top: -15%;
+      opacity: 0;
+      pointer-events: none;
+      animation: fall linear infinite, snowSpin ease-in-out infinite alternate;
+      animation-fill-mode: both;
+    }
+    .ny-gold-foil {
+      position: absolute;
+      top: -10%;
+      border-radius: 2px;
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 55%, #b45309 100%);
+      box-shadow: 0 0 8px rgba(250, 204, 21, 0.85);
+      opacity: 0;
+      pointer-events: none;
+      animation: fall linear infinite, sway ease-in-out infinite alternate;
+      animation-fill-mode: both;
+    }
   </style>
 </head>
 <body class="p-4 sm:p-8 min-h-screen flex flex-col items-center justify-start relative pb-24 sm:pb-8">
 
-  <!-- 背景飄落特效容器 (櫻花 / 萬聖節蝙蝠 / 聖誕節雪花 共用) -->
+  <!-- 背景飄落特效容器 (櫻花 / 萬聖節蝙蝠 / 聖誕節雪花 / 新年元寶金箔 共用) -->
   <div class="sakura-container" id="sakura-container"></div>
 
   <!-- =========================================================================
@@ -415,7 +508,6 @@
        🎄 聖誕節角落裝飾圖層 (純 SVG 手繪向量圖、固定於視窗四角、pointer-events: none 絕不影響點擊)
        ========================================================================= -->
   <div id="christmas-ambient-decor" class="christmas-only fixed inset-0 pointer-events-none z-20 overflow-hidden">
-    
     <!-- 左上角：冬青松針花環 + 立體紅絲絨蝴蝶結 + 搖擺發光金鈴鐺 -->
     <div class="absolute top-0 left-0 w-40 h-40 sm:w-56 sm:h-56">
       <svg viewBox="0 0 220 220" class="w-full h-full">
@@ -430,24 +522,20 @@
             <stop offset="100%" stop-color="#991b1b"/>
           </linearGradient>
         </defs>
-        <!-- 松枝弧形藤蔓 -->
         <path d="M -10 18 Q 75 15 165 -10" fill="none" stroke="#14532d" stroke-width="18" stroke-linecap="round"/>
         <path d="M -10 18 Q 75 15 165 -10" fill="none" stroke="#16a34a" stroke-width="10" stroke-linecap="round" stroke-dasharray="6 8"/>
         <path d="M 18 -10 Q 15 75 -10 165" fill="none" stroke="#14532d" stroke-width="18" stroke-linecap="round"/>
         <path d="M 18 -10 Q 15 75 -10 165" fill="none" stroke="#16a34a" stroke-width="10" stroke-linecap="round" stroke-dasharray="6 8"/>
-        <!-- 閃爍彩色聖誕燈泡串 -->
         <circle cx="95" cy="18" r="5" fill="#facc15" class="xmas-bulb-a"/>
         <circle cx="135" cy="10" r="5" fill="#ef4444" class="xmas-bulb-b"/>
         <circle cx="18" cy="95" r="5" fill="#38bdf8" class="xmas-bulb-b"/>
         <circle cx="10" cy="135" r="5" fill="#facc15" class="xmas-bulb-a"/>
-        <!-- 搖擺雙金鈴鐺 -->
         <g class="xmas-bell-swing">
           <path d="M 38 42 C 26 42, 22 62, 18 72 L 58 72 C 54 62, 50 42, 38 42 Z" fill="url(#goldBellGrad)" stroke="#a16207" stroke-width="1.5"/>
           <circle cx="38" cy="74" r="5" fill="#ca8a04"/>
           <path d="M 62 38 C 52 38, 48 56, 44 65 L 80 65 C 76 56, 72 38, 62 38 Z" fill="url(#goldBellGrad)" stroke="#a16207" stroke-width="1.5" transform="rotate(-18 62 50)"/>
           <circle cx="67" cy="66" r="4.5" fill="#ca8a04"/>
         </g>
-        <!-- 紅絲絨蝴蝶結與冬青紅果 -->
         <path d="M 45 28 L 28 58 L 38 56 L 44 65 L 50 32 Z" fill="#b91c1c"/>
         <path d="M 52 28 L 72 54 L 62 54 L 58 63 L 48 32 Z" fill="#b91c1c"/>
         <path d="M 48 26 C 28 8, 12 28, 34 38 C 42 41, 46 32, 48 26 Z" fill="url(#redRibbonGrad)" stroke="#fca5a5" stroke-width="0.8"/>
@@ -476,7 +564,7 @@
       </svg>
     </div>
 
-    <!-- 左下角：發光伯利恆之星三層立體聖誕樹 (手機版縮小靠邊避開底部購物車，電腦版完整呈現) -->
+    <!-- 左下角：發光伯利恆之星三層立體聖誕樹 -->
     <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-20 h-24 sm:w-32 sm:h-40">
       <svg viewBox="0 0 120 150" class="w-full h-full drop-shadow-2xl">
         <defs>
@@ -486,20 +574,16 @@
             <stop offset="100%" stop-color="#052e16"/>
           </linearGradient>
         </defs>
-        <!-- 樹幹與雪地底座 -->
         <ellipse cx="60" cy="140" rx="38" ry="7" fill="#f8fafc" opacity="0.9"/>
         <rect x="51" y="116" width="18" height="24" rx="3" fill="#78350f"/>
-        <!-- 三層松針樹冠与積雪邊緣 -->
         <polygon points="60,58 14,122 106,122" fill="url(#pineLayerGrad)"/>
         <path d="M14 122 Q37 114 60 122 Q83 114 106 122" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
         <polygon points="60,36 22,92 98,92" fill="url(#pineLayerGrad)"/>
         <path d="M22 92 Q41 85 60 92 Q79 85 98 92" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
         <polygon points="60,18 32,64 88,64" fill="url(#pineLayerGrad)"/>
         <path d="M32 64 Q46 58 60 64 Q74 58 88 64" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-        <!-- 金色流蘇彩帶 -->
         <path d="M38 56 Q60 70 85 60" fill="none" stroke="#fde047" stroke-width="2.2" stroke-dasharray="3 2"/>
         <path d="M28 84 Q60 102 92 86" fill="none" stroke="#fde047" stroke-width="2.5" stroke-dasharray="3 2"/>
-        <!-- 呼吸閃爍彩球裝飾 -->
         <circle cx="48" cy="48" r="4.2" fill="#ef4444" class="xmas-bulb-a"/>
         <circle cx="72" cy="52" r="4" fill="#38bdf8" class="xmas-bulb-b"/>
         <circle cx="40" cy="76" r="4.8" fill="#facc15" class="xmas-bulb-b"/>
@@ -508,7 +592,6 @@
         <circle cx="34" cy="106" r="5" fill="#38bdf8" class="xmas-bulb-a"/>
         <circle cx="58" cy="109" r="5.2" fill="#facc15" class="xmas-bulb-b"/>
         <circle cx="84" cy="105" r="5" fill="#ef4444" class="xmas-bulb-b"/>
-        <!-- 頂端發光伯利恆之星 -->
         <polygon points="60,2 64,12 75,12 66,18 69,28 60,22 51,28 54,18 45,12 56,12" fill="#fef08a" stroke="#eab308" stroke-width="1.2" class="xmas-star-glow"/>
       </svg>
     </div>
@@ -523,16 +606,13 @@
             <stop offset="100%" stop-color="#cbd5e1"/>
           </radialGradient>
         </defs>
-        <!-- 樹枝小手 -->
         <path d="M30 82 L8 66 M16 72 L10 60" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>
         <path d="M90 82 L112 64 M104 70 L111 58" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>
-        <!-- 雪人雙層身體与毛衣鈕扣 -->
         <circle cx="60" cy="104" r="32" fill="url(#snowballGrad)"/>
         <circle cx="60" cy="58" r="23" fill="url(#snowballGrad)"/>
         <circle cx="60" cy="92" r="3" fill="#1e293b"/>
         <circle cx="60" cy="105" r="3" fill="#1e293b"/>
         <circle cx="60" cy="118" r="3" fill="#1e293b"/>
-        <!-- 眼睛、腮紅、微笑與立體胡蘿蔔鼻 -->
         <circle cx="51" cy="51" r="2.8" fill="#0f172a"/>
         <circle cx="69" cy="51" r="2.8" fill="#0f172a"/>
         <circle cx="50" cy="50" r="1" fill="#ffffff"/>
@@ -541,12 +621,10 @@
         <ellipse cx="76" cy="57" rx="4" ry="2" fill="#f87171" opacity="0.55"/>
         <polygon points="58,54 78,58 58,61" fill="#f97316" stroke="#c2410c" stroke-width="0.8"/>
         <path d="M50 64 Q60 70 70 64" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
-        <!-- 聖誕紅白條紋保暖圍巾 -->
         <path d="M39 72 Q60 82 81 72 L83 81 Q60 90 37 81 Z" fill="#dc2626"/>
         <path d="M70 77 L78 106 L66 108 L62 79 Z" fill="#dc2626"/>
         <line x1="65" y1="88" x2="74" y2="87" stroke="#fef08a" stroke-width="2.5"/>
         <line x1="66" y1="98" x2="76" y2="97" stroke="#fef08a" stroke-width="2.5"/>
-        <!-- 紳士高禮帽與冬青裝飾 -->
         <g transform="rotate(-6 60 34)">
           <ellipse cx="60" cy="37" rx="26" ry="5.5" fill="#1e293b"/>
           <rect x="43" y="13" width="34" height="24" rx="2.5" fill="#0f172a"/>
@@ -554,6 +632,182 @@
           <circle cx="71" cy="31" r="3" fill="#ef4444"/>
           <circle cx="75" cy="33" r="2.8" fill="#facc15"/>
         </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       🧧 農曆新年角落裝飾圖層 (純 SVG 手繪向量圖、固定於視窗四角、pointer-events: none 絕不影響點擊)
+       ========================================================================= -->
+  <div id="newyear-ambient-decor" class="newyear-only fixed inset-0 pointer-events-none z-20 overflow-hidden">
+    
+    <!-- 左上角：紅梅傲雪枝枒 + 搖擺發光雕花宮燈 (含流蘇動畫) -->
+    <div class="absolute top-0 left-0 w-40 h-48 sm:w-56 sm:h-64">
+      <svg viewBox="0 0 220 250" class="w-full h-full">
+        <defs>
+          <radialGradient id="nyLanternGrad" cx="50%" cy="45%" r="55%">
+            <stop offset="0%" stop-color="#fde047"/>
+            <stop offset="28%" stop-color="#ef4444"/>
+            <stop offset="75%" stop-color="#dc2626"/>
+            <stop offset="100%" stop-color="#7f1d1d"/>
+          </radialGradient>
+          <linearGradient id="nyGoldRim" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ca8a04"/>
+            <stop offset="50%" stop-color="#fef08a"/>
+            <stop offset="100%" stop-color="#a16207"/>
+          </linearGradient>
+        </defs>
+        <!-- 蒼勁紅梅枝幹 -->
+        <path d="M-8 38 Q55 32 115 12 Q145 4 175 -5" fill="none" stroke="#451a03" stroke-width="6.5" stroke-linecap="round"/>
+        <path d="M45 30 Q72 52 102 58" fill="none" stroke="#451a03" stroke-width="4" stroke-linecap="round"/>
+        <path d="M22 34 Q14 78 6 115" fill="none" stroke="#451a03" stroke-width="4.5" stroke-linecap="round"/>
+        <!-- 綻放五瓣紅梅與花苞 -->
+        <g transform="translate(105, 16)">
+          <circle cx="0" cy="-6" r="5" fill="#f43f5e"/><circle cx="6" cy="-2" r="5" fill="#e11d48"/>
+          <circle cx="4" cy="5" r="5" fill="#f43f5e"/><circle cx="-4" cy="5" r="5" fill="#e11d48"/>
+          <circle cx="-6" cy="-2" r="5" fill="#fb7185"/><circle cx="0" cy="0" r="2.8" fill="#fef08a"/>
+        </g>
+        <g transform="translate(96, 56) scale(0.82)">
+          <circle cx="0" cy="-6" r="5" fill="#e11d48"/><circle cx="6" cy="-2" r="5" fill="#f43f5e"/>
+          <circle cx="4" cy="5" r="5" fill="#e11d48"/><circle cx="-4" cy="5" r="5" fill="#fb7185"/>
+          <circle cx="-6" cy="-2" r="5" fill="#f43f5e"/><circle cx="0" cy="0" r="2.8" fill="#fef08a"/>
+        </g>
+        <circle cx="138" cy="8" r="4" fill="#fb7185"/>
+        <circle cx="12" cy="88" r="4.5" fill="#f43f5e"/>
+        <!-- 垂掛宮廷紅燈籠 (整體隨風輕擺) -->
+        <g class="ny-lantern-sway">
+          <!-- 金色吊繩與小中國結 -->
+          <line x1="60" y1="0" x2="60" y2="52" stroke="#facc15" stroke-width="2.5"/>
+          <polygon points="60,26 68,34 60,42 52,34" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+          <!-- 燈籠上下金冠底座 -->
+          <rect x="44" y="50" width="32" height="7" rx="2" fill="url(#nyGoldRim)"/>
+          <!-- 燈籠渾圓主體與金色骨架弧線 -->
+          <ellipse cx="60" cy="90" rx="38" ry="35" fill="url(#nyLanternGrad)" stroke="#facc15" stroke-width="1.5"/>
+          <ellipse cx="60" cy="90" rx="24" ry="35" fill="none" stroke="#fde047" stroke-width="1.2" opacity="0.65"/>
+          <ellipse cx="60" cy="90" rx="10" ry="35" fill="none" stroke="#fde047" stroke-width="1.2" opacity="0.65"/>
+          <!-- 燈籠中央「春」字金印紋章 -->
+          <circle cx="60" cy="90" r="12" fill="#7f1d1d" stroke="#fde047" stroke-width="1.5"/>
+          <path d="M53 85 L67 85 M55 88 L65 88 M52 91 L68 91 M60 82 L60 91 M55 91 L52 97 M65 91 L68 97 M56 94 L64 94 L64 98 L56 98 Z" stroke="#fef08a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <rect x="46" y="123" width="28" height="7" rx="2" fill="url(#nyGoldRim)"/>
+          <!-- 燈籠下方搖曳金紅流蘇 -->
+          <g class="ny-tassel-wave">
+            <line x1="60" y1="130" x2="60" y2="142" stroke="#facc15" stroke-width="3"/>
+            <circle cx="60" cy="140" r="4" fill="#eab308"/>
+            <path d="M56 143 L51 182 M59 143 L57 185 M61 143 L63 185 M64 143 L69 182" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M58 143 L55 178 M62 143 L65 178" stroke="#facc15" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 右上角：對稱紅梅枝枒與迎春雙響炮串 -->
+    <div class="absolute top-0 right-0 w-36 h-44 sm:w-48 sm:h-56 transform -scale-x-100">
+      <svg viewBox="0 0 220 250" class="w-full h-full">
+        <path d="M-8 38 Q55 32 115 12 Q145 4 175 -5" fill="none" stroke="#451a03" stroke-width="6.5" stroke-linecap="round"/>
+        <path d="M45 30 Q72 52 102 58" fill="none" stroke="#451a03" stroke-width="4" stroke-linecap="round"/>
+        <g transform="translate(105, 16)">
+          <circle cx="0" cy="-6" r="5" fill="#f43f5e"/><circle cx="6" cy="-2" r="5" fill="#e11d48"/>
+          <circle cx="4" cy="5" r="5" fill="#f43f5e"/><circle cx="-4" cy="5" r="5" fill="#e11d48"/>
+          <circle cx="-6" cy="-2" r="5" fill="#fb7185"/><circle cx="0" cy="0" r="2.8" fill="#fef08a"/>
+        </g>
+        <!-- 垂掛喜慶鞭炮串 -->
+        <g class="ny-lantern-sway">
+          <line x1="52" y1="0" x2="52" y2="128" stroke="#facc15" stroke-width="2"/>
+          <g transform="translate(36, 42) rotate(-18)">
+            <rect x="0" y="0" width="12" height="24" rx="2" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+            <line x1="0" y1="5" x2="12" y2="5" stroke="#fef08a" stroke-width="2"/>
+            <line x1="0" y1="19" x2="12" y2="19" stroke="#fef08a" stroke-width="2"/>
+          </g>
+          <g transform="translate(56, 56) rotate(18)">
+            <rect x="0" y="0" width="12" height="24" rx="2" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+            <line x1="0" y1="5" x2="12" y2="5" stroke="#fef08a" stroke-width="2"/>
+            <line x1="0" y1="19" x2="12" y2="19" stroke="#fef08a" stroke-width="2"/>
+          </g>
+          <g transform="translate(35, 76) rotate(-15)">
+            <rect x="0" y="0" width="12" height="24" rx="2" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+            <line x1="0" y1="5" x2="12" y2="5" stroke="#fef08a" stroke-width="2"/>
+            <line x1="0" y1="19" x2="12" y2="19" stroke="#fef08a" stroke-width="2"/>
+          </g>
+          <g transform="translate(55, 92) rotate(16)">
+            <rect x="0" y="0" width="12" height="24" rx="2" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+            <line x1="0" y1="5" x2="12" y2="5" stroke="#fef08a" stroke-width="2"/>
+            <line x1="0" y1="19" x2="12" y2="19" stroke="#fef08a" stroke-width="2"/>
+          </g>
+          <!-- 鞭炮尾端金色花火閃爍 -->
+          <polygon points="52,135 55,143 63,146 55,149 52,157 49,149 41,146 49,143" fill="#fef08a" class="ny-sparkle-star"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 左下角：招財進寶發光金元寶聚寶盆 (手機版縮小靠邊避開底部購物車，電腦版完整呈現) -->
+    <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-20 h-20 sm:w-32 sm:h-32 ny-ingot-glow">
+      <svg viewBox="0 0 130 130" class="w-full h-full">
+        <defs>
+          <linearGradient id="nyGoldIngot" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fef9c3"/>
+            <stop offset="45%" stop-color="#facc15"/>
+            <stop offset="85%" stop-color="#ca8a04"/>
+            <stop offset="100%" stop-color="#854d0e"/>
+          </linearGradient>
+          <linearGradient id="nyBowlGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="65%" stop-color="#b91c1c"/>
+            <stop offset="100%" stop-color="#7f1d1d"/>
+          </radialGradient>
+        </defs>
+        <!-- 後層古銅錢與小元寶 -->
+        <circle cx="34" cy="64" r="12" fill="url(#nyGoldIngot)" stroke="#a16207" stroke-width="1.5"/>
+        <rect x="30" y="60" width="8" height="8" fill="#7f1d1d"/>
+        <circle cx="96" cy="64" r="12" fill="url(#nyGoldIngot)" stroke="#a16207" stroke-width="1.5"/>
+        <rect x="92" y="60" width="8" height="8" fill="#7f1d1d"/>
+        <!-- 中央超大立體黃金元寶 -->
+        <ellipse cx="65" cy="52" rx="22" ry="13" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+        <path d="M22 52 Q38 40 65 40 Q92 40 108 52 L94 78 Q65 88 36 78 Z" fill="url(#nyGoldIngot)" stroke="#a16207" stroke-width="1.5"/>
+        <path d="M32 55 Q65 68 98 55" fill="none" stroke="#fef9c3" stroke-width="2" opacity="0.8"/>
+        <!-- 朱紅鑲金聚寶盆底座 -->
+        <path d="M18 74 L112 74 L98 112 Q65 122 32 112 Z" fill="url(#nyBowlGrad)" stroke="#facc15" stroke-width="2.5"/>
+        <rect x="14" y="70" width="102" height="7" rx="3.5" fill="url(#nyGoldIngot)"/>
+        <!-- 聚寶盆中央方孔銅錢紋飾 -->
+        <circle cx="65" cy="94" r="13" fill="url(#nyGoldIngot)" stroke="#991b1b" stroke-width="1.2"/>
+        <rect x="60" y="89" width="10" height="10" rx="1" fill="#991b1b" stroke="#fef08a" stroke-width="1"/>
+        <!-- 閃爍瑞氣星芒 -->
+        <polygon points="26,28 29,35 36,38 29,41 26,48 23,41 16,38 23,35" fill="#fef08a" class="ny-sparkle-star"/>
+        <polygon points="104,22 106,27 111,29 106,31 104,36 102,31 97,29 102,27" fill="#fef08a" class="ny-sparkle-star" style="animation-delay: -1s"/>
+      </svg>
+    </div>
+
+    <!-- 右下角：點頭賀歲傳統醒獅頭 (舞獅) -->
+    <div class="fixed bottom-20 right-1.5 sm:bottom-6 sm:right-6 w-20 h-20 sm:w-32 sm:h-32 ny-lion-dance">
+      <svg viewBox="0 0 130 130" class="w-full h-full drop-shadow-2xl">
+        <!-- 醒獅金色蓬鬆鬃毛與雙耳 -->
+        <circle cx="24" cy="48" r="14" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+        <circle cx="106" cy="48" r="14" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+        <circle cx="20" cy="72" r="15" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+        <circle cx="110" cy="72" r="15" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+        <!-- 醒獅朱紅主臉龐 -->
+        <path d="M24 46 C24 18, 106 18, 106 46 L110 88 C110 105, 20 105, 20 88 Z" fill="#dc2626" stroke="#facc15" stroke-width="2.5"/>
+        <!-- 額頭八卦鏡與獨角絨球 -->
+        <circle cx="65" cy="24" r="13" fill="#facc15" stroke="#b91c1c" stroke-width="2"/>
+        <circle cx="65" cy="24" r="7" fill="#38bdf8"/>
+        <path d="M40 34 Q52 24 65 34 Q78 24 90 34" fill="none" stroke="#fef08a" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- 炯炯有神舞獅大眼 -->
+        <circle cx="44" cy="58" r="14" fill="#ffffff" stroke="#facc15" stroke-width="2.5"/>
+        <circle cx="44" cy="58" r="7.5" fill="#0f172a"/>
+        <circle cx="41" cy="55" r="2.8" fill="#ffffff"/>
+        <circle cx="86" cy="58" r="14" fill="#ffffff" stroke="#facc15" stroke-width="2.5"/>
+        <circle cx="86" cy="58" r="7.5" fill="#0f172a"/>
+        <circle cx="83" cy="55" r="2.8" fill="#ffffff"/>
+        <!-- 如意大鼻與喜氣白鬍鬚下巴 -->
+        <ellipse cx="65" cy="70" rx="14" ry="9" fill="#facc15" stroke="#991b1b" stroke-width="1.5"/>
+        <circle cx="59" cy="70" r="2.5" fill="#7f1d1d"/>
+        <circle cx="71" cy="70" r="2.5" fill="#7f1d1d"/>
+        <path d="M26 84 Q65 96 104 84 L98 102 Q65 112 32 102 Z" fill="#1e293b" stroke="#facc15" stroke-width="2"/>
+        <!-- 洁白波浪鬍鬚球 -->
+        <circle cx="34" cy="104" r="10" fill="#ffffff"/>
+        <circle cx="50" cy="108" r="11" fill="#f8fafc"/>
+        <circle cx="65" cy="110" r="12" fill="#ffffff"/>
+        <circle cx="80" cy="108" r="11" fill="#f8fafc"/>
+        <circle cx="96" cy="104" r="10" fill="#ffffff"/>
       </svg>
     </div>
   </div>
@@ -589,12 +843,41 @@
             <stop offset="100%" stop-color="#991b1b"/>
           </linearGradient>
         </defs>
-        <!-- 柔軟垂墜紅帽身 -->
         <path d="M20 82 C26 42, 55 16, 92 26 C106 30, 108 46, 98 54 C85 38, 68 50, 88 80 Z" fill="url(#santaHatGrad)"/>
-        <!-- 蓬鬆白絨毛帽邊 -->
         <path d="M14 82 C14 73, 26 71, 32 75 C38 70, 50 70, 56 75 C62 70, 74 70, 80 75 C86 71, 96 74, 96 82 C96 90, 84 92, 78 88 C72 92, 60 92, 54 88 C48 92, 36 92, 30 88 C24 92, 14 90, 14 82 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
-        <!-- 垂墜白絨毛球 -->
         <circle cx="101" cy="56" r="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+      </svg>
+    </div>
+
+    <!-- 🧧 卡片左上角掛著的立體灑金「福到（倒福）」春聯斗方 (農曆新年專屬) -->
+    <div class="newyear-only absolute -top-8 -left-4 sm:-top-10 sm:-left-7 w-20 h-20 sm:w-24 sm:h-24 pointer-events-none z-30 ny-fu-couplet">
+      <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-xl">
+        <defs>
+          <linearGradient id="fuPaperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="50%" stop-color="#dc2626"/>
+            <stop offset="100%" stop-color="#991b1b"/>
+          </linearGradient>
+        </defs>
+        <!-- 菱形春聯主體與雙層鎏金內框 -->
+        <polygon points="60,6 114,60 60,114 6,60" fill="url(#fuPaperGrad)" stroke="#facc15" stroke-width="3.5" stroke-linejoin="round"/>
+        <polygon points="60,14 106,60 60,106 14,60" fill="none" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="4 2"/>
+        <!-- 四角古典金色迴紋裝飾 -->
+        <circle cx="60" cy="18" r="2.2" fill="#fde047"/>
+        <circle cx="102" cy="60" r="2.2" fill="#fde047"/>
+        <circle cx="60" cy="102" r="2.2" fill="#fde047"/>
+        <circle cx="18" cy="60" r="2.2" fill="#fde047"/>
+        <!-- 倒置（寓意「福到」）之書法黃金「福」字向量筆畫 -->
+        <g transform="rotate(180 60 60)">
+          <!-- 左側示字旁 -->
+          <path d="M40 38 L47 43 M36 48 L50 48 L39 62 M45 56 L45 82 M45 58 L51 64" stroke="#fef08a" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- 右側一口田 -->
+          <line x1="56" y1="41" x2="82" y2="41" stroke="#fef08a" stroke-width="4.2" stroke-linecap="round"/>
+          <rect x="59" y="48" width="20" height="10" rx="1.5" stroke="#fef08a" stroke-width="3.8" fill="none"/>
+          <rect x="56" y="64" width="26" height="17" rx="2" stroke="#fef08a" stroke-width="4" fill="none"/>
+          <line x1="69" y1="64" x2="69" y2="81" stroke="#fef08a" stroke-width="3.6"/>
+          <line x1="56" y1="72.5" x2="82" y2="72.5" stroke="#fef08a" stroke-width="3.6"/>
+        </g>
       </svg>
     </div>
 
@@ -602,7 +885,7 @@
         <header class="text-center pb-4 border-b border-gray-200">
           <!-- 櫻花預設標題 -->
           <h1 id="header-title-sakura" class="text-4xl font-extrabold text-pink-700">🍜 風岡線上點餐 🍰</h1>
-          <!-- 萬聖節限定標題 (使用精緻 SVG 圖示) -->
+          <!-- 萬聖節限定標題 -->
           <h1 id="header-title-halloween" class="halloween-only text-3xl sm:text-4xl font-extrabold text-orange-600">
             <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
               <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
@@ -621,7 +904,7 @@
               </svg>
             </span>
           </h1>
-          <!-- 聖誕節限定標題 (使用精緻 SVG 聖誕花環與麋鹿金鈴圖示) -->
+          <!-- 聖誕節限定標題 -->
           <h1 id="header-title-christmas" class="christmas-only text-3xl sm:text-4xl font-extrabold text-red-700">
             <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
               <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
@@ -647,6 +930,26 @@
                 <circle cx="37" cy="34" r="2.5" fill="#fde047"/>
                 <circle cx="23" cy="45" r="2.5" fill="#38bdf8"/>
                 <circle cx="34" cy="44" r="2.5" fill="#ef4444"/>
+              </svg>
+            </span>
+          </h1>
+          <!-- 農曆新年限定標題 (使用精緻手繪宮燈與黃金元寶 SVG 圖示) -->
+          <h1 id="header-title-newyear" class="newyear-only text-3xl sm:text-4xl font-extrabold text-red-800">
+            <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
+              <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
+                <line x1="32" y1="2" x2="32" y2="12" stroke="#ca8a04" stroke-width="3"/>
+                <rect x="22" y="10" width="20" height="5" rx="1.5" fill="#facc15"/>
+                <ellipse cx="32" cy="30" rx="22" ry="17" fill="#dc2626" stroke="#facc15" stroke-width="2"/>
+                <ellipse cx="32" cy="30" rx="11" ry="17" fill="none" stroke="#fde047" stroke-width="1.2"/>
+                <circle cx="32" cy="30" r="6" fill="#fef08a"/>
+                <rect x="23" y="45" width="18" height="5" rx="1.5" fill="#facc15"/>
+                <path d="M28 50 L26 62 M32 50 L32 63 M36 50 L38 62" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+              <span>風岡線上點餐</span>
+              <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
+                <ellipse cx="32" cy="26" rx="14" ry="8" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+                <path d="M6 28 Q18 18 32 18 Q46 18 58 28 L48 48 Q32 56 16 48 Z" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+                <path d="M14 31 Q32 40 50 31" fill="none" stroke="#fef9c3" stroke-width="2.2"/>
               </svg>
             </span>
           </h1>
@@ -833,9 +1136,9 @@
      </div>
   </div>
 
-  <!-- 【新增】系統主題選擇彈跳視窗 (Theme Picker Modal) -->
+  <!-- 系統主題選擇彈跳視窗 (Theme Picker Modal - 支援四種主題) -->
   <div id="theme-picker-modal" class="modal-overlay hidden !z-[10000]" onclick="if(event.target === this) closeThemePickerModal()">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col p-6 space-y-5 relative mx-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col p-6 space-y-5 relative mx-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 class="text-xl font-black text-gray-800">選擇系統主題</h3>
         <button type="button" onclick="closeThemePickerModal()" class="text-gray-400 hover:text-gray-600 text-3xl font-bold leading-none">&times;</button>
@@ -895,6 +1198,25 @@
             <div class="text-xs text-gray-500 mt-0.5">手繪聖誕帽、發光聖誕樹、雪人與飄雪</div>
           </div>
           <div id="modal-theme-badge-christmas" class="text-xs font-bold px-2.5 py-1 rounded-full bg-red-600 text-white hidden">已選擇</div>
+        </button>
+
+        <!-- 農曆新年主題 -->
+        <button type="button" id="modal-theme-opt-newyear" onclick="chooseThemeFromModal('newyear')" class="w-full p-4 rounded-xl border-2 text-left transition flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-red-950 flex items-center justify-center flex-shrink-0 shadow-inner">
+            <svg class="w-8 h-8" viewBox="0 0 64 64">
+              <line x1="32" y1="2" x2="32" y2="11" stroke="#facc15" stroke-width="2.5"/>
+              <rect x="22" y="10" width="20" height="4.5" rx="1.5" fill="#facc15"/>
+              <ellipse cx="32" cy="29" rx="20" ry="15" fill="#dc2626" stroke="#facc15" stroke-width="2"/>
+              <circle cx="32" cy="29" r="5.5" fill="#fef08a"/>
+              <rect x="23" y="43" width="18" height="4.5" rx="1.5" fill="#facc15"/>
+              <path d="M28 48 L26 60 M32 48 L32 61 M36 48 L38 60" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="font-extrabold text-gray-800 text-base">賀歲迎新春</div>
+            <div class="text-xs text-gray-500 mt-0.5">手繪宮燈、倒福春聯、聚寶盆、醒獅與金箔</div>
+          </div>
+          <div id="modal-theme-badge-newyear" class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-600 text-white hidden">已選擇</div>
         </button>
       </div>
 
@@ -1087,7 +1409,7 @@
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5lzeKHGHkFI58bDajyOuwSRWPg-Zbz1ksFFqM0jp-3bpPAaduzTvilBqPgy3lVZuE/exec'; 
 
     // =========================================
-    // 【核心升級】三主題引擎：管理「櫻花」、「萬聖節」與「聖誕節」主題切換與粒子動畫
+    // 【核心升級】四主題引擎：管理「櫻花」、「萬聖節」、「聖誕節」與「農曆新年」主題切換與粒子動畫
     // =========================================
     const THEME_META = {
       sakura: {
@@ -1107,6 +1429,12 @@
         desc: '手繪聖誕帽、發光聖誕樹、雪人與飄雪',
         iconBg: 'bg-emerald-950',
         svg: `<svg class="w-6 h-6" viewBox="0 0 64 64"><rect x="28" y="48" width="8" height="9" rx="1.5" fill="#78350f"/><polygon points="32,24 12,49 52,49" fill="#15803d"/><polygon points="32,14 17,36 47,36" fill="#16a34a"/><polygon points="32,6 22,24 42,24" fill="#22c55e"/><polygon points="32,1 34,6 39,6 35,9 37,14 32,11 27,14 29,9 25,6 30,6" fill="#facc15"/><circle cx="26" cy="32" r="2.5" fill="#ef4444"/><circle cx="37" cy="33" r="2.5" fill="#fde047"/></svg>`
+      },
+      newyear: {
+        name: '賀歲迎新春',
+        desc: '手繪宮燈、倒福春聯、聚寶盆、醒獅與金箔',
+        iconBg: 'bg-red-950',
+        svg: `<svg class="w-6 h-6" viewBox="0 0 64 64"><line x1="32" y1="2" x2="32" y2="11" stroke="#facc15" stroke-width="2.5"/><rect x="22" y="10" width="20" height="4.5" rx="1.5" fill="#facc15"/><ellipse cx="32" cy="29" rx="20" ry="15" fill="#dc2626" stroke="#facc15" stroke-width="2"/><circle cx="32" cy="29" r="5.5" fill="#fef08a"/><rect x="23" y="43" width="18" height="4.5" rx="1.5" fill="#facc15"/><path d="M28 48 L26 60 M32 48 L32 61 M36 48 L38 60" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/></svg>`
       }
     };
 
@@ -1114,11 +1442,11 @@
     let selectedAdminTheme = currentSystemTheme;
 
     function applyTheme(themeName) {
-      const validTheme = ['sakura', 'halloween', 'christmas'].includes(themeName) ? themeName : 'sakura';
+      const validTheme = ['sakura', 'halloween', 'christmas', 'newyear'].includes(themeName) ? themeName : 'sakura';
       currentSystemTheme = validTheme;
       localStorage.setItem('app_theme', validTheme);
 
-      document.body.classList.remove('theme-halloween', 'theme-christmas');
+      document.body.classList.remove('theme-halloween', 'theme-christmas', 'theme-newyear');
       const sakuraTitle = document.getElementById('header-title-sakura');
 
       if (validTheme === 'halloween') {
@@ -1126,6 +1454,9 @@
         if (sakuraTitle) sakuraTitle.classList.add('hidden');
       } else if (validTheme === 'christmas') {
         document.body.classList.add('theme-christmas');
+        if (sakuraTitle) sakuraTitle.classList.add('hidden');
+      } else if (validTheme === 'newyear') {
+        document.body.classList.add('theme-newyear');
         if (sakuraTitle) sakuraTitle.classList.add('hidden');
       } else {
         if (sakuraTitle) sakuraTitle.classList.remove('hidden');
@@ -1226,6 +1557,69 @@
           spark.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
           spark.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
           container.appendChild(spark);
+        }
+      } else if (themeName === 'newyear') {
+        // 農曆新年：10 顆立體小金元寶 + 14 朵五瓣紅梅花 + 22 片閃爍黃金箔片
+        for (let i = 0; i < 10; i++) {
+          const ingot = document.createElement('div');
+          ingot.className = 'ny-falling-particle';
+          const size = Math.random() * 10 + 16;
+          const startLeft = Math.random() * 96;
+          const fallDuration = Math.random() * 6 + 8;
+          const swayDuration = Math.random() * 3 + 3;
+          const fallDelay = -(Math.random() * fallDuration);
+          const swayDelay = -(Math.random() * swayDuration);
+          ingot.style.left = `${startLeft}vw`;
+          ingot.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+          ingot.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
+          ingot.innerHTML = `
+            <svg width="${size}" height="${size * 0.75}" viewBox="0 0 40 30" fill="none">
+              <ellipse cx="20" cy="11" rx="9" ry="5" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+              <path d="M3 12 Q11 6 20 6 Q29 6 37 12 L31 24 Q20 28 9 24 Z" fill="#facc15" stroke="#b45309" stroke-width="1.2"/>
+            </svg>
+          `;
+          container.appendChild(ingot);
+        }
+        for (let i = 0; i < 14; i++) {
+          const plum = document.createElement('div');
+          plum.className = 'ny-falling-particle';
+          const size = Math.random() * 8 + 12;
+          const startLeft = Math.random() * 98;
+          const fallDuration = Math.random() * 6 + 7;
+          const swayDuration = Math.random() * 2.5 + 2.5;
+          const fallDelay = -(Math.random() * fallDuration);
+          const swayDelay = -(Math.random() * swayDuration);
+          plum.style.left = `${startLeft}vw`;
+          plum.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+          plum.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
+          plum.innerHTML = `
+            <svg width="${size}" height="${size}" viewBox="0 0 28 28">
+              <circle cx="14" cy="7" r="4.8" fill="#f43f5e"/>
+              <circle cx="20.5" cy="11.5" r="4.8" fill="#e11d48"/>
+              <circle cx="18" cy="19" r="4.8" fill="#f43f5e"/>
+              <circle cx="10" cy="19" r="4.8" fill="#e11d48"/>
+              <circle cx="7.5" cy="11.5" r="4.8" fill="#fb7185"/>
+              <circle cx="14" cy="13.5" r="2.5" fill="#fef08a"/>
+            </svg>
+          `;
+          container.appendChild(plum);
+        }
+        for (let i = 0; i < 22; i++) {
+          const foil = document.createElement('div');
+          foil.className = 'ny-gold-foil';
+          const w = Math.random() * 6 + 4;
+          const h = w * (Math.random() * 0.6 + 0.8);
+          const startLeft = Math.random() * 100;
+          const fallDuration = Math.random() * 5 + 6;
+          const swayDuration = Math.random() * 2.5 + 2;
+          const fallDelay = -(Math.random() * fallDuration);
+          const swayDelay = -(Math.random() * swayDuration);
+          foil.style.width = `${w}px`;
+          foil.style.height = `${h}px`;
+          foil.style.left = `${startLeft}vw`;
+          foil.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+          foil.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
+          container.appendChild(foil);
         }
       } else {
         // 櫻花主題：40 片粉嫩櫻花瓣
@@ -2185,7 +2579,7 @@
       if(tab==='users') loadAdminUsers();
     }
 
-    // --- 系統設定 (SWR + 彈跳視窗主題選擇器) ---
+    // --- 系統設定 (SWR + 彈跳視窗四主題選擇器) ---
     function openThemePickerModal() {
       updateThemePickerModalUI(selectedAdminTheme);
       document.getElementById('theme-picker-modal').classList.remove('hidden');
@@ -2199,9 +2593,10 @@
       const styles = {
         sakura: 'border-pink-500 bg-pink-50 ring-2 ring-pink-200',
         halloween: 'border-orange-500 bg-orange-50 ring-2 ring-orange-200',
-        christmas: 'border-red-500 bg-red-50 ring-2 ring-red-200'
+        christmas: 'border-red-500 bg-red-50 ring-2 ring-red-200',
+        newyear: 'border-amber-500 bg-amber-50 ring-2 ring-amber-200'
       };
-      ['sakura', 'halloween', 'christmas'].forEach(t => {
+      ['sakura', 'halloween', 'christmas', 'newyear'].forEach(t => {
         const btn = document.getElementById(`modal-theme-opt-${t}`);
         const badge = document.getElementById(`modal-theme-badge-${t}`);
         if (!btn || !badge) return;
@@ -2234,7 +2629,7 @@
 
     function renderAdminSettingsDOM(res) {
       const container = document.getElementById('admin-settings-container');
-      selectedAdminTheme = ['sakura', 'halloween', 'christmas'].includes(res.theme) ? res.theme : (currentSystemTheme || 'sakura');
+      selectedAdminTheme = ['sakura', 'halloween', 'christmas', 'newyear'].includes(res.theme) ? res.theme : (currentSystemTheme || 'sakura');
       const meta = THEME_META[selectedAdminTheme] || THEME_META.sakura;
 
       container.innerHTML = `
