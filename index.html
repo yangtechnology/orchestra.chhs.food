@@ -206,7 +206,6 @@
     .dragonboat-only { display: none !important; pointer-events: none !important; }
     body.theme-dragonboat .dragonboat-only { display: block !important; }
 
-    /* 背景深邃碧江竹林綠與陽光暖金漸層 */
     body.theme-dragonboat {
       background-color: #06281e !important;
       background-image: 
@@ -216,14 +215,12 @@
         linear-gradient(180deg, #041d15 0%, #093528 52%, #05221a 100%) !important;
     }
 
-    /* 主容器卡片：高對比暖白底搭配竹葉翡翠與五彩金線光暈外框 */
     body.theme-dragonboat #main-container {
       background-color: #fcfdfa !important;
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.82), 0 0 38px rgba(16, 185, 129, 0.32), 0 0 16px rgba(245, 158, 11, 0.28) !important;
       --tw-ring-color: rgba(16, 185, 129, 0.78) !important;
     }
 
-    /* 系統櫻花粉色系無縫轉換為端陽竹葉綠、艾草青與雄黃暖金 */
     body.theme-dragonboat .text-pink-700 { color: #047857 !important; }
     body.theme-dragonboat .text-pink-600 { color: #059669 !important; }
     body.theme-dragonboat .text-pink-500 { color: #10b981 !important; }
@@ -242,7 +239,6 @@
     body.theme-dragonboat .focus\:ring-pink-500:focus { --tw-ring-color: #10b981 !important; }
     body.theme-dragonboat .focus\:border-pink-500:focus { border-color: #10b981 !important; }
 
-    /* 端午節專屬動畫集 */
     @keyframes dragonBoatRock {
       0%, 100% { transform: translateY(0px) rotate(-3deg); }
       50% { transform: translateY(-8px) rotate(3.5deg); }
@@ -270,7 +266,6 @@
     .db-egg-wobble { animation: eggBalanceWobble 2.6s ease-in-out infinite; transform-origin: 96px 96px; }
     .db-zongzi-hat { animation: zongziHatNod 4.2s ease-in-out infinite; transform-origin: center bottom; }
 
-    /* 背景飄落修長翠竹葉與五彩祈福光塵 */
     .db-bamboo-particle {
       position: absolute;
       top: -15%;
@@ -564,11 +559,147 @@
       animation: fall linear infinite, sway ease-in-out infinite alternate;
       animation-fill-mode: both;
     }
+
+    /* =========================================================================
+       💻 賽博龐克駭客限定主題 (Cyberpunk Hacker Pro Theme) - 100% 純 SVG 向量與動態特效，不影響任何操作
+       ========================================================================= */
+    .cyberpunk-only { display: none !important; pointer-events: none !important; }
+    body.theme-cyberpunk .cyberpunk-only { display: block !important; }
+
+    /* 極致深黑底色 + 科技網格 + 螢光霓虹綠與電馭粉紅雙極光暈 */
+    body.theme-cyberpunk {
+      background-color: #05050a !important;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(0, 255, 157, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 88% 22%, rgba(255, 0, 127, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 50% 88%, rgba(0, 240, 255, 0.14) 0%, transparent 55%),
+        linear-gradient(rgba(0, 255, 157, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 127, 0.04) 1px, transparent 1px),
+        linear-gradient(180deg, #030308 0%, #090716 55%, #04040a 100%) !important;
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px, 100% 100% !important;
+    }
+
+    /* 主容器卡片：維持高可讀性冷白底，外框加上電馭粉紅 × 螢光霓虹綠雙色燈管閃爍與 Glitch 光暈 */
+    body.theme-cyberpunk #main-container {
+      background-color: #f8fafc !important;
+      animation: cyberNeonBorderFlicker 5s infinite alternate !important;
+      --tw-ring-color: rgba(0, 255, 157, 0.85) !important;
+    }
+
+    @keyframes cyberNeonBorderFlicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        box-shadow: 
+          0 25px 60px -15px rgba(0, 0, 0, 0.92),
+          0 0 28px rgba(0, 255, 157, 0.45),
+          0 0 52px rgba(255, 0, 127, 0.35),
+          inset 0 0 12px rgba(0, 255, 157, 0.18);
+      }
+      20%, 24%, 55% {
+        box-shadow: 
+          0 25px 60px -15px rgba(0, 0, 0, 0.92),
+          0 0 10px rgba(0, 240, 255, 0.25),
+          0 0 22px rgba(255, 0, 127, 0.65);
+      }
+    }
+
+    /* 系統配色轉換為電馭粉紅 (Cyber Magenta) 與駭客螢光綠 (Matrix Neon Green) */
+    body.theme-cyberpunk .text-pink-700 { color: #be185d !important; }
+    body.theme-cyberpunk .text-pink-600 { color: #059669 !important; }
+    body.theme-cyberpunk .text-pink-500 { color: #db2777 !important; }
+    body.theme-cyberpunk .bg-pink-600 { 
+      background-color: #e11d48 !important; 
+      box-shadow: 0 0 16px rgba(225, 29, 72, 0.45) !important;
+    }
+    body.theme-cyberpunk .hover\:bg-pink-700:hover { background-color: #be123c !important; }
+    body.theme-cyberpunk .bg-pink-500 { 
+      background-color: #059669 !important; 
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.45) !important;
+    }
+    body.theme-cyberpunk .hover\:bg-pink-600:hover { background-color: #047857 !important; }
+    body.theme-cyberpunk .bg-pink-100 { background-color: #d1fae5 !important; }
+    body.theme-cyberpunk .hover\:bg-pink-200:hover { background-color: #a7f3d0 !important; }
+    body.theme-cyberpunk .bg-pink-50 { background-color: #ecfdf5 !important; }
+    body.theme-cyberpunk .border-pink-200 { border-color: #6ee7b7 !important; }
+    body.theme-cyberpunk .border-pink-300 { border-color: #34d399 !important; }
+    body.theme-cyberpunk .border-pink-600 { border-color: #10b981 !important; }
+    body.theme-cyberpunk .border-t-pink-500 { border-top-color: #10b981 !important; }
+    body.theme-cyberpunk .loading-spinner { border-top-color: #10b981 !important; }
+    body.theme-cyberpunk .focus\:ring-pink-500:focus { --tw-ring-color: #10b981 !important; }
+    body.theme-cyberpunk .focus\:border-pink-500:focus { border-color: #10b981 !important; }
+
+    /* 賽博龐克專屬動畫集 */
+    @keyframes cyberCircuitFlow {
+      0% { stroke-dashoffset: 160; opacity: 0.35; }
+      50% { opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 0.35; }
+    }
+    @keyframes cyberCursorBlink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    @keyframes cyberGlitchTitle {
+      0%, 92%, 100% { transform: translate(0, 0) skewX(0deg); filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4)); }
+      94% { transform: translate(-2px, 1px) skewX(-4deg); filter: drop-shadow(-3px 0 #ff007f) drop-shadow(3px 0 #00ff9d); }
+      96% { transform: translate(2px, -1px) skewX(4deg); filter: drop-shadow(3px 0 #ff007f) drop-shadow(-3px 0 #00f0ff); }
+      98% { transform: translate(-1px, 0) skewX(0deg); }
+    }
+    @keyframes cyberVisorScan {
+      0%, 100% { transform: translateX(-18px); opacity: 0.7; }
+      50% { transform: translateX(18px); opacity: 1; }
+    }
+    @keyframes cyberVisorFloat {
+      0%, 100% { transform: rotate(-14deg) translateY(0px); }
+      50% { transform: rotate(-9deg) translateY(-4px); }
+    }
+    @keyframes cyberRadarSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes cyberServerPulse {
+      0%, 100% { transform: translateY(0px); filter: drop-shadow(0 0 12px rgba(0, 255, 157, 0.45)); }
+      50% { transform: translateY(-6px); filter: drop-shadow(0 0 22px rgba(255, 0, 127, 0.7)); }
+    }
+    @keyframes digitalRainFall {
+      0% { top: -25%; opacity: 0; }
+      12% { opacity: 0.9; }
+      85% { opacity: 0.85; }
+      100% { top: 112%; opacity: 0; }
+    }
+
+    .cb-circuit-pulse { stroke-dasharray: 28 132; animation: cyberCircuitFlow 3.2s linear infinite; }
+    .cb-circuit-pulse-pink { stroke-dasharray: 22 118; animation: cyberCircuitFlow 2.6s linear infinite reverse; }
+    .cb-cursor-blink { animation: cyberCursorBlink 0.9s steps(1) infinite; }
+    .cb-glitch-header { animation: cyberGlitchTitle 4.5s infinite; }
+    .cb-visor-hat { animation: cyberVisorFloat 4.2s ease-in-out infinite; transform-origin: center center; }
+    .cb-visor-laser { animation: cyberVisorScan 2.2s ease-in-out infinite; }
+    .cb-radar-sweep { animation: cyberRadarSpin 4s linear infinite; transform-origin: 155px 70px; }
+    .cb-server-float { animation: cyberServerPulse 4s ease-in-out infinite; }
+
+    /* 背景駭客任務數位雨 (Digital Rain) 與霓虹雷射光束粒子 */
+    .cb-matrix-rain {
+      position: absolute;
+      top: -25%;
+      opacity: 0;
+      pointer-events: none;
+      animation: digitalRainFall linear infinite;
+      animation-fill-mode: both;
+      filter: drop-shadow(0 0 6px #00ff9d);
+    }
+    .cb-laser-spark {
+      position: absolute;
+      top: -15%;
+      width: 2px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      animation: digitalRainFall linear infinite;
+      animation-fill-mode: both;
+    }
   </style>
 </head>
 <body class="p-4 sm:p-8 min-h-screen flex flex-col items-center justify-start relative pb-24 sm:pb-8">
 
-  <!-- 背景飄落特效容器 (六大主題共用) -->
+  <!-- 背景飄落特效容器 (七大主題共用) -->
   <div class="sakura-container" id="sakura-container"></div>
 
   <!-- =========================================================================
@@ -726,10 +857,9 @@
   </div>
 
   <!-- =========================================================================
-       🐲 端午節角落裝飾圖層 (5~6月：純 SVG 艾草菖蒲、五彩香包、乘風破浪龍舟、竹籠肉粽與立蛋)
+       🐲 端午節角落裝飾圖層 (5~6月)
        ========================================================================= -->
   <div id="dragonboat-ambient-decor" class="dragonboat-only fixed inset-0 pointer-events-none z-20 overflow-hidden">
-    
     <!-- 左上角：辟邪翠竹艾草菖蒲束 + 搖曳五彩絲線刺繡香包 -->
     <div class="absolute top-0 left-0 w-44 h-48 sm:w-60 sm:h-64">
       <svg viewBox="0 0 230 250" class="w-full h-full">
@@ -745,26 +875,18 @@
             <stop offset="100%" stop-color="#064e3b"/>
           </linearGradient>
         </defs>
-        <!-- 修長菖蒲劍葉與艾草枝葉 -->
         <path d="M-5 15 Q65 25 145 8" fill="none" stroke="#047857" stroke-width="5" stroke-linecap="round"/>
         <path d="M10 -5 C45 20, 95 38, 165 22 C115 48, 55 42, -5 18 Z" fill="url(#dbLeafGrad)"/>
         <path d="M-5 12 C35 45, 78 75, 132 82 C85 92, 35 65, -8 28 Z" fill="#10b981" opacity="0.88"/>
         <path d="M12 -5 C25 45, 22 98, 8 148 C38 105, 42 52, 22 -5 Z" fill="url(#dbLeafGrad)"/>
-        <!-- 束口紅絲絨雙喜結 -->
         <circle cx="32" cy="28" r="7" fill="#dc2626" stroke="#fde047" stroke-width="1.5"/>
-        <!-- 垂掛隨風搖擺的五彩流蘇香包 (香囊) -->
         <g class="db-sachet-sway">
-          <!-- 五彩祈福絲繩 (青、紅、白、黑、黃意象) -->
           <line x1="65" y1="25" x2="65" y2="68" stroke="#facc15" stroke-width="2.5" stroke-dasharray="3 2"/>
           <line x1="65" y1="25" x2="65" y2="68" stroke="#10b981" stroke-width="1.2"/>
-          <!-- 香包金珠頂飾 -->
           <circle cx="65" cy="66" r="4.5" fill="#facc15" stroke="#b45309" stroke-width="1"/>
-          <!-- 飽滿菱形圓肚香包本體 -->
           <path d="M65 68 C88 68, 96 92, 65 118 C34 92, 42 68, 65 68 Z" fill="url(#dbSachetGrad)" stroke="#fde047" stroke-width="2"/>
-          <!-- 香包中央金色祥雲與平安刺繡紋 -->
           <circle cx="65" cy="91" r="11" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
           <path d="M59 88 L71 88 M61 92 L69 92 M65 85 L65 97 M61 90 L59 95 M69 90 L71 95" stroke="#b91c1c" stroke-width="1.6" stroke-linecap="round"/>
-          <!-- 五彩絲線流蘇穗 -->
           <circle cx="65" cy="120" r="4" fill="#facc15"/>
           <path d="M61 123 L55 162" stroke="#10b981" stroke-width="2.2" stroke-linecap="round"/>
           <path d="M63 123 L60 165" stroke="#f43f5e" stroke-width="2.2" stroke-linecap="round"/>
@@ -778,22 +900,18 @@
     <!-- 右上角：翠竹枝枒 + 垂掛立體雙竹葉粽串 -->
     <div class="absolute top-0 right-0 w-40 h-48 sm:w-52 sm:h-60">
       <svg viewBox="0 0 220 240" class="w-full h-full">
-        <!-- 翠竹枝節 -->
         <path d="M225 28 Q155 22 85 6" fill="none" stroke="#065f46" stroke-width="6" stroke-linecap="round"/>
         <path d="M180 22 C155 42, 128 48, 98 42 C125 28, 152 22, 180 22 Z" fill="#10b981"/>
         <path d="M140 15 C115 32, 92 35, 68 28 C92 16, 118 12, 140 15 Z" fill="#059669"/>
-        <!-- 搖曳綁繩雙肉粽串 -->
         <g class="db-sachet-sway" style="transform-origin: 155px 20px;">
           <line x1="155" y1="20" x2="142" y2="68" stroke="#fcd34d" stroke-width="2"/>
           <line x1="155" y1="20" x2="172" y2="85" stroke="#fcd34d" stroke-width="2"/>
-          <!-- 上方立體竹葉粽 -->
           <g transform="translate(122, 55) rotate(-12)">
             <path d="M20 2 L38 32 L4 34 Z" fill="#15803d" stroke="#064e3b" stroke-width="1.2" stroke-linejoin="round"/>
             <path d="M20 2 L30 33 L12 33 Z" fill="#16a34a"/>
             <path d="M11 18 Q20 23 30 18" fill="none" stroke="#fef08a" stroke-width="2.2" stroke-linecap="round"/>
             <circle cx="20" cy="20" r="2.8" fill="#ef4444"/>
           </g>
-          <!-- 下方立體竹葉粽 -->
           <g transform="translate(152, 72) rotate(14)">
             <path d="M20 2 L38 32 L4 34 Z" fill="#047857" stroke="#064e3b" stroke-width="1.2" stroke-linejoin="round"/>
             <path d="M20 2 L30 33 L12 33 Z" fill="#10b981"/>
@@ -804,7 +922,7 @@
       </svg>
     </div>
 
-    <!-- 左下角：乘風破浪立體皇家金紅龍舟首 + 翻湧碧江波濤 (手機版縮小靠邊避開底部購物車，電腦版完整呈現) -->
+    <!-- 左下角：乘風破浪立體皇家金紅龍舟首 + 翻湧碧江波濤 -->
     <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-22 h-22 sm:w-36 sm:h-36">
       <svg viewBox="0 0 150 140" class="w-full h-full drop-shadow-2xl">
         <defs>
@@ -819,31 +937,23 @@
             <stop offset="100%" stop-color="#ca8a04"/>
           </linearGradient>
         </defs>
-        <!-- 乘風破浪搖擺龍舟主體 -->
         <g class="db-boat-rock">
-          <!-- 龍舟船身與金色龍鱗紋 -->
           <path d="M15 88 Q55 112 118 92 L126 70 Q68 88 26 70 Z" fill="url(#dbHullGrad)" stroke="#facc15" stroke-width="2"/>
           <path d="M35 82 Q45 76 55 82 Q65 76 75 82 Q85 76 95 82 Q105 76 115 82" fill="none" stroke="#fde047" stroke-width="1.8" stroke-linecap="round"/>
-          <!-- 昂首威武龍頸與龍頭 -->
           <path d="M22 76 C16 52, 24 28, 48 22 L56 36 C38 42, 36 58, 44 76 Z" fill="url(#dbHullGrad)" stroke="#facc15" stroke-width="2"/>
-          <!-- 黃金龍角與翡翠龍鬃 -->
           <path d="M36 26 C22 14, 14 18, 10 8 C22 8, 32 14, 44 22 Z" fill="url(#dbGoldGrad)" stroke="#a16207" stroke-width="1.2"/>
           <path d="M26 36 C12 32, 8 38, 4 32 C12 28, 22 28, 30 32 Z" fill="#10b981"/>
           <path d="M22 48 C10 46, 6 52, 3 46 C10 42, 18 42, 25 46 Z" fill="#10b981"/>
-          <!-- 龍吻、龍鬚與口銜明珠 -->
           <path d="M44 22 L76 20 C80 26, 74 32, 54 32 Z" fill="url(#dbGoldGrad)" stroke="#b45309" stroke-width="1.2"/>
           <path d="M48 34 L72 38 C70 44, 58 44, 46 39 Z" fill="#dc2626" stroke="#facc15" stroke-width="1.2"/>
           <circle cx="65" cy="30" r="4.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1"/>
           <path d="M72 24 Q92 16 102 26" fill="none" stroke="#fef08a" stroke-width="2" stroke-linecap="round"/>
-          <!-- 炯炯龍眼 -->
           <circle cx="46" cy="26" r="3.5" fill="#ffffff"/>
           <circle cx="47" cy="26" r="1.8" fill="#0f172a"/>
-          <!-- 划動木槳 -->
           <line x1="62" y1="78" x2="52" y2="112" stroke="#fde047" stroke-width="3" stroke-linecap="round"/>
           <line x1="86" y1="78" x2="76" y2="112" stroke="#fde047" stroke-width="3" stroke-linecap="round"/>
           <line x1="108" y1="74" x2="98" y2="108" stroke="#fde047" stroke-width="3" stroke-linecap="round"/>
         </g>
-        <!-- 前景動態碧水浪花 -->
         <g class="db-wave-move">
           <path d="M6 108 Q24 96 42 108 T78 108 T114 108 T144 108 L144 124 L6 124 Z" fill="#0284c7" opacity="0.85"/>
           <path d="M12 114 Q30 102 48 114 T84 114 T120 114 T146 114" fill="none" stroke="#bae6fd" stroke-width="3" stroke-linecap="round"/>
@@ -854,7 +964,7 @@
       </svg>
     </div>
 
-    <!-- 右下角：竹編蒸籠剝開鹹蛋黃燒肉粽 + 端午正午立蛋 (含熱氣動畫) -->
+    <!-- 右下角：竹編蒸籠剝開鹹蛋黃燒肉粽 + 端午正午立蛋 -->
     <div class="fixed bottom-20 right-1.5 sm:bottom-6 sm:right-6 w-20 h-20 sm:w-32 sm:h-32">
       <svg viewBox="0 0 135 130" class="w-full h-full drop-shadow-2xl">
         <defs>
@@ -869,32 +979,23 @@
             <stop offset="100%" stop-color="#c2410c"/>
           </radialGradient>
         </defs>
-        <!-- 傳統竹編圓盤底座 -->
         <ellipse cx="68" cy="104" rx="56" ry="16" fill="#92400e" stroke="#f59e0b" stroke-width="2"/>
         <ellipse cx="68" cy="101" rx="49" ry="12" fill="#b45309"/>
-        <!-- 氤氳糯米香氣熱煙 -->
         <path d="M45 36 Q40 26 46 18 Q52 10 46 2" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" class="ma-steam-1"/>
         <path d="M62 32 Q57 22 63 14 Q69 6 63 -2" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" class="ma-steam-2"/>
-        <!-- 左側：半剝開竹葉的飽滿鹹蛋黃燒肉粽 -->
         <g transform="translate(18, 42)">
-          <!-- 展開的翠綠粽葉底襯 -->
           <path d="M4 48 Q28 62 64 48 L56 32 L12 32 Z" fill="#15803d" stroke="#064e3b" stroke-width="1.2"/>
-          <!-- 晶瑩醬色金字塔糯米粽身 -->
           <path d="M34 4 L60 46 Q34 54 8 46 Z" fill="url(#dbRiceGrad)" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round"/>
-          <!-- 飽滿流油紅仁鹹蛋黃與香菇內餡 -->
           <circle cx="34" cy="28" r="7.5" fill="#ea580c" stroke="#fef08a" stroke-width="1.2"/>
           <circle cx="32" cy="26" r="2" fill="#fde047"/>
           <ellipse cx="23" cy="36" rx="5" ry="3.2" fill="#78350f" transform="rotate(-15 23 36)"/>
           <ellipse cx="45" cy="37" rx="4.5" ry="3" fill="#78350f" transform="rotate(18 45 37)"/>
-          <!-- 下方包覆的十字竹葉與棉繩 -->
           <path d="M8 44 L34 28 L52 50 Q28 56 8 44 Z" fill="#16a34a" stroke="#065f46" stroke-width="1"/>
           <path d="M60 44 L34 28 L16 50 Q40 56 60 44 Z" fill="#15803d" stroke="#065f46" stroke-width="1"/>
         </g>
-        <!-- 右側：端午正午立蛋成功（微晃不倒）的吉慶福蛋 -->
         <g class="db-egg-wobble">
           <ellipse cx="96" cy="98" rx="10" ry="3" fill="#78350f" opacity="0.6"/>
           <path d="M96 56 C106 56, 111 74, 111 84 C111 93, 104 98, 96 98 C88 98, 81 93, 81 84 C81 74, 86 56, 96 56 Z" fill="url(#dbEggGrad)" stroke="#9a3412" stroke-width="1.2"/>
-          <!-- 立蛋上的可愛招財笑臉 -->
           <path d="M90 76 Q92 73 94 76" fill="none" stroke="#431407" stroke-width="1.6" stroke-linecap="round"/>
           <path d="M98 76 Q100 73 102 76" fill="none" stroke="#431407" stroke-width="1.6" stroke-linecap="round"/>
           <path d="M93 81 Q96 84 99 81" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-linecap="round"/>
@@ -1307,6 +1408,145 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       💻 賽博龐克駭客角落裝飾圖層 (隱藏版特殊風格：純 SVG 發光電路板脈衝、HUD 全息雷達、復古 CRT 終端機與量子核心)
+       ========================================================================= -->
+  <div id="cyberpunk-ambient-decor" class="cyberpunk-only fixed inset-0 pointer-events-none z-20 overflow-hidden">
+    
+    <!-- 左上角：發光印刷電路板 (PCB Traces) + 動態電流脈衝節點 -->
+    <div class="absolute top-0 left-0 w-44 h-44 sm:w-64 sm:h-64 opacity-90">
+      <svg viewBox="0 0 240 240" class="w-full h-full fill-none">
+        <!-- 底層暗色電路軌跡 -->
+        <path d="M 0 24 L 65 24 L 95 54 L 165 54 L 195 24 L 235 24" stroke="#065f46" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 0 56 L 48 56 L 82 90 L 145 90" stroke="#065f46" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 24 0 L 24 72 L 58 106 L 58 175 L 24 205" stroke="#831843" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 56 0 L 56 42 L 105 90 L 105 155" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
+        <!-- 動態高頻脈衝電流 (螢光綠與電馭粉紅) -->
+        <path d="M 0 24 L 65 24 L 95 54 L 165 54 L 195 24 L 235 24" stroke="#00ff9d" stroke-width="2.8" stroke-linecap="round" class="cb-circuit-pulse" filter="drop-shadow(0 0 6px #00ff9d)"/>
+        <path d="M 24 0 L 24 72 L 58 106 L 58 175 L 24 205" stroke="#ff007f" stroke-width="2.8" stroke-linecap="round" class="cb-circuit-pulse-pink" filter="drop-shadow(0 0 6px #ff007f)"/>
+        <path d="M 0 56 L 48 56 L 82 90 L 145 90" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" class="cb-circuit-pulse"/>
+        <!-- 晶片與發光節點焊盤 -->
+        <rect x="72" y="76" width="26" height="26" rx="3" fill="#090d16" stroke="#00ff9d" stroke-width="1.8" filter="drop-shadow(0 0 8px rgba(0,255,157,0.5))"/>
+        <rect x="78" y="82" width="14" height="14" fill="#00ff9d" opacity="0.8" class="cb-cursor-blink"/>
+        <circle cx="145" cy="90" r="4.5" fill="#090d16" stroke="#00f0ff" stroke-width="2.2"/>
+        <circle cx="165" cy="54" r="4" fill="#00ff9d"/>
+        <circle cx="58" cy="175" r="4.5" fill="#090d16" stroke="#ff007f" stroke-width="2.2"/>
+        <circle cx="105" cy="155" r="4" fill="#ff007f"/>
+      </svg>
+    </div>
+
+    <!-- 右上角：全息 HUD 雷達掃描儀 + 對稱電路脈衝 -->
+    <div class="absolute top-0 right-0 w-44 h-44 sm:w-60 sm:h-60 opacity-90">
+      <svg viewBox="0 0 220 220" class="w-full h-full fill-none">
+        <!-- 右上電路延伸 -->
+        <path d="M 220 28 L 145 28 L 115 58 L 45 58" stroke="#065f46" stroke-width="2"/>
+        <path d="M 220 28 L 145 28 L 115 58 L 45 58" stroke="#00ff9d" stroke-width="2.5" class="cb-circuit-pulse" filter="drop-shadow(0 0 6px #00ff9d)"/>
+        <path d="M 192 0 L 192 85 L 155 122 L 155 185" stroke="#ff007f" stroke-width="2.2" class="cb-circuit-pulse-pink"/>
+        <!-- 全息投影戰術雷達環 -->
+        <circle cx="155" cy="70" r="36" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="12 6 4 6" opacity="0.75"/>
+        <circle cx="155" cy="70" r="24" stroke="#00ff9d" stroke-width="1.2" opacity="0.5"/>
+        <circle cx="155" cy="70" r="11" stroke="#ff007f" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+        <line x1="115" y1="70" x2="195" y2="70" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
+        <line x1="155" y1="30" x2="155" y2="110" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
+        <!-- 旋轉雷達掃描扇形束 -->
+        <g class="cb-radar-sweep">
+          <path d="M 155 70 L 155 34 A 36 36 0 0 1 186 52 Z" fill="rgba(0, 255, 157, 0.28)"/>
+          <line x1="155" y1="70" x2="155" y2="34" stroke="#00ff9d" stroke-width="2"/>
+        </g>
+        <!-- 雷達鎖定光點 -->
+        <circle cx="168" cy="56" r="2.8" fill="#ff007f" class="cb-cursor-blink" filter="drop-shadow(0 0 4px #ff007f)"/>
+        <circle cx="142" cy="78" r="2.2" fill="#00ff9d"/>
+        <!-- HUD 科技狀態數據條 -->
+        <rect x="118" y="116" width="42" height="5" rx="1" fill="#00ff9d" opacity="0.8"/>
+        <rect x="164" y="116" width="22" height="5" rx="1" fill="#ff007f" opacity="0.85"/>
+        <rect x="132" y="125" width="54" height="3" rx="1" fill="#00f0ff" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <!-- 左下角：復古 CRT 球面駭客終端機螢幕 (內含閃爍游標與指令輸入動畫，手機版縮小靠邊避開底部購物車) -->
+    <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-22 h-22 sm:w-36 sm:h-36 cb-server-float">
+      <svg viewBox="0 0 140 140" class="w-full h-full">
+        <defs>
+          <linearGradient id="cbCrtCaseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#334155"/>
+            <stop offset="60%" stop-color="#1e293b"/>
+            <stop offset="100%" stop-color="#0f172a"/>
+          </linearGradient>
+          <radialGradient id="cbCrtScreenGrad" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#064e3b"/>
+            <stop offset="70%" stop-color="#022c22"/>
+            <stop offset="100%" stop-color="#011510"/>
+          </radialGradient>
+        </defs>
+        <!-- CRT 電腦底座與機械鍵盤斜板 -->
+        <path d="M26 104 L114 104 L126 122 L14 122 Z" fill="#1e293b" stroke="#00f0ff" stroke-width="1.5"/>
+        <line x1="26" y1="111" x2="114" y2="111" stroke="#00ff9d" stroke-width="2" stroke-dasharray="5 3"/>
+        <line x1="22" y1="116" x2="118" y2="116" stroke="#ff007f" stroke-width="2" stroke-dasharray="4 3"/>
+        <rect x="45" y="96" width="50" height="9" fill="#0f172a" stroke="#475569" stroke-width="1.2"/>
+        <!-- 復古厚重 CRT 顯示器外殼 -->
+        <rect x="18" y="18" width="104" height="80" rx="10" fill="url(#cbCrtCaseGrad)" stroke="#00ff9d" stroke-width="2"/>
+        <line x1="18" y1="32" x2="122" y2="32" stroke="#ff007f" stroke-width="1.2" opacity="0.7"/>
+        <!-- 球面發光綠磷光螢幕 -->
+        <rect x="27" y="27" width="86" height="58" rx="6" fill="url(#cbCrtScreenGrad)" stroke="#10b981" stroke-width="1.5"/>
+        <!-- CRT 螢幕水平掃描線紋理 -->
+        <line x1="29" y1="35" x2="111" y2="35" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
+        <line x1="29" y1="43" x2="111" y2="43" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
+        <line x1="29" y1="51" x2="111" y2="51" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
+        <line x1="29" y1="59" x2="111" y2="59" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
+        <line x1="29" y1="67" x2="111" y2="67" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
+        <line x1="29" y1="75" x2="111" y2="75" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
+        <!-- 終端機內部的綠色程式碼與閃爍方塊游標 -->
+        <text x="33" y="41" fill="#00ff9d" font-family="monospace" font-size="8" font-weight="bold">&gt; ROOT@CHHS:~#</text>
+        <text x="33" y="53" fill="#38bdf8" font-family="monospace" font-size="7.5" font-weight="bold">&gt; ACCESS_GRANTED</text>
+        <text x="33" y="65" fill="#ff007f" font-family="monospace" font-size="7.5" font-weight="bold">&gt; SYS_OVERRIDE</text>
+        <text x="33" y="77" fill="#00ff9d" font-family="monospace" font-size="8.5" font-weight="bold">&gt; EXEC_ORDER</text>
+        <rect x="93" y="69" width="6.5" height="9" fill="#00ff9d" class="cb-cursor-blink" filter="drop-shadow(0 0 4px #00ff9d)"/>
+        <!-- 電源霓虹指示燈 -->
+        <circle cx="108" cy="91" r="2.8" fill="#ff007f" class="cb-cursor-blink"/>
+        <circle cx="99" cy="91" r="2.5" fill="#00ff9d"/>
+      </svg>
+    </div>
+
+    <!-- 右下角：量子駭客核心伺服器機櫃與全息能量柱 -->
+    <div class="fixed bottom-20 right-1.5 sm:bottom-6 sm:right-6 w-20 h-22 sm:w-32 sm:h-36 cb-server-float" style="animation-delay: -2s;">
+      <svg viewBox="0 0 130 140" class="w-full h-full">
+        <defs>
+          <linearGradient id="cbCoreGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#00f0ff"/>
+            <stop offset="50%" stop-color="#00ff9d"/>
+            <stop offset="100%" stop-color="#059669"/>
+          </linearGradient>
+        </defs>
+        <!-- 全息投影底座 -->
+        <ellipse cx="65" cy="122" rx="48" ry="10" fill="#090d16" stroke="#00f0ff" stroke-width="2"/>
+        <ellipse cx="65" cy="122" rx="36" ry="6" fill="none" stroke="#ff007f" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <!-- 主機甲機箱與雙側霓虹導光條 -->
+        <rect x="28" y="24" width="74" height="94" rx="6" fill="#0f172a" stroke="#00ff9d" stroke-width="2"/>
+        <line x1="34" y1="30" x2="34" y2="112" stroke="#ff007f" stroke-width="3" stroke-linecap="round"/>
+        <line x1="96" y1="30" x2="96" y2="112" stroke="#00f0ff" stroke-width="3" stroke-linecap="round"/>
+        <!-- 4 層刀鋒伺服器模組與呼吸陣列燈 -->
+        <rect x="41" y="32" width="48" height="14" rx="2" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <circle cx="48" cy="39" r="2.5" fill="#00ff9d" class="xmas-bulb-a"/>
+        <circle cx="56" cy="39" r="2.5" fill="#00ff9d" class="xmas-bulb-b"/>
+        <rect x="66" y="37" width="18" height="4" rx="1" fill="#00f0ff"/>
+
+        <rect x="41" y="52" width="48" height="14" rx="2" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <circle cx="48" cy="59" r="2.5" fill="#ff007f" class="xmas-bulb-b"/>
+        <circle cx="56" cy="59" r="2.5" fill="#00ff9d" class="xmas-bulb-a"/>
+        <rect x="66" y="57" width="14" height="4" rx="1" fill="#ff007f"/>
+
+        <rect x="41" y="72" width="48" height="14" rx="2" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <circle cx="48" cy="79" r="2.5" fill="#00ff9d" class="xmas-bulb-a"/>
+        <circle cx="56" cy="79" r="2.5" fill="#00f0ff" class="xmas-bulb-b"/>
+        <rect x="66" y="77" width="19" height="4" rx="1" fill="#00ff9d"/>
+
+        <!-- 底部發光量子能量核心腔 -->
+        <rect x="41" y="92" width="48" height="20" rx="3" fill="#022c22" stroke="#00ff9d" stroke-width="1.5"/>
+        <path d="M45 104 L53 96 L61 106 L69 95 L77 104 L85 98" fill="none" stroke="url(#cbCoreGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
   <div id="main-container" class="w-full max-w-xl bg-white shadow-2xl rounded-2xl p-4 sm:p-8 space-y-6 ring-4 ring-pink-300/50 relative z-10 flex flex-col min-h-[80vh]">
     
     <!-- 🧧 1. 農曆新年卡片左上角：立體灑金「福到（倒福）」春聯斗方 -->
@@ -1346,16 +1586,12 @@
             <stop offset="100%" stop-color="#064e3b"/>
           </linearGradient>
         </defs>
-        <!-- 後方襯底雙片艾草與菖蒲葉 -->
         <path d="M18 76 C8 52, 22 28, 48 22 C36 45, 34 62, 42 78 Z" fill="#10b981"/>
         <path d="M102 74 C112 50, 98 26, 72 22 C84 45, 86 62, 78 78 Z" fill="#059669"/>
-        <!-- 立體三角稜線竹葉肉粽本體 -->
         <path d="M60 16 L102 82 Q60 98 18 82 Z" fill="url(#dbHatZongziGrad)" stroke="#064e3b" stroke-width="2" stroke-linejoin="round"/>
         <path d="M60 16 L84 85 L36 85 Z" fill="#16a34a" opacity="0.75"/>
-        <!-- 竹葉自然葉脈紋理 -->
         <line x1="48" y1="36" x2="32" y2="74" stroke="#86efac" stroke-width="1.2" opacity="0.6"/>
         <line x1="72" y1="36" x2="88" y2="74" stroke="#86efac" stroke-width="1.2" opacity="0.6"/>
-        <!-- 傳統五彩棉繩十字纏繞與蝴蝶結 -->
         <path d="M35 52 Q60 64 85 52" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
         <path d="M35 52 Q60 64 85 52" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
         <line x1="60" y1="18" x2="60" y2="89" stroke="#fef08a" stroke-width="3.2"/>
@@ -1424,6 +1660,35 @@
         <circle cx="101" cy="56" r="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
       </svg>
     </div>
+
+    <!-- 💻 6. 賽博龐克駭客卡片左上角：立體電馭戰術全息護目面罩 (Cyber Tactical Visor) -->
+    <div class="cyberpunk-only absolute -top-9 -left-5 sm:-top-11 sm:-left-8 w-22 h-22 sm:w-26 sm:h-26 pointer-events-none z-30 cb-visor-hat">
+      <svg viewBox="0 0 120 120" class="w-full h-full" filter="drop-shadow(0 0 12px rgba(0, 255, 157, 0.5))">
+        <defs>
+          <linearGradient id="cbVisorGlassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff007f"/>
+            <stop offset="50%" stop-color="#00f0ff"/>
+            <stop offset="100%" stop-color="#00ff9d"/>
+          </linearGradient>
+        </defs>
+        <!-- 戰術高頻天線耳機翼 -->
+        <polygon points="18,62 28,20 36,24 30,66" fill="#0f172a" stroke="#00ff9d" stroke-width="1.5"/>
+        <circle cx="28" cy="18" r="3.5" fill="#ff007f" class="cb-cursor-blink"/>
+        <polygon points="102,62 92,20 84,24 90,66" fill="#0f172a" stroke="#00f0ff" stroke-width="1.5"/>
+        <circle cx="92" cy="18" r="3.5" fill="#00ff9d"/>
+        <!-- 碳纖維戰術頭盔冠部 -->
+        <path d="M22 62 C26 32, 94 32, 98 62 Z" fill="#1e293b" stroke="#00ff9d" stroke-width="2"/>
+        <path d="M42 42 L78 42 L84 56 L36 56 Z" fill="#090d16" stroke="#ff007f" stroke-width="1.2"/>
+        <!-- 發光全息流線型護目鏡片 -->
+        <path d="M12 58 Q60 48 108 58 L100 84 Q60 94 20 84 Z" fill="#090d16" stroke="url(#cbVisorGlassGrad)" stroke-width="3"/>
+        <path d="M18 63 Q60 54 102 63 L95 79 Q60 88 25 79 Z" fill="url(#cbVisorGlassGrad)" opacity="0.82"/>
+        <!-- 護目鏡內部動態掃描雷射準星 -->
+        <g class="cb-visor-laser">
+          <line x1="60" y1="58" x2="60" y2="83" stroke="#ffffff" stroke-width="3"/>
+          <circle cx="60" cy="71" r="6" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+        </g>
+      </svg>
+    </div>
     <div class="flex-grow space-y-6">
         <header class="text-center pb-4 border-b border-gray-200">
           <!-- 0. 櫻花預設標題 -->
@@ -1450,7 +1715,7 @@
             </span>
           </h1>
 
-          <!-- 2. 端午節限定標題 (5~6月：使用精緻手繪立體竹葉粽與龍舟 SVG 圖示) -->
+          <!-- 2. 端午節限定標題 (5~6月) -->
           <h1 id="header-title-dragonboat" class="dragonboat-only text-3xl sm:text-4xl font-extrabold text-emerald-800">
             <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
               <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
@@ -1538,6 +1803,39 @@
                 <circle cx="37" cy="34" r="2.5" fill="#fde047"/>
                 <circle cx="23" cy="45" r="2.5" fill="#38bdf8"/>
                 <circle cx="34" cy="44" r="2.5" fill="#ef4444"/>
+              </svg>
+            </span>
+          </h1>
+
+          <!-- 6. 賽博龐克駭客限定標題 (隱藏版特殊風格：純 SVG 終端機晶片與全息雷射圖示 + Glitch 故障特效) -->
+          <h1 id="header-title-cyberpunk" class="cyberpunk-only text-3xl sm:text-4xl font-black text-slate-900 cb-glitch-header">
+            <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
+              <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
+                <rect x="14" y="14" width="36" height="36" rx="4" fill="#090d16" stroke="#00ff9d" stroke-width="2.5"/>
+                <rect x="22" y="22" width="20" height="20" rx="2" fill="#064e3b" stroke="#ff007f" stroke-width="1.8"/>
+                <path d="M26 28 L31 32 L26 36 M33 36 L39 36" fill="none" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- 晶片金屬引腳 -->
+                <line x1="22" y1="6" x2="22" y2="14" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="32" y1="6" x2="32" y2="14" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="42" y1="6" x2="42" y2="14" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="22" y1="50" x2="22" y2="58" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="32" y1="50" x2="32" y2="58" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="42" y1="50" x2="42" y2="58" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="6" y1="22" x2="14" y2="22" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="6" y1="32" x2="14" y2="32" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="6" y1="42" x2="14" y2="42" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="50" y1="22" x2="58" y2="22" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="50" y1="32" x2="58" y2="32" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="50" y1="42" x2="58" y2="42" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+              <span class="tracking-wider">風岡線上點餐</span>
+              <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
+                <rect x="6" y="10" width="52" height="38" rx="5" fill="#090d16" stroke="#ff007f" stroke-width="2.5"/>
+                <rect x="11" y="15" width="42" height="28" rx="2" fill="#022c22"/>
+                <text x="15" y="28" fill="#00ff9d" font-family="monospace" font-size="11" font-weight="bold">01_OS</text>
+                <rect x="15" y="33" width="22" height="4" fill="#00f0ff"/>
+                <rect x="40" y="32" width="6" height="6" fill="#00ff9d" class="cb-cursor-blink"/>
+                <path d="M22 48 L16 56 L48 56 L42 48 Z" fill="#1e293b" stroke="#00ff9d" stroke-width="1.8"/>
               </svg>
             </span>
           </h1>
@@ -1724,7 +2022,7 @@
      </div>
   </div>
 
-  <!-- 系統主題選擇彈跳視窗 (Theme Picker Modal - 依照預設櫻花 + 節慶月份順序排列) -->
+  <!-- 系統主題選擇彈跳視窗 (Theme Picker Modal - 依照預設櫻花 + 節慶月份順序 + 隱藏版賽博龐克排列) -->
   <div id="theme-picker-modal" class="modal-overlay hidden !z-[10000]" onclick="if(event.target === this) closeThemePickerModal()">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col p-6 space-y-5 relative mx-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
@@ -1843,6 +2141,23 @@
             <div class="text-xs text-gray-500 mt-0.5">手繪聖誕帽、發光聖誕樹、雪人與飄雪</div>
           </div>
           <div id="modal-theme-badge-christmas" class="text-xs font-bold px-2.5 py-1 rounded-full bg-red-600 text-white hidden">已選擇</div>
+        </button>
+
+        <!-- 7. 賽博龐克駭客主題 (隱藏版特殊風格) -->
+        <button type="button" id="modal-theme-opt-cyberpunk" onclick="chooseThemeFromModal('cyberpunk')" class="w-full p-4 rounded-xl border-2 text-left transition flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-slate-950 border border-emerald-400/50 flex items-center justify-center flex-shrink-0 shadow-inner">
+            <svg class="w-8 h-8" viewBox="0 0 64 64">
+              <rect x="8" y="12" width="48" height="34" rx="4" fill="#090d16" stroke="#00ff9d" stroke-width="2.2"/>
+              <path d="M16 24 L23 29 L16 34 M26 34 L36 34" fill="none" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="40" y="24" width="6" height="10" fill="#00ff9d"/>
+              <path d="M22 46 L16 54 L48 54 L42 46 Z" fill="#1e293b" stroke="#00f0ff" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="font-extrabold text-gray-800 text-base">電馭叛客：駭客終端</div>
+            <div class="text-xs text-gray-500 mt-0.5">數位矩陣雨、發光電路脈衝、霓虹閃爍與復古 CRT</div>
+          </div>
+          <div id="modal-theme-badge-cyberpunk" class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-600 text-white hidden">已選擇</div>
         </button>
       </div>
 
@@ -2035,9 +2350,9 @@
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5lzeKHGHkFI58bDajyOuwSRWPg-Zbz1ksFFqM0jp-3bpPAaduzTvilBqPgy3lVZuE/exec'; 
 
     // =========================================
-    // 【核心升級】六主題引擎 (依預設櫻花 + 節慶月份順序：櫻花 -> 新年 -> 端午 -> 中秋 -> 萬聖 -> 聖誕)
+    // 【核心升級】七主題引擎 (依預設櫻花 + 節慶月份順序 + 壓軸隱藏版賽博龐克)
     // =========================================
-    const THEME_ORDER = ['sakura', 'newyear', 'dragonboat', 'midautumn', 'halloween', 'christmas'];
+    const THEME_ORDER = ['sakura', 'newyear', 'dragonboat', 'midautumn', 'halloween', 'christmas', 'cyberpunk'];
 
     const THEME_META = {
       sakura: {
@@ -2075,6 +2390,12 @@
         desc: '手繪聖誕帽、發光聖誕樹、雪人與飄雪',
         iconBg: 'bg-emerald-950',
         svg: `<svg class="w-6 h-6" viewBox="0 0 64 64"><rect x="28" y="48" width="8" height="9" rx="1.5" fill="#78350f"/><polygon points="32,24 12,49 52,49" fill="#15803d"/><polygon points="32,14 17,36 47,36" fill="#16a34a"/><polygon points="32,6 22,24 42,24" fill="#22c55e"/><polygon points="32,1 34,6 39,6 35,9 37,14 32,11 27,14 29,9 25,6 30,6" fill="#facc15"/><circle cx="26" cy="32" r="2.5" fill="#ef4444"/><circle cx="37" cy="33" r="2.5" fill="#fde047"/></svg>`
+      },
+      cyberpunk: {
+        name: '電馭叛客：駭客終端',
+        desc: '數位矩陣雨、發光電路脈衝、霓虹閃爍與復古 CRT',
+        iconBg: 'bg-slate-950 border border-emerald-400/50',
+        svg: `<svg class="w-6 h-6" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="34" rx="4" fill="#090d16" stroke="#00ff9d" stroke-width="2.2"/><path d="M16 24 L23 29 L16 34 M26 34 L36 34" fill="none" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="40" y="24" width="6" height="10" fill="#00ff9d"/><path d="M22 46 L16 54 L48 54 L42 46 Z" fill="#1e293b" stroke="#00f0ff" stroke-width="1.5"/></svg>`
       }
     };
 
@@ -2086,7 +2407,7 @@
       currentSystemTheme = validTheme;
       localStorage.setItem('app_theme', validTheme);
 
-      document.body.classList.remove('theme-newyear', 'theme-dragonboat', 'theme-midautumn', 'theme-halloween', 'theme-christmas');
+      document.body.classList.remove('theme-newyear', 'theme-dragonboat', 'theme-midautumn', 'theme-halloween', 'theme-christmas', 'theme-cyberpunk');
       const sakuraTitle = document.getElementById('header-title-sakura');
 
       if (validTheme !== 'sakura') {
@@ -2359,6 +2680,53 @@
           spark.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
           spark.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
           container.appendChild(spark);
+        }
+      } else if (themeName === 'cyberpunk') {
+        // 賽博龐克：22 道駭客任務 01 數位矩陣雨 (SVG 垂直發光字元串) + 18 道電馭粉紅/青色高速雷射光束
+        const glyphs = ['0', '1', '0', '1', '7', 'A', 'F', 'X', '9', 'C', '0', '1'];
+        for (let i = 0; i < 22; i++) {
+          const stream = document.createElement('div');
+          stream.className = 'cb-matrix-rain';
+          const startLeft = Math.random() * 98;
+          const fallDuration = Math.random() * 4.5 + 4.5;
+          const fallDelay = -(Math.random() * fallDuration);
+          stream.style.left = `${startLeft}vw`;
+          stream.style.animationDuration = `${fallDuration}s`;
+          stream.style.animationDelay = `${fallDelay}s`;
+
+          const c1 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c2 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c4 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c5 = glyphs[Math.floor(Math.random() * glyphs.length)];
+
+          stream.innerHTML = `
+            <svg width="16" height="95" viewBox="0 0 16 95">
+              <text x="2" y="14" fill="#00ff9d" opacity="0.22" font-family="monospace" font-size="12" font-weight="bold">${c1}</text>
+              <text x="2" y="32" fill="#00ff9d" opacity="0.45" font-family="monospace" font-size="12" font-weight="bold">${c2}</text>
+              <text x="2" y="50" fill="#00ff9d" opacity="0.7" font-family="monospace" font-size="12" font-weight="bold">${c3}</text>
+              <text x="2" y="68" fill="#00ff9d" opacity="0.92" font-family="monospace" font-size="12" font-weight="bold">${c4}</text>
+              <text x="2" y="86" fill="#ffffff" font-family="monospace" font-size="12" font-weight="bold">${c5}</text>
+            </svg>
+          `;
+          container.appendChild(stream);
+        }
+        for (let i = 0; i < 18; i++) {
+          const beam = document.createElement('div');
+          beam.className = 'cb-laser-spark';
+          const h = Math.random() * 28 + 18;
+          const startLeft = Math.random() * 100;
+          const fallDuration = Math.random() * 3 + 3;
+          const fallDelay = -(Math.random() * fallDuration);
+          const isPink = i % 2 === 0;
+          const color = isPink ? '#ff007f' : '#00f0ff';
+          beam.style.height = `${h}px`;
+          beam.style.left = `${startLeft}vw`;
+          beam.style.background = `linear-gradient(180deg, transparent 0%, ${color} 80%, #ffffff 100%)`;
+          beam.style.boxShadow = `0 0 10px ${color}`;
+          beam.style.animationDuration = `${fallDuration}s`;
+          beam.style.animationDelay = `${fallDelay}s`;
+          container.appendChild(beam);
         }
       } else {
         // 櫻花主題：40 片粉嫩櫻花瓣
@@ -3318,7 +3686,7 @@
       if(tab==='users') loadAdminUsers();
     }
 
-    // --- 系統設定 (SWR + 彈跳視窗六主題選擇器，依節慶月份順序排列) ---
+    // --- 系統設定 (SWR + 彈跳視窗七主題選擇器) ---
     function openThemePickerModal() {
       updateThemePickerModalUI(selectedAdminTheme);
       document.getElementById('theme-picker-modal').classList.remove('hidden');
@@ -3335,7 +3703,8 @@
         dragonboat: 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200',
         midautumn: 'border-amber-400 bg-amber-50/90 ring-2 ring-amber-200',
         halloween: 'border-orange-500 bg-orange-50 ring-2 ring-orange-200',
-        christmas: 'border-red-500 bg-red-50 ring-2 ring-red-200'
+        christmas: 'border-red-500 bg-red-50 ring-2 ring-red-200',
+        cyberpunk: 'border-emerald-400 bg-emerald-50/90 ring-2 ring-pink-400'
       };
       THEME_ORDER.forEach(t => {
         const btn = document.getElementById(`modal-theme-opt-${t}`);
