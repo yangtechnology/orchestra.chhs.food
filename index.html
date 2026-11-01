@@ -566,7 +566,6 @@
     .cyberpunk-only { display: none !important; pointer-events: none !important; }
     body.theme-cyberpunk .cyberpunk-only { display: block !important; }
 
-    /* 極致深黑底色 + 科技網格 + 螢光霓虹綠與電馭粉紅雙極光暈 */
     body.theme-cyberpunk {
       background-color: #05050a !important;
       background-image: 
@@ -579,7 +578,6 @@
       background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px, 100% 100% !important;
     }
 
-    /* 主容器卡片：維持高可讀性冷白底，外框加上電馭粉紅 × 螢光霓虹綠雙色燈管閃爍與 Glitch 光暈 */
     body.theme-cyberpunk #main-container {
       background-color: #f8fafc !important;
       animation: cyberNeonBorderFlicker 5s infinite alternate !important;
@@ -602,7 +600,6 @@
       }
     }
 
-    /* 系統配色轉換為電馭粉紅 (Cyber Magenta) 與駭客螢光綠 (Matrix Neon Green) */
     body.theme-cyberpunk .text-pink-700 { color: #be185d !important; }
     body.theme-cyberpunk .text-pink-600 { color: #059669 !important; }
     body.theme-cyberpunk .text-pink-500 { color: #db2777 !important; }
@@ -627,7 +624,6 @@
     body.theme-cyberpunk .focus\:ring-pink-500:focus { --tw-ring-color: #10b981 !important; }
     body.theme-cyberpunk .focus\:border-pink-500:focus { border-color: #10b981 !important; }
 
-    /* 賽博龐克專屬動畫集 */
     @keyframes cyberCircuitFlow {
       0% { stroke-dashoffset: 160; opacity: 0.35; }
       50% { opacity: 1; }
@@ -642,14 +638,6 @@
       94% { transform: translate(-2px, 1px) skewX(-4deg); filter: drop-shadow(-3px 0 #ff007f) drop-shadow(3px 0 #00ff9d); }
       96% { transform: translate(2px, -1px) skewX(4deg); filter: drop-shadow(3px 0 #ff007f) drop-shadow(-3px 0 #00f0ff); }
       98% { transform: translate(-1px, 0) skewX(0deg); }
-    }
-    @keyframes cyberVisorScan {
-      0%, 100% { transform: translateX(-18px); opacity: 0.7; }
-      50% { transform: translateX(18px); opacity: 1; }
-    }
-    @keyframes cyberVisorFloat {
-      0%, 100% { transform: rotate(-14deg) translateY(0px); }
-      50% { transform: rotate(-9deg) translateY(-4px); }
     }
     @keyframes cyberRadarSpin {
       from { transform: rotate(0deg); }
@@ -670,12 +658,9 @@
     .cb-circuit-pulse-pink { stroke-dasharray: 22 118; animation: cyberCircuitFlow 2.6s linear infinite reverse; }
     .cb-cursor-blink { animation: cyberCursorBlink 0.9s steps(1) infinite; }
     .cb-glitch-header { animation: cyberGlitchTitle 4.5s infinite; }
-    .cb-visor-hat { animation: cyberVisorFloat 4.2s ease-in-out infinite; transform-origin: center center; }
-    .cb-visor-laser { animation: cyberVisorScan 2.2s ease-in-out infinite; }
     .cb-radar-sweep { animation: cyberRadarSpin 4s linear infinite; transform-origin: 155px 70px; }
     .cb-server-float { animation: cyberServerPulse 4s ease-in-out infinite; }
 
-    /* 背景駭客任務數位雨 (Digital Rain) 與霓虹雷射光束粒子 */
     .cb-matrix-rain {
       position: absolute;
       top: -25%;
@@ -695,11 +680,126 @@
       animation: digitalRainFall linear infinite;
       animation-fill-mode: both;
     }
+
+    /* =========================================================================
+       🎵 璀璨交響樂限定主題 (Symphony Concert Pro Theme) - 100% 純 SVG 向量與動態特效，不影響任何操作
+       ========================================================================= */
+    .symphony-only { display: none !important; pointer-events: none !important; }
+    body.theme-symphony .symphony-only { display: block !important; }
+
+    /* 深邃午夜藍底色 + 音樂廳聚光燈金輝漸層 */
+    body.theme-symphony {
+      background-color: #070d1f !important;
+      background-image: 
+        radial-gradient(ellipse at 20% 0%, rgba(250, 204, 21, 0.22) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 0%, rgba(234, 179, 8, 0.18) 0%, transparent 55%),
+        radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.14) 0%, transparent 55%),
+        linear-gradient(180deg, #040814 0%, #0b1530 52%, #060b19 100%) !important;
+    }
+
+    /* 主容器卡片：高對比象牙暖白底 + 舞台聚光燈 (Spotlight) 動態流轉金藍邊框 */
+    body.theme-symphony #main-container {
+      background-color: #fffdf9 !important;
+      animation: symphonySpotlightSweep 6s ease-in-out infinite alternate !important;
+      --tw-ring-color: rgba(234, 179, 8, 0.85) !important;
+    }
+
+    @keyframes symphonySpotlightSweep {
+      0% {
+        box-shadow: 
+          -18px -15px 45px rgba(250, 204, 21, 0.38),
+          18px 25px 60px rgba(0, 0, 0, 0.9),
+          0 0 28px rgba(234, 179, 8, 0.35),
+          inset 0 0 15px rgba(250, 204, 21, 0.15);
+      }
+      50% {
+        box-shadow: 
+          0px -22px 55px rgba(254, 240, 138, 0.48),
+          0px 25px 60px rgba(0, 0, 0, 0.9),
+          0 0 38px rgba(250, 204, 21, 0.45),
+          inset 0 0 20px rgba(250, 204, 21, 0.22);
+      }
+      100% {
+        box-shadow: 
+          18px -15px 45px rgba(250, 204, 21, 0.38),
+          -18px 25px 60px rgba(0, 0, 0, 0.9),
+          0 0 28px rgba(234, 179, 8, 0.35),
+          inset 0 0 15px rgba(250, 204, 21, 0.15);
+      }
+    }
+
+    /* 系統櫻花粉色系無縫轉換為古典黃銅金與交響午夜藍 */
+    body.theme-symphony .text-pink-700 { color: #92400e !important; }
+    body.theme-symphony .text-pink-600 { color: #b45309 !important; }
+    body.theme-symphony .text-pink-500 { color: #d97706 !important; }
+    body.theme-symphony .bg-pink-600 { 
+      background-color: #b45309 !important; 
+      box-shadow: 0 4px 15px rgba(180, 83, 9, 0.4) !important;
+    }
+    body.theme-symphony .hover\:bg-pink-700:hover { background-color: #92400e !important; }
+    body.theme-symphony .bg-pink-500 { 
+      background-color: #1e3a8a !important; 
+      box-shadow: 0 4px 18px rgba(30, 58, 138, 0.45) !important;
+    }
+    body.theme-symphony .hover\:bg-pink-600:hover { background-color: #1e40af !important; }
+    body.theme-symphony .bg-pink-100 { background-color: #fef3c7 !important; }
+    body.theme-symphony .hover\:bg-pink-200:hover { background-color: #fde68a !important; }
+    body.theme-symphony .bg-pink-50 { background-color: #fffbeb !important; }
+    body.theme-symphony .border-pink-200 { border-color: #fde68a !important; }
+    body.theme-symphony .border-pink-300 { border-color: #fcd34d !important; }
+    body.theme-symphony .border-pink-600 { border-color: #b45309 !important; }
+    body.theme-symphony .border-t-pink-500 { border-top-color: #d97706 !important; }
+    body.theme-symphony .loading-spinner { border-top-color: #d97706 !important; }
+    body.theme-symphony .focus\:ring-pink-500:focus { --tw-ring-color: #d97706 !important; }
+    body.theme-symphony .focus\:border-pink-500:focus { border-color: #d97706 !important; }
+
+    /* 璀璨交響樂專屬動畫集 */
+    @keyframes symTrumpetShine {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.55)); }
+      50% { transform: translateY(-6px) rotate(2deg); filter: drop-shadow(0 0 24px rgba(254, 240, 138, 0.95)); }
+    }
+    @keyframes symBatonConduct {
+      0%, 100% { transform: rotate(-18deg) translateY(0px); }
+      25% { transform: rotate(12deg) translateY(-6px); }
+      50% { transform: rotate(-8deg) translateY(2px); }
+      75% { transform: rotate(16deg) translateY(-4px); }
+    }
+    @keyframes symPageTurn {
+      0%, 100% { transform: skewY(0deg) scaleX(1); }
+      50% { transform: skewY(-4deg) scaleX(0.92); }
+    }
+    @keyframes symSpotlightBeam {
+      0%, 100% { transform: rotate(-7deg); opacity: 0.55; }
+      50% { transform: rotate(7deg); opacity: 0.88; }
+    }
+    @keyframes symNoteRise {
+      0% { transform: translateY(6px) scale(0.85); opacity: 0; }
+      50% { opacity: 0.95; }
+      100% { transform: translateY(-14px) scale(1.1); opacity: 0; }
+    }
+
+    .sym-trumpet-glow { animation: symTrumpetShine 4s ease-in-out infinite; }
+    .sym-baton-wave { animation: symBatonConduct 3.2s ease-in-out infinite; transform-origin: 95px 95px; }
+    .sym-page-flip { animation: symPageTurn 3.6s ease-in-out infinite; transform-origin: 65px 75px; }
+    .sym-spotlight-ray { animation: symSpotlightBeam 5s ease-in-out infinite; transform-origin: 185px 10px; }
+    .sym-note-float-1 { animation: symNoteRise 2.8s ease-in-out infinite; }
+    .sym-note-float-2 { animation: symNoteRise 2.8s ease-in-out infinite 1.4s; }
+
+    /* 背景飄落黃金音符與舞台星塵 */
+    .sym-note-particle {
+      position: absolute;
+      top: -15%;
+      opacity: 0;
+      pointer-events: none;
+      animation: fall linear infinite, sway ease-in-out infinite alternate;
+      animation-fill-mode: both;
+      filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.7));
+    }
   </style>
 </head>
 <body class="p-4 sm:p-8 min-h-screen flex flex-col items-center justify-start relative pb-24 sm:pb-8">
 
-  <!-- 背景飄落特效容器 (七大主題共用) -->
+  <!-- 背景飄落特效容器 (八大主題共用) -->
   <div class="sakura-container" id="sakura-container"></div>
 
   <!-- =========================================================================
@@ -922,7 +1022,7 @@
       </svg>
     </div>
 
-    <!-- 左下角：乘風破浪立體皇家金紅龍舟首 + 翻湧碧江波濤 -->
+    <!-- 左下角：乘風破浪立體皇家金紅龍舟首 + 翻湧碧江波濤 (已修復為標準 w-20 h-20 尺寸) -->
     <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-20 h-20 sm:w-36 sm:h-36">
       <svg viewBox="0 0 150 140" class="w-full h-full drop-shadow-2xl">
         <defs>
@@ -1409,23 +1509,19 @@
   </div>
 
   <!-- =========================================================================
-       💻 賽博龐克駭客角落裝飾圖層 (隱藏版特殊風格：純 SVG 發光電路板脈衝、HUD 全息雷達、復古 CRT 終端機與量子核心)
+       💻 賽博龐克駭客角落裝飾圖層 (隱藏版特殊風格：已修復手機版左下角 CRT 為標準 w-20 h-20 尺寸)
        ========================================================================= -->
   <div id="cyberpunk-ambient-decor" class="cyberpunk-only fixed inset-0 pointer-events-none z-20 overflow-hidden">
-    
     <!-- 左上角：發光印刷電路板 (PCB Traces) + 動態電流脈衝節點 -->
     <div class="absolute top-0 left-0 w-44 h-44 sm:w-64 sm:h-64 opacity-90">
       <svg viewBox="0 0 240 240" class="w-full h-full fill-none">
-        <!-- 底層暗色電路軌跡 -->
         <path d="M 0 24 L 65 24 L 95 54 L 165 54 L 195 24 L 235 24" stroke="#065f46" stroke-width="2" stroke-linecap="round"/>
         <path d="M 0 56 L 48 56 L 82 90 L 145 90" stroke="#065f46" stroke-width="2" stroke-linecap="round"/>
         <path d="M 24 0 L 24 72 L 58 106 L 58 175 L 24 205" stroke="#831843" stroke-width="2" stroke-linecap="round"/>
         <path d="M 56 0 L 56 42 L 105 90 L 105 155" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
-        <!-- 動態高頻脈衝電流 (螢光綠與電馭粉紅) -->
         <path d="M 0 24 L 65 24 L 95 54 L 165 54 L 195 24 L 235 24" stroke="#00ff9d" stroke-width="2.8" stroke-linecap="round" class="cb-circuit-pulse" filter="drop-shadow(0 0 6px #00ff9d)"/>
         <path d="M 24 0 L 24 72 L 58 106 L 58 175 L 24 205" stroke="#ff007f" stroke-width="2.8" stroke-linecap="round" class="cb-circuit-pulse-pink" filter="drop-shadow(0 0 6px #ff007f)"/>
         <path d="M 0 56 L 48 56 L 82 90 L 145 90" stroke="#00f0ff" stroke-width="2.2" stroke-linecap="round" class="cb-circuit-pulse"/>
-        <!-- 晶片與發光節點焊盤 -->
         <rect x="72" y="76" width="26" height="26" rx="3" fill="#090d16" stroke="#00ff9d" stroke-width="1.8" filter="drop-shadow(0 0 8px rgba(0,255,157,0.5))"/>
         <rect x="78" y="82" width="14" height="14" fill="#00ff9d" opacity="0.8" class="cb-cursor-blink"/>
         <circle cx="145" cy="90" r="4.5" fill="#090d16" stroke="#00f0ff" stroke-width="2.2"/>
@@ -1438,32 +1534,27 @@
     <!-- 右上角：全息 HUD 雷達掃描儀 + 對稱電路脈衝 -->
     <div class="absolute top-0 right-0 w-44 h-44 sm:w-60 sm:h-60 opacity-90">
       <svg viewBox="0 0 220 220" class="w-full h-full fill-none">
-        <!-- 右上電路延伸 -->
         <path d="M 220 28 L 145 28 L 115 58 L 45 58" stroke="#065f46" stroke-width="2"/>
         <path d="M 220 28 L 145 28 L 115 58 L 45 58" stroke="#00ff9d" stroke-width="2.5" class="cb-circuit-pulse" filter="drop-shadow(0 0 6px #00ff9d)"/>
         <path d="M 192 0 L 192 85 L 155 122 L 155 185" stroke="#ff007f" stroke-width="2.2" class="cb-circuit-pulse-pink"/>
-        <!-- 全息投影戰術雷達環 -->
         <circle cx="155" cy="70" r="36" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="12 6 4 6" opacity="0.75"/>
         <circle cx="155" cy="70" r="24" stroke="#00ff9d" stroke-width="1.2" opacity="0.5"/>
         <circle cx="155" cy="70" r="11" stroke="#ff007f" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
         <line x1="115" y1="70" x2="195" y2="70" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
         <line x1="155" y1="30" x2="155" y2="110" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
-        <!-- 旋轉雷達掃描扇形束 -->
         <g class="cb-radar-sweep">
           <path d="M 155 70 L 155 34 A 36 36 0 0 1 186 52 Z" fill="rgba(0, 255, 157, 0.28)"/>
           <line x1="155" y1="70" x2="155" y2="34" stroke="#00ff9d" stroke-width="2"/>
         </g>
-        <!-- 雷達鎖定光點 -->
         <circle cx="168" cy="56" r="2.8" fill="#ff007f" class="cb-cursor-blink" filter="drop-shadow(0 0 4px #ff007f)"/>
         <circle cx="142" cy="78" r="2.2" fill="#00ff9d"/>
-        <!-- HUD 科技狀態數據條 -->
         <rect x="118" y="116" width="42" height="5" rx="1" fill="#00ff9d" opacity="0.8"/>
         <rect x="164" y="116" width="22" height="5" rx="1" fill="#ff007f" opacity="0.85"/>
         <rect x="132" y="125" width="54" height="3" rx="1" fill="#00f0ff" opacity="0.6"/>
       </svg>
     </div>
 
-    <!-- 左下角：復古 CRT 球面駭客終端機螢幕 (內含閃爍游標與指令輸入動畫，手機版縮小靠邊避開底部購物車) -->
+    <!-- 左下角：復古 CRT 球面駭客終端機螢幕 (已修復為標準 w-20 h-20 尺寸) -->
     <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-20 h-20 sm:w-36 sm:h-36 cb-server-float">
       <svg viewBox="0 0 140 140" class="w-full h-full">
         <defs>
@@ -1478,30 +1569,24 @@
             <stop offset="100%" stop-color="#011510"/>
           </radialGradient>
         </defs>
-        <!-- CRT 電腦底座與機械鍵盤斜板 -->
         <path d="M26 104 L114 104 L126 122 L14 122 Z" fill="#1e293b" stroke="#00f0ff" stroke-width="1.5"/>
         <line x1="26" y1="111" x2="114" y2="111" stroke="#00ff9d" stroke-width="2" stroke-dasharray="5 3"/>
         <line x1="22" y1="116" x2="118" y2="116" stroke="#ff007f" stroke-width="2" stroke-dasharray="4 3"/>
         <rect x="45" y="96" width="50" height="9" fill="#0f172a" stroke="#475569" stroke-width="1.2"/>
-        <!-- 復古厚重 CRT 顯示器外殼 -->
         <rect x="18" y="18" width="104" height="80" rx="10" fill="url(#cbCrtCaseGrad)" stroke="#00ff9d" stroke-width="2"/>
         <line x1="18" y1="32" x2="122" y2="32" stroke="#ff007f" stroke-width="1.2" opacity="0.7"/>
-        <!-- 球面發光綠磷光螢幕 -->
         <rect x="27" y="27" width="86" height="58" rx="6" fill="url(#cbCrtScreenGrad)" stroke="#10b981" stroke-width="1.5"/>
-        <!-- CRT 螢幕水平掃描線紋理 -->
         <line x1="29" y1="35" x2="111" y2="35" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
         <line x1="29" y1="43" x2="111" y2="43" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
         <line x1="29" y1="51" x2="111" y2="51" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
         <line x1="29" y1="59" x2="111" y2="59" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
         <line x1="29" y1="67" x2="111" y2="67" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
         <line x1="29" y1="75" x2="111" y2="75" stroke="#00ff9d" stroke-width="0.6" opacity="0.22"/>
-        <!-- 終端機內部的綠色程式碼與閃爍方塊游標 -->
         <text x="33" y="41" fill="#00ff9d" font-family="monospace" font-size="8" font-weight="bold">&gt; ROOT@CHHS:~#</text>
         <text x="33" y="53" fill="#38bdf8" font-family="monospace" font-size="7.5" font-weight="bold">&gt; ACCESS_GRANTED</text>
         <text x="33" y="65" fill="#ff007f" font-family="monospace" font-size="7.5" font-weight="bold">&gt; SYS_OVERRIDE</text>
         <text x="33" y="77" fill="#00ff9d" font-family="monospace" font-size="8.5" font-weight="bold">&gt; EXEC_ORDER</text>
         <rect x="93" y="69" width="6.5" height="9" fill="#00ff9d" class="cb-cursor-blink" filter="drop-shadow(0 0 4px #00ff9d)"/>
-        <!-- 電源霓虹指示燈 -->
         <circle cx="108" cy="91" r="2.8" fill="#ff007f" class="cb-cursor-blink"/>
         <circle cx="99" cy="91" r="2.5" fill="#00ff9d"/>
       </svg>
@@ -1517,32 +1602,198 @@
             <stop offset="100%" stop-color="#059669"/>
           </linearGradient>
         </defs>
-        <!-- 全息投影底座 -->
         <ellipse cx="65" cy="122" rx="48" ry="10" fill="#090d16" stroke="#00f0ff" stroke-width="2"/>
         <ellipse cx="65" cy="122" rx="36" ry="6" fill="none" stroke="#ff007f" stroke-width="1.5" stroke-dasharray="6 4"/>
-        <!-- 主機甲機箱與雙側霓虹導光條 -->
         <rect x="28" y="24" width="74" height="94" rx="6" fill="#0f172a" stroke="#00ff9d" stroke-width="2"/>
         <line x1="34" y1="30" x2="34" y2="112" stroke="#ff007f" stroke-width="3" stroke-linecap="round"/>
         <line x1="96" y1="30" x2="96" y2="112" stroke="#00f0ff" stroke-width="3" stroke-linecap="round"/>
-        <!-- 4 層刀鋒伺服器模組與呼吸陣列燈 -->
         <rect x="41" y="32" width="48" height="14" rx="2" fill="#1e293b" stroke="#334155" stroke-width="1"/>
         <circle cx="48" cy="39" r="2.5" fill="#00ff9d" class="xmas-bulb-a"/>
         <circle cx="56" cy="39" r="2.5" fill="#00ff9d" class="xmas-bulb-b"/>
         <rect x="66" y="37" width="18" height="4" rx="1" fill="#00f0ff"/>
-
         <rect x="41" y="52" width="48" height="14" rx="2" fill="#1e293b" stroke="#334155" stroke-width="1"/>
         <circle cx="48" cy="59" r="2.5" fill="#ff007f" class="xmas-bulb-b"/>
         <circle cx="56" cy="59" r="2.5" fill="#00ff9d" class="xmas-bulb-a"/>
         <rect x="66" y="57" width="14" height="4" rx="1" fill="#ff007f"/>
-
         <rect x="41" y="72" width="48" height="14" rx="2" fill="#1e293b" stroke="#334155" stroke-width="1"/>
         <circle cx="48" cy="79" r="2.5" fill="#00ff9d" class="xmas-bulb-a"/>
         <circle cx="56" cy="79" r="2.5" fill="#00f0ff" class="xmas-bulb-b"/>
         <rect x="66" y="77" width="19" height="4" rx="1" fill="#00ff9d"/>
-
-        <!-- 底部發光量子能量核心腔 -->
         <rect x="41" y="92" width="48" height="20" rx="3" fill="#022c22" stroke="#00ff9d" stroke-width="1.5"/>
         <path d="M45 104 L53 96 L61 106 L69 95 L77 104 L85 98" fill="none" stroke="url(#cbCoreGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       🎵 璀璨交響樂角落裝飾圖層 (社團公演 / 音樂祭：純 SVG 皇家紅絲絨帷幕、流光五線譜、舞台聚光燈、黃金小號與指揮棒樂譜)
+       ========================================================================= -->
+  <div id="symphony-ambient-decor" class="symphony-only fixed inset-0 pointer-events-none z-20 overflow-hidden">
+    
+    <!-- 左上角：國家音樂廳皇家紅絲絨帷幕 + 金色流蘇 + 流光五線譜音符絲帶 -->
+    <div class="absolute top-0 left-0 w-44 h-48 sm:w-64 sm:h-64">
+      <svg viewBox="0 0 240 240" class="w-full h-full">
+        <defs>
+          <linearGradient id="symVelvetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#be123c"/>
+            <stop offset="55%" stop-color="#881337"/>
+            <stop offset="100%" stop-color="#4c0519"/>
+          </linearGradient>
+          <linearGradient id="symBrassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fef9c3"/>
+            <stop offset="35%" stop-color="#facc15"/>
+            <stop offset="75%" stop-color="#ca8a04"/>
+            <stop offset="100%" stop-color="#713f12"/>
+          </linearGradient>
+        </defs>
+        <!-- 音樂廳波浪垂墜五線譜金線 -->
+        <g opacity="0.78">
+          <path d="M 0 95 Q 75 65 155 35 T 235 0" fill="none" stroke="#fde047" stroke-width="1.2"/>
+          <path d="M 0 103 Q 75 73 155 43 T 235 8" fill="none" stroke="#facc15" stroke-width="1.2"/>
+          <path d="M 0 111 Q 75 81 155 51 T 235 16" fill="none" stroke="#eab308" stroke-width="1.2"/>
+          <path d="M 0 119 Q 75 89 155 59 T 235 24" fill="none" stroke="#ca8a04" stroke-width="1.2"/>
+          <path d="M 0 127 Q 75 97 155 67 T 235 32" fill="none" stroke="#a16207" stroke-width="1.2"/>
+        </g>
+        <!-- 五線譜上的跳動黃金音符 -->
+        <g transform="translate(105, 42) rotate(-14)" fill="url(#symBrassGrad)">
+          <ellipse cx="8" cy="24" rx="5.5" ry="4" transform="rotate(-20 8 24)"/>
+          <ellipse cx="24" cy="19" rx="5.5" ry="4" transform="rotate(-20 24 19)"/>
+          <path d="M12 23 L12 4 L28 0 L28 18" fill="none" stroke="#fef08a" stroke-width="2.5"/>
+          <line x1="12" y1="9" x2="28" y2="5" stroke="#facc15" stroke-width="2.5"/>
+        </g>
+        <!-- 皇家歌劇院紅絲絨帷幕與金色束繩 -->
+        <path d="M 0 0 L 145 0 Q 115 38 78 52 Q 48 92 0 148 Z" fill="url(#symVelvetGrad)" stroke="#facc15" stroke-width="2"/>
+        <path d="M 0 0 Q 55 32 45 78" fill="none" stroke="#4c0519" stroke-width="3" opacity="0.6"/>
+        <path d="M 0 0 Q 85 20 78 52" fill="none" stroke="#facc15" stroke-width="2.5" stroke-dasharray="4 2"/>
+        <!-- 帷幕金結與流蘇 -->
+        <circle cx="46" cy="78" r="6" fill="url(#symBrassGrad)"/>
+        <path d="M43 84 L38 112 M46 84 L46 115 M49 84 L54 112" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- 右上角：舞台雙聚光燈投射光束 + 対稱紅絲絨帷幕 -->
+    <div class="absolute top-0 right-0 w-44 h-48 sm:w-64 sm:h-64">
+      <svg viewBox="0 0 240 240" class="w-full h-full">
+        <defs>
+          <linearGradient id="symBeamGrad" x1="80%" y1="0%" x2="10%" y2="100%">
+            <stop offset="0%" stop-color="#fef08a" stop-opacity="0.55"/>
+            <stop offset="45%" stop-color="#facc15" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#facc15" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- 緩緩掃動的舞台金色聚光燈束 -->
+        <g class="sym-spotlight-ray">
+          <polygon points="195,8 25,165 95,215" fill="url(#symBeamGrad)"/>
+          <polygon points="160,5 5,110 55,155" fill="url(#symBeamGrad)" opacity="0.7"/>
+        </g>
+        <!-- 右上角紅絲絨帷幕 -->
+        <path d="M 240 0 L 105 0 Q 135 38 168 52 Q 195 92 240 142 Z" fill="url(#symVelvetGrad)" stroke="#facc15" stroke-width="2"/>
+        <circle cx="192" cy="76" r="5.5" fill="url(#symBrassGrad)"/>
+        <path d="M189 82 L185 108 M192 82 L192 110 M195 82 L199 108" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+        <!-- 閃爍星芒 -->
+        <polygon points="125,42 128,49 135,52 128,55 125,62 122,55 115,52 122,49" fill="#fef08a" class="ny-sparkle-star"/>
+      </svg>
+    </div>
+
+    <!-- 左下角：閃耀立體黃金小號 (Trumpet) + 飄升發光音符 (標準 w-20 h-20 尺寸，手機版絕不擋畫面) -->
+    <div class="fixed bottom-20 left-1.5 sm:bottom-6 sm:left-6 w-20 h-20 sm:w-36 sm:h-36 sym-trumpet-glow">
+      <svg viewBox="0 0 150 140" class="w-full h-full">
+        <defs>
+          <linearGradient id="symTrumpetBell" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="25%" stop-color="#fef08a"/>
+            <stop offset="60%" stop-color="#eab308"/>
+            <stop offset="90%" stop-color="#a16207"/>
+            <stop offset="100%" stop-color="#713f12"/>
+          </linearGradient>
+        </defs>
+        <!-- 號口飄出的動態發光音符 -->
+        <g class="sym-note-float-1" transform="translate(108, 18)">
+          <ellipse cx="6" cy="16" rx="4.5" ry="3.2" fill="#fef08a" transform="rotate(-20 6 16)"/>
+          <path d="M9.5 15 L9.5 2 Q16 5 15 11" fill="none" stroke="#fef08a" stroke-width="2.2" stroke-linecap="round"/>
+        </g>
+        <g class="sym-note-float-2" transform="translate(82, 8)">
+          <ellipse cx="5" cy="14" rx="4" ry="2.8" fill="#facc15" transform="rotate(-20 5 14)"/>
+          <ellipse cx="17" cy="11" rx="4" ry="2.8" fill="#facc15" transform="rotate(-20 17 11)"/>
+          <path d="M8 13 L8 2 L20 0 L20 10" fill="none" stroke="#facc15" stroke-width="2"/>
+        </g>
+        <!-- 精細手繪黃金小號 (斜角昂揚姿態) -->
+        <g transform="rotate(-26 75 78)">
+          <!-- 號嘴 (Mouthpiece) 與吹口管 (Leadpipe) -->
+          <polygon points="8,63 18,66 18,70 8,73" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="1"/>
+          <rect x="18" y="66.5" width="12" height="3" fill="#fef08a"/>
+          <!-- 下層彎曲調音管迴路 (Tuning Slide) -->
+          <rect x="30" y="66" width="66" height="3.8" rx="1.8" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="0.9"/>
+          <rect x="34" y="77" width="58" height="3.8" rx="1.8" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="0.9"/>
+          <path d="M92 67.8 C104 67.8, 104 79, 92 79" fill="none" stroke="url(#symTrumpetBell)" stroke-width="3.8"/>
+          <path d="M36 67.8 C26 67.8, 26 79, 36 79" fill="none" stroke="url(#symTrumpetBell)" stroke-width="3.8"/>
+          <!-- 三組精準活塞氣閥管與珍珠按鍵帽 (3 Piston Valves) -->
+          <rect x="52" y="54" width="6" height="28" rx="1.5" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="1"/>
+          <rect x="61" y="54" width="6" height="28" rx="1.5" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="1"/>
+          <rect x="70" y="54" width="6" height="28" rx="1.5" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="1"/>
+          <line x1="55" y1="48" x2="55" y2="54" stroke="#fef08a" stroke-width="2"/>
+          <line x1="64" y1="48" x2="64" y2="54" stroke="#fef08a" stroke-width="2"/>
+          <line x1="73" y1="48" x2="73" y2="54" stroke="#fef08a" stroke-width="2"/>
+          <ellipse cx="55" cy="47.5" rx="3.8" ry="1.8" fill="#ffffff" stroke="#ca8a04" stroke-width="1"/>
+          <ellipse cx="64" cy="47.5" rx="3.8" ry="1.8" fill="#ffffff" stroke="#ca8a04" stroke-width="1"/>
+          <ellipse cx="73" cy="47.5" rx="3.8" ry="1.8" fill="#ffffff" stroke="#ca8a04" stroke-width="1"/>
+          <!-- 小指勾環與主號口揚聲器 (Trumpet Bell) -->
+          <circle cx="83" cy="59" r="4" fill="none" stroke="#fef08a" stroke-width="1.8"/>
+          <path d="M30 62 L92 62 C112 62, 125 48, 134 38 L134 90 C125 80, 112 67, 92 67 L30 67 Z" fill="url(#symTrumpetBell)" stroke="#854d0e" stroke-width="1.2" stroke-linejoin="round"/>
+          <!-- 號口內側深金反光橢圓 -->
+          <ellipse cx="134" cy="64" rx="5.5" ry="26" fill="#713f12" stroke="#fef08a" stroke-width="2"/>
+          <ellipse cx="133" cy="64" rx="3" ry="18" fill="#422006"/>
+          <!-- 號口高光流線 -->
+          <path d="M75 63.5 Q112 62 128 46" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+        </g>
+        <!-- 閃爍星芒 -->
+        <polygon points="122,48 124,54 130,56 124,58 122,64 120,58 114,56 120,54" fill="#ffffff" class="ny-sparkle-star"/>
+      </svg>
+    </div>
+
+    <!-- 右下角：古典雕花譜架上的交響總譜 (微風翻頁動畫) + 揮動節拍的立體指揮棒 -->
+    <div class="fixed bottom-20 right-1.5 sm:bottom-6 sm:right-6 w-20 h-20 sm:w-32 sm:h-32">
+      <svg viewBox="0 0 135 130" class="w-full h-full drop-shadow-2xl">
+        <!-- 黑金古典譜架底座與立柱 -->
+        <path d="M42 122 Q68 108 94 122" fill="none" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+        <line x1="68" y1="88" x2="68" y2="120" stroke="#eab308" stroke-width="4.5"/>
+        <circle cx="68" cy="102" r="4" fill="#fef08a"/>
+        <!-- 譜架木質托盤 -->
+        <polygon points="16,44 120,44 110,94 26,94" fill="#451a03" stroke="#facc15" stroke-width="2.2" stroke-linejoin="round"/>
+        <line x1="18" y1="92" x2="118" y2="92" stroke="#fef08a" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- 攤開的米白五線譜樂譜左頁 -->
+        <path d="M26 48 Q47 44 68 50 L68 88 Q47 82 22 86 Z" fill="#fffbeb" stroke="#d97706" stroke-width="1"/>
+        <line x1="30" y1="56" x2="62" y2="57" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="29" y1="62" x2="62" y2="63" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="28" y1="68" x2="62" y2="69" stroke="#94a3b8" stroke-width="1.2"/>
+        <line x1="27" y1="74" x2="62" y2="75" stroke="#94a3b8" stroke-width="1.2"/>
+        <circle cx="38" cy="62" r="2.2" fill="#1e293b"/>
+        <line x1="40" y1="62" x2="40" y2="53" stroke="#1e293b" stroke-width="1.4"/>
+        <circle cx="52" cy="68" r="2.2" fill="#1e293b"/>
+        <line x1="54" y1="68" x2="54" y2="59" stroke="#1e293b" stroke-width="1.4"/>
+        <!-- 攤開的樂譜右頁 (含翻頁動畫) -->
+        <g class="sym-page-flip">
+          <path d="M68 50 Q89 44 110 48 L114 86 Q89 82 68 88 Z" fill="#fefce8" stroke="#d97706" stroke-width="1"/>
+          <line x1="74" y1="57" x2="106" y2="56" stroke="#94a3b8" stroke-width="1.2"/>
+          <line x1="74" y1="63" x2="107" y2="62" stroke="#94a3b8" stroke-width="1.2"/>
+          <line x1="74" y1="69" x2="108" y2="68" stroke="#94a3b8" stroke-width="1.2"/>
+          <line x1="74" y1="75" x2="109" y2="74" stroke="#94a3b8" stroke-width="1.2"/>
+          <circle cx="84" cy="63" r="2.2" fill="#b45309"/>
+          <circle cx="96" cy="59" r="2.2" fill="#b45309"/>
+          <path d="M86 62 L86 52 L98 50 L98 58" fill="none" stroke="#b45309" stroke-width="1.5"/>
+        </g>
+        <!-- 輕盈揮動打拍子的立體珍珠白指揮棒 (Conductor's Baton) -->
+        <g class="sym-baton-wave">
+          <!-- 指揮棒揮動殘影弧線 -->
+          <path d="M32 26 Q68 8 106 28" fill="none" stroke="#fef08a" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.7"/>
+          <!-- 指揮棒修長白色棒身 -->
+          <line x1="104" y1="88" x2="36" y2="24" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" filter="drop-shadow(0 0 6px #fef08a)"/>
+          <!-- 奢華胡桃木與黃金握把 (Pear-shaped Handle) -->
+          <ellipse cx="99" cy="83" rx="8" ry="4.5" fill="#78350f" stroke="#facc15" stroke-width="1.5" transform="rotate(43 99 83)"/>
+          <circle cx="93" cy="77" r="2.8" fill="#facc15"/>
+          <!-- 指揮棒尖端發光星點 -->
+          <circle cx="36" cy="24" r="3" fill="#fef08a" filter="drop-shadow(0 0 8px #fde047)"/>
+        </g>
       </svg>
     </div>
   </div>
@@ -1661,6 +1912,26 @@
       </svg>
     </div>
 
+    <!-- 🎵 6. 璀璨交響樂卡片左上角：立體皇家黃金高音譜號與月桂冠徽章 -->
+    <div class="symphony-only absolute -top-9 -left-5 sm:-top-11 sm:-left-7 w-20 h-20 sm:w-24 sm:h-24 pointer-events-none z-30 ma-mooncake-hat">
+      <svg viewBox="0 0 120 120" class="w-full h-full" filter="drop-shadow(0 8px 16px rgba(0,0,0,0.5))">
+        <defs>
+          <radialGradient id="symCrestBg" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#1e3a8a"/>
+            <stop offset="65%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="#020617"/>
+          </radialGradient>
+        </defs>
+        <!-- 外環金色月桂花冠 -->
+        <circle cx="60" cy="64" r="36" fill="url(#symCrestBg)" stroke="#facc15" stroke-width="3"/>
+        <circle cx="60" cy="64" r="30" fill="none" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <!-- 中央立體黃金高音譜號 (G-Clef) -->
+        <path d="M56 88 C48 88, 45 81, 51 77 C56 74, 62 79, 58 83 C54 86, 44 82, 44 68 C44 54, 68 48, 66 35 C65 27, 57 27, 56 36 L60 92 C60 98, 52 99, 49 95" fill="none" stroke="#fef08a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 6px rgba(250,204,21,0.8))"/>
+        <circle cx="49" cy="94" r="3.5" fill="#facc15"/>
+        <!-- 頂部閃亮皇冠星芒 -->
+        <polygon points="60,14 63,21 70,24 63,27 60,34 57,27 50,24 57,21" fill="#fef08a"/>
+      </svg>
+    </div>
     <div class="flex-grow space-y-6">
         <header class="text-center pb-4 border-b border-gray-200">
           <!-- 0. 櫻花預設標題 -->
@@ -1779,14 +2050,13 @@
             </span>
           </h1>
 
-          <!-- 6. 賽博龐克駭客限定標題 (隱藏版特殊風格：純 SVG 終端機晶片與全息雷射圖示 + Glitch 故障特效) -->
+          <!-- 6. 賽博龐克駭客限定標題 (隱藏版特殊風格) -->
           <h1 id="header-title-cyberpunk" class="cyberpunk-only text-3xl sm:text-4xl font-black text-slate-900 cb-glitch-header">
             <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
               <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
                 <rect x="14" y="14" width="36" height="36" rx="4" fill="#090d16" stroke="#00ff9d" stroke-width="2.5"/>
                 <rect x="22" y="22" width="20" height="20" rx="2" fill="#064e3b" stroke="#ff007f" stroke-width="1.8"/>
                 <path d="M26 28 L31 32 L26 36 M33 36 L39 36" fill="none" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <!-- 晶片金屬引腳 -->
                 <line x1="22" y1="6" x2="22" y2="14" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round"/>
                 <line x1="32" y1="6" x2="32" y2="14" stroke="#00ff9d" stroke-width="2.5" stroke-linecap="round"/>
                 <line x1="42" y1="6" x2="42" y2="14" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round"/>
@@ -1808,6 +2078,33 @@
                 <rect x="15" y="33" width="22" height="4" fill="#00f0ff"/>
                 <rect x="40" y="32" width="6" height="6" fill="#00ff9d" class="cb-cursor-blink"/>
                 <path d="M22 48 L16 56 L48 56 L42 48 Z" fill="#1e293b" stroke="#00ff9d" stroke-width="1.8"/>
+              </svg>
+            </span>
+          </h1>
+
+          <!-- 7. 璀璨交響樂限定標題 (社團公演 / 音樂祭：純 SVG 黃金小號與法國號圖示) -->
+          <h1 id="header-title-symphony" class="symphony-only text-3xl sm:text-4xl font-extrabold text-amber-800">
+            <span class="inline-flex items-center justify-center gap-2 sm:gap-3">
+              <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
+                <g transform="rotate(-18 32 32)">
+                  <polygon points="4,30 12,32 12,35 4,37" fill="#ca8a04"/>
+                  <rect x="12" y="32" width="32" height="3" fill="#eab308"/>
+                  <rect x="16" y="38" width="26" height="2.8" rx="1.4" fill="#ca8a04"/>
+                  <rect x="24" y="25" width="3.5" height="14" rx="1" fill="#facc15"/>
+                  <rect x="29" y="25" width="3.5" height="14" rx="1" fill="#facc15"/>
+                  <rect x="34" y="25" width="3.5" height="14" rx="1" fill="#facc15"/>
+                  <path d="M12 31 L44 31 C52 31, 57 22, 60 16 L60 48 C57 42, 52 34, 44 34 L12 34 Z" fill="#facc15" stroke="#a16207" stroke-width="1.2"/>
+                  <ellipse cx="60" cy="32" rx="2.5" ry="16" fill="#713f12" stroke="#fef08a" stroke-width="1.2"/>
+                </g>
+              </svg>
+              <span>風岡線上點餐</span>
+              <svg class="w-8 h-8 sm:w-9 sm:h-9 inline-block flex-shrink-0" viewBox="0 0 64 64">
+                <circle cx="30" cy="30" r="18" fill="none" stroke="#eab308" stroke-width="4"/>
+                <circle cx="30" cy="30" r="12" fill="none" stroke="#ca8a04" stroke-width="3"/>
+                <path d="M12 30 C12 48, 42 54, 56 56 L58 34 C46 40, 38 38, 38 30" fill="#facc15" stroke="#a16207" stroke-width="1.5" stroke-linejoin="round"/>
+                <ellipse cx="57" cy="45" rx="3.5" ry="11" fill="#713f12" stroke="#fef08a" stroke-width="1.2" transform="rotate(8 57 45)"/>
+                <line x1="24" y1="22" x2="36" y2="38" stroke="#fef08a" stroke-width="2.5"/>
+                <line x1="28" y1="19" x2="40" y2="35" stroke="#fef08a" stroke-width="2.5"/>
               </svg>
             </span>
           </h1>
@@ -1994,7 +2291,7 @@
      </div>
   </div>
 
-  <!-- 系統主題選擇彈跳視窗 (Theme Picker Modal - 依照預設櫻花 + 節慶月份順序 + 隱藏版賽博龐克排列) -->
+  <!-- 系統主題選擇彈跳視窗 (Theme Picker Modal - 支援八大主題) -->
   <div id="theme-picker-modal" class="modal-overlay hidden !z-[10000]" onclick="if(event.target === this) closeThemePickerModal()">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col p-6 space-y-5 relative mx-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
@@ -2115,7 +2412,7 @@
           <div id="modal-theme-badge-christmas" class="text-xs font-bold px-2.5 py-1 rounded-full bg-red-600 text-white hidden">已選擇</div>
         </button>
 
-        <!-- 7. 賽博龐克駭客主題 (隱藏版特殊風格) -->
+        <!-- 7. 賽博龐克駭客主題 (特殊風格) -->
         <button type="button" id="modal-theme-opt-cyberpunk" onclick="chooseThemeFromModal('cyberpunk')" class="w-full p-4 rounded-xl border-2 text-left transition flex items-center gap-4">
           <div class="w-12 h-12 rounded-xl bg-slate-950 border border-emerald-400/50 flex items-center justify-center flex-shrink-0 shadow-inner">
             <svg class="w-8 h-8" viewBox="0 0 64 64">
@@ -2130,6 +2427,28 @@
             <div class="text-xs text-gray-500 mt-0.5">數位矩陣雨、發光電路脈衝、霓虹閃爍與復古 CRT</div>
           </div>
           <div id="modal-theme-badge-cyberpunk" class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-600 text-white hidden">已選擇</div>
+        </button>
+
+        <!-- 8. 璀璨交響樂主題 (社團公演 / 音樂季限定) -->
+        <button type="button" id="modal-theme-opt-symphony" onclick="chooseThemeFromModal('symphony')" class="w-full p-4 rounded-xl border-2 text-left transition flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-950 border border-amber-400/60 flex items-center justify-center flex-shrink-0 shadow-inner">
+            <svg class="w-8 h-8" viewBox="0 0 64 64">
+              <g transform="rotate(-18 32 32)">
+                <polygon points="4,30 12,32 12,35 4,37" fill="#ca8a04"/>
+                <rect x="12" y="32" width="32" height="3" fill="#eab308"/>
+                <rect x="24" y="24" width="3.5" height="14" rx="1" fill="#fef08a"/>
+                <rect x="29" y="24" width="3.5" height="14" rx="1" fill="#fef08a"/>
+                <rect x="34" y="24" width="3.5" height="14" rx="1" fill="#fef08a"/>
+                <path d="M12 31 L44 31 C52 31, 57 22, 60 16 L60 48 C57 42, 52 34, 44 34 L12 34 Z" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+                <ellipse cx="60" cy="32" rx="2.5" ry="16" fill="#713f12" stroke="#fef08a" stroke-width="1.2"/>
+              </g>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="font-extrabold text-gray-800 text-base">璀璨交響樂：公演之夜</div>
+            <div class="text-xs text-gray-500 mt-0.5">手繪黃金小號、舞台聚光燈、紅絲絨帷幕與指揮樂譜</div>
+          </div>
+          <div id="modal-theme-badge-symphony" class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-600 text-white hidden">已選擇</div>
         </button>
       </div>
 
@@ -2322,9 +2641,9 @@
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5lzeKHGHkFI58bDajyOuwSRWPg-Zbz1ksFFqM0jp-3bpPAaduzTvilBqPgy3lVZuE/exec'; 
 
     // =========================================
-    // 【核心升級】七主題引擎 (依預設櫻花 + 節慶月份順序 + 壓軸隱藏版賽博龐克)
+    // 【核心升級】八主題引擎 (依預設櫻花 + 節慶月份順序 + 賽博龐克 + 璀璨交響樂)
     // =========================================
-    const THEME_ORDER = ['sakura', 'newyear', 'dragonboat', 'midautumn', 'halloween', 'christmas', 'cyberpunk'];
+    const THEME_ORDER = ['sakura', 'newyear', 'dragonboat', 'midautumn', 'halloween', 'christmas', 'cyberpunk', 'symphony'];
 
     const THEME_META = {
       sakura: {
@@ -2368,6 +2687,12 @@
         desc: '數位矩陣雨、發光電路脈衝、霓虹閃爍與復古 CRT',
         iconBg: 'bg-slate-950 border border-emerald-400/50',
         svg: `<svg class="w-6 h-6" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="34" rx="4" fill="#090d16" stroke="#00ff9d" stroke-width="2.2"/><path d="M16 24 L23 29 L16 34 M26 34 L36 34" fill="none" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="40" y="24" width="6" height="10" fill="#00ff9d"/><path d="M22 46 L16 54 L48 54 L42 46 Z" fill="#1e293b" stroke="#00f0ff" stroke-width="1.5"/></svg>`
+      },
+      symphony: {
+        name: '璀璨交響樂：公演之夜',
+        desc: '手繪黃金小號、舞台聚光燈、紅絲絨帷幕與指揮樂譜',
+        iconBg: 'bg-blue-950 border border-amber-400/60',
+        svg: `<svg class="w-6 h-6" viewBox="0 0 64 64"><g transform="rotate(-18 32 32)"><polygon points="4,30 12,32 12,35 4,37" fill="#ca8a04"/><rect x="12" y="32" width="32" height="3" fill="#eab308"/><rect x="24" y="24" width="3.5" height="14" rx="1" fill="#fef08a"/><rect x="29" y="24" width="3.5" height="14" rx="1" fill="#fef08a"/><rect x="34" y="24" width="3.5" height="14" rx="1" fill="#fef08a"/><path d="M12 31 L44 31 C52 31, 57 22, 60 16 L60 48 C57 42, 52 34, 44 34 L12 34 Z" fill="#facc15" stroke="#ca8a04" stroke-width="1"/><ellipse cx="60" cy="32" rx="2.5" ry="16" fill="#713f12" stroke="#fef08a" stroke-width="1.2"/></g></svg>`
       }
     };
 
@@ -2379,7 +2704,7 @@
       currentSystemTheme = validTheme;
       localStorage.setItem('app_theme', validTheme);
 
-      document.body.classList.remove('theme-newyear', 'theme-dragonboat', 'theme-midautumn', 'theme-halloween', 'theme-christmas', 'theme-cyberpunk');
+      document.body.classList.remove('theme-newyear', 'theme-dragonboat', 'theme-midautumn', 'theme-halloween', 'theme-christmas', 'theme-cyberpunk', 'theme-symphony');
       const sakuraTitle = document.getElementById('header-title-sakura');
 
       if (validTheme !== 'sakura') {
@@ -2654,7 +2979,7 @@
           container.appendChild(spark);
         }
       } else if (themeName === 'cyberpunk') {
-        // 賽博龐克：22 道駭客任務 01 數位矩陣雨 (SVG 垂直發光字元串) + 18 道電馭粉紅/青色高速雷射光束
+        // 賽博龐克：22 道駭客任務 01 數位矩陣雨 + 18 道電馭粉紅/青色高速雷射光束
         const glyphs = ['0', '1', '0', '1', '7', 'A', 'F', 'X', '9', 'C', '0', '1'];
         for (let i = 0; i < 22; i++) {
           const stream = document.createElement('div');
@@ -2699,6 +3024,55 @@
           beam.style.animationDuration = `${fallDuration}s`;
           beam.style.animationDelay = `${fallDelay}s`;
           container.appendChild(beam);
+        }
+      } else if (themeName === 'symphony') {
+        // 璀璨交響樂：18 顆飄落發光黃金音符 + 20 顆音樂廳金色星塵
+        for (let i = 0; i < 18; i++) {
+          const note = document.createElement('div');
+          note.className = 'sym-note-particle';
+          const size = Math.random() * 10 + 16;
+          const startLeft = Math.random() * 96;
+          const fallDuration = Math.random() * 6 + 7;
+          const swayDuration = Math.random() * 2.5 + 2.5;
+          const fallDelay = -(Math.random() * fallDuration);
+          const swayDelay = -(Math.random() * swayDuration);
+          note.style.left = `${startLeft}vw`;
+          note.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+          note.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
+
+          if (i % 2 === 0) {
+            note.innerHTML = `
+              <svg width="${size}" height="${size}" viewBox="0 0 28 28" fill="none">
+                <ellipse cx="9" cy="21" rx="5.5" ry="4" fill="#fef08a" transform="rotate(-20 9 21)"/>
+                <path d="M13.5 20 L13.5 4 Q22 8 20 15" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            `;
+          } else {
+            note.innerHTML = `
+              <svg width="${size}" height="${size}" viewBox="0 0 32 28" fill="none">
+                <ellipse cx="7" cy="22" rx="4.8" ry="3.5" fill="#facc15" transform="rotate(-20 7 22)"/>
+                <ellipse cx="22" cy="18" rx="4.8" ry="3.5" fill="#fef08a" transform="rotate(-20 22 18)"/>
+                <path d="M11 21 L11 5 L26 2 L26 17" stroke="#fef08a" stroke-width="2.4" stroke-linejoin="round"/>
+              </svg>
+            `;
+          }
+          container.appendChild(note);
+        }
+        for (let i = 0; i < 20; i++) {
+          const spark = document.createElement('div');
+          spark.className = 'xmas-gold-particle';
+          const size = Math.random() * 5 + 3;
+          const startLeft = Math.random() * 100;
+          const fallDuration = Math.random() * 6 + 8;
+          const swayDuration = Math.random() * 3 + 2;
+          const fallDelay = -(Math.random() * fallDuration);
+          const swayDelay = -(Math.random() * swayDuration);
+          spark.style.width = `${size}px`;
+          spark.style.height = `${size}px`;
+          spark.style.left = `${startLeft}vw`;
+          spark.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+          spark.style.animationDelay = `${fallDelay}s, ${swayDelay}s`;
+          container.appendChild(spark);
         }
       } else {
         // 櫻花主題：40 片粉嫩櫻花瓣
@@ -3658,7 +4032,7 @@
       if(tab==='users') loadAdminUsers();
     }
 
-    // --- 系統設定 (SWR + 彈跳視窗七主題選擇器) ---
+    // --- 系統設定 (SWR + 彈跳視窗八主題選擇器) ---
     function openThemePickerModal() {
       updateThemePickerModalUI(selectedAdminTheme);
       document.getElementById('theme-picker-modal').classList.remove('hidden');
@@ -3676,7 +4050,8 @@
         midautumn: 'border-amber-400 bg-amber-50/90 ring-2 ring-amber-200',
         halloween: 'border-orange-500 bg-orange-50 ring-2 ring-orange-200',
         christmas: 'border-red-500 bg-red-50 ring-2 ring-red-200',
-        cyberpunk: 'border-emerald-400 bg-emerald-50/90 ring-2 ring-pink-400'
+        cyberpunk: 'border-emerald-400 bg-emerald-50/90 ring-2 ring-pink-400',
+        symphony: 'border-amber-500 bg-amber-50/95 ring-2 ring-blue-400'
       };
       THEME_ORDER.forEach(t => {
         const btn = document.getElementById(`modal-theme-opt-${t}`);
